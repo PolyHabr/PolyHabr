@@ -1,0 +1,72 @@
+version: '3.7'
+
+services:
+  database:
+    container_name: database
+    image: postgres:14.4
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./docker_multiple_databases:/docker-entrypoint-initdb.d
+    shm_size: 256mb
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: pass
+      POSTGRES_MULTIPLE_DATABASES: keycloak_db, backend_db
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  auth_server:
+    container_name: auth_server
+    image: quay.io/keycloak/keycloak:20.0.1
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak_db
+      DB_USER: admin
+      DB_PASSWORD: pass
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: pass
+    ports:
+      - '8099:8080'
+    command:
+      - start-dev
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    depends_on:
+      - database
+
+  backend:
+    container_name: backend
+    image: poly_back
+    environment:
+      DB_URL: "jdbc:postgresql://database/backend_db"
+      DB_USERNAME: "admin"
+      DB_PASSWORD: "pass"
+      SEARCH_ENGINE_URL: "http://search_engine:7070"
+      SEARCH_ENGINE_KEY: "masterKey"
+      AUTH_SERVER_JWKS_URL: "http://auth_server:8080/auth/realms/master/protocol/openid-connect/certs"
+      AUTH_SERVER_URL: "http://auth_server:8080"
+      AUTH_SERVER_GRANT_TYPE: "client_credentials"
+      AUTH_SERVER_REALM: "master"
+      AUTH_SERVER_CLIENT_ID: "backend"
+    env_file:
+      - backend/.env
+    depends_on:
+      - database
+      - auth_server
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+volumes:
+  db-data:
