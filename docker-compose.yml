@@ -45,7 +45,7 @@ services:
 
   backend:
     container_name: backend
-    image: poly_back
+    image: ssdhn/poly_back
     environment:
       DB_URL: "jdbc:postgresql://database/backend_db"
       DB_USERNAME: "admin"

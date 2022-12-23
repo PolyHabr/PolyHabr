@@ -135,7 +135,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <image>
-                        <name>${project.artifactId}</name>
+                        <name>ssdhn/${project.artifactId}</name>
                     </image>
                     <excludes>
                         <exclude>
