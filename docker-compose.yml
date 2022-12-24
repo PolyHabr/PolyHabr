@@ -31,6 +31,8 @@ services:
       DB_PASSWORD: pass
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: pass
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: pass
     ports:
       - '8099:8080'
     command:
@@ -50,8 +52,6 @@ services:
       DB_URL: "jdbc:postgresql://database/backend_db"
       DB_USERNAME: "admin"
       DB_PASSWORD: "pass"
-      SEARCH_ENGINE_URL: "http://search_engine:7070"
-      SEARCH_ENGINE_KEY: "masterKey"
       AUTH_SERVER_JWKS_URL: "http://auth_server:8080/auth/realms/master/protocol/openid-connect/certs"
       AUTH_SERVER_URL: "http://auth_server:8080"
       AUTH_SERVER_GRANT_TYPE: "client_credentials"
