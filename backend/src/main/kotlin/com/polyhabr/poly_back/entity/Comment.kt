@@ -10,5 +10,9 @@ class Comment (
     val id: Int,
     var text: String,
     var user_id: Int,
-    var article_id: Int
+    var article_id: Int,
+
+    @ManyToOne
+    @JoinColumn(name = "article_id")
+    var comments: Article,
 )

@@ -8,5 +8,8 @@ class DisciplineType (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
-    var name: String
+    var name: String,
+
+    @ManyToMany(mappedBy = "to_discipline")
+    var article_to_tag_type: List<Article>,
 )

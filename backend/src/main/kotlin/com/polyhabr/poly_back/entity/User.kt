@@ -13,6 +13,13 @@ class User (
     var login: String,
     var password: String,
     var name: String,
-    var surname: String ?= null
+    var surname: String ?= null,
+
+    @ManyToMany(mappedBy = "to_liked_article")
+    var user_to_liked_article: List<Article>,
+
+    @ManyToOne
+    @JoinColumn(name = "id")
+    var users_id: Article,
 
 )
