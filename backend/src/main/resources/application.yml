@@ -38,3 +38,17 @@ server:
 #    org.springframework: info
 #    org.springframework.boot.autoconfigure: error
 #    org.hibernate: info
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/PolyHabr
+    username: postrges
+    password: "1234"
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        show_sql: true
+        temp:
+          use_jdbc_metadata_default: false
+
