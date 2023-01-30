@@ -1,40 +1,40 @@
 server:
-  port: ${PORT:8445}
+  port: ${PORT:8733} # 8445 is the default port for the proxy
 
-poly_back:
-  auth_server:
-    url: ${AUTH_SERVER_URL:}
-    grant_type: ${AUTH_SERVER_GRANT_TYPE:}
-    realm: ${AUTH_SERVER_REALM:}
-    client_id: ${AUTH_SERVER_CLIENT_ID:}
-    client_secret: ${AUTH_SERVER_CLIENT_SECRET:}
+#poly_back:
+#  auth_server:
+#    url: ${AUTH_SERVER_URL:}
+#    grant_type: ${AUTH_SERVER_GRANT_TYPE:}
+#    realm: ${AUTH_SERVER_REALM:}
+#    client_id: ${AUTH_SERVER_CLIENT_ID:}
+#    client_secret: ${AUTH_SERVER_CLIENT_SECRET:}
 
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: ${AUTH_SERVER_JWKS_URL:}
-  main:
-    banner-mode: off
-  sql:
-    init:
-      platform: ${DB_PLATFORM:postgres}
-  datasource:
-    url: ${DB_URL:}
-    username: ${DB_USERNAME:}
-    password: ${DB_PASSWORD:}
-  jpa:
-    properties:
-      hibernate:
-        dialect: ${DB_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
-        format_sql: true
-
-logging:
-  file:
-    name: logs/proxy.log
-  level:
-    web: info
-    org.springframework: info
-    org.springframework.boot.autoconfigure: error
-    org.hibernate: info
+#spring:
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri: ${AUTH_SERVER_JWKS_URL:}
+#  main:
+#    banner-mode: off
+#  sql:
+#    init:
+#      platform: ${DB_PLATFORM:postgres}
+#  datasource:
+#    url: ${DB_URL:}
+#    username: ${DB_USERNAME:}
+#    password: ${DB_PASSWORD:}
+#  jpa:
+#    properties:
+#      hibernate:
+#        dialect: ${DB_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
+#        format_sql: true
+#
+#logging:
+#  file:
+#    name: logs/proxy.log
+#  level:
+#    web: info
+#    org.springframework: info
+#    org.springframework.boot.autoconfigure: error
+#    org.hibernate: info
