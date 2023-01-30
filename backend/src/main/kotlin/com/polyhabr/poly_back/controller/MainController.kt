@@ -11,29 +11,8 @@ import org.springframework.web.bind.annotation.RestController
 open class MainController(
     private val mainService: MainService
 ) {
-
-    private val listArticlie: List<Article> = mutableListOf()
-
     @GetMapping("/hello")
     open fun hello(): String {
-        return listOf<Article>(
-            Article(
-                id = "1",
-                sadsad = "sadsad",
-                asdsad = "asdsad",
-            ),
-            Article(
-                id = "2",
-                sadsad = "sadsad",
-                asdsad = "asdsad"
-            )
-        ).toString()
+        return mainService.hello()
     }
 }
-
-data class Article(
-
-    val id: String,
-    val sadsad: String,
-    val asdsad: String,
-)
