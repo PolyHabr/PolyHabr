@@ -18,4 +18,4 @@ class Comment (
     @JoinColumn(name = "user_id")
     var users_to_comment: Users,
 
-)
+    )

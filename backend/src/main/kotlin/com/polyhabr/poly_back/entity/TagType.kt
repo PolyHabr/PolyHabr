@@ -13,4 +13,4 @@ class TagType (
     @ManyToMany(mappedBy = "to_tag_type")
     var article_to_tag_type: List<Article>,
 
-)
+    )

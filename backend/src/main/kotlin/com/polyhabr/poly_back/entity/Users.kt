@@ -4,25 +4,25 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "users")
-class Users (
+class Users(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
     var email: String,
     var login: String,
     var password: String,
-    var name_u: String,
-    var surname: String ?= null,
+    var name: String,
+    var surname: String,
 
     @OneToMany (mappedBy = "users")
-    var user_id: List<Article>,
+    var user_id: List<Article>?,
 
     @ManyToMany(mappedBy = "to_liked")
-    var user_to_liked_article: List<Article>,
+    var user_to_liked_article: List<Article>?,
 
     @OneToMany (mappedBy = "users_to_comment")
-    var users_comment: List<Comment>,
+    var users_comment: List<Comment>?,
 
-){
+    ){
 
 }
