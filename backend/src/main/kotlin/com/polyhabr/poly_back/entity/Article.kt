@@ -1,54 +1,33 @@
 package com.polyhabr.poly_back.entity
 
-import java.sql.Date
+import java.time.LocalDate
 import javax.persistence.*
-
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "article")
-class Article(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+open class Article(
+    @Column(name = "date")
+    open var date: LocalDate,
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    var users: Users,
+    @Size(max = 255)
+    @Column(name = "file_pdf")
+    open var filePdf: String? = null,
 
-    @ManyToMany
-    @JoinTable(
-    name = "article_to_tag_type",
-    joinColumns = arrayOf(JoinColumn(name = "article_id")),
-    inverseJoinColumns = arrayOf(JoinColumn(name = "tag_type_id"))
-    )
-    var to_tag_type: List<TagType>,
+    @NotNull
+    @Column(name = "likes", nullable = false)
+    open var likes: Int = 0,
 
-    @ManyToMany
-    @JoinTable(
-    name = "article_to_discipline_type",
-    joinColumns = arrayOf(JoinColumn(name = "article_id")),
-    inverseJoinColumns = arrayOf(JoinColumn(name = "discipline_type_id"))
-    )
-    var to_discipline: List<DisciplineType>,
+    @Size(max = 255)
+    @Column(name = "preview_text")
+    open var previewText: String,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
-    var articlesType: ArticleType,
+    open var type: ArticleType,
 
-    @ManyToMany
-    @JoinTable(
-        name = "user_to_liked_article",
-        joinColumns = arrayOf(JoinColumn(name = "article_id")),
-        inverseJoinColumns = arrayOf(JoinColumn(name = "user_id"))
-    )
-    var to_liked: List<Users>,
-
-    @OneToMany (mappedBy = "article_to_comment")
-    var article_comment: List<Comment>,
-
-    var preview_text: String,
-    var date: Date,
-    var file_pdf: String,
-    var likes: Int = 0,
-
-    )
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    open var user: User
+) : BaseEntity<Long>()

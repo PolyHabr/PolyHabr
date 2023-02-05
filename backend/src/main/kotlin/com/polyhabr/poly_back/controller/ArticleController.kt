@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController
 class ArticleController(
     private val articleService: ArticleService,
 ) {
-
     @GetMapping
     fun getAll(): List<ArticleDto> = articleService.getAll()
-
 }

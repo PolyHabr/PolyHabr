@@ -1,15 +1,15 @@
 package com.polyhabr.poly_back.dto
 
 import com.polyhabr.poly_back.entity.ArticleType
-import com.polyhabr.poly_back.entity.Users
-import java.sql.Date
+import com.polyhabr.poly_back.entity.User
+import java.time.LocalDate
 
 data class ArticleDto(
-    val id: Int? = null,
-    var date: Date,
-    var file_pdf: String,
-    var likes: Int = 0,
-    var preview_text: String,
-    var type_id: ArticleType,
-    var user_id: Users,
-    )
+    val id: Long? = null,
+    var date: LocalDate? = null,
+    var filePdf: String? = null,
+    var likes: Int? = null,
+    var previewText: String? = null,
+    var typeId: ArticleType? = null,
+    var userId: User? = null,
+)

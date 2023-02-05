@@ -19,9 +19,8 @@ class CommentServiceImpl(
     private fun Comment.toDto(): CommentDto =
         CommentDto(
             id = this.id,
-//            text = this.text,
-//            article_id = this.article_to_comment,
-
-
+            text = this.text,
+            articleId = this.article?.id,
+            userId = this.user?.id,
         )
 }

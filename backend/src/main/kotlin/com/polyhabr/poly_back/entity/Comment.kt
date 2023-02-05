@@ -1,21 +1,21 @@
 package com.polyhabr.poly_back.entity
 
 import javax.persistence.*
+import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "comment")
-class Comment (
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
-    var text: String,
+open class Comment : BaseEntity<Long>() {
 
-    @ManyToOne
+    @Size(max = 255)
+    @Column(name = "text")
+    open var text: String? = null
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
-    var article_to_comment: Article,
+    open var article: Article? = null
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    var users_to_comment: Users,
-
-    )
+    open var user: User? = null
+}

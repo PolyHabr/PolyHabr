@@ -1,7 +1,9 @@
 package com.polyhabr.poly_back.service.impl
 
-import com.polyhabr.poly_back.dto.UsersDto
-import com.polyhabr.poly_back.entity.Users
+import com.polyhabr.poly_back.controller.model.UserModel
+import com.polyhabr.poly_back.controller.model.toDto
+import com.polyhabr.poly_back.dto.UserDto
+import com.polyhabr.poly_back.entity.User
 import com.polyhabr.poly_back.repository.UsersRepository
 import com.polyhabr.poly_back.service.UsersService
 import org.springframework.data.repository.findByIdOrNull
@@ -12,61 +14,59 @@ import kotlin.RuntimeException
 class UsersServiceImpl(
     private val usersRepository: UsersRepository
 ) : UsersService {
-    override fun getAll(): List<UsersDto> {
+    override fun getAll(): List<UserDto> {
         return usersRepository.findAll().map {
             it.toDto()
         }
     }
 
-    override fun getById(id: Int): UsersDto {
+    override fun getById(id: Long): UserDto {
         return usersRepository.findByIdOrNull(id)
             ?.toDto()
             ?: throw RuntimeException("User not found")
     }
 
-    override fun search(prefix: String): List<UsersDto> =
+    override fun search(prefix: String): List<UserDto> =
         usersRepository.findByNameStartsWithIgnoreCaseOrderByName(prefix)
             .map { it.toDto() }
 
-    override fun create(dto: UsersDto): Int {
-        return usersRepository.save(dto.toEntity()).id
+    override fun create(userModel: UserModel): Long? {
+        return usersRepository.save(
+            userModel
+                .toDto()
+                .toEntity()
+        ).id
     }
 
-    override fun update(id: Int, dto: UsersDto) {
+    override fun update(id: Long, userModel: UserModel) {
         val existingUser = usersRepository.findByIdOrNull(id)
             ?: throw RuntimeException("User not found")
-        existingUser.name = dto.name
+        existingUser.name = userModel.name ?: throw RuntimeException("name not found")
 
         usersRepository.save(existingUser)
     }
 
-    override fun delete(id: Int) {
+    override fun delete(id: Long) {
         val existingUser = usersRepository.findByIdOrNull(id)
             ?: throw RuntimeException("User not found")
-
-        usersRepository.deleteById(existingUser.id)
+        val existedId = existingUser.id ?: throw RuntimeException("id not found")
+        usersRepository.deleteById(existedId)
     }
 
-    private fun Users.toDto(): UsersDto =
-        UsersDto(
-            id = this.id,
-            email = this.email,
-            login = this.login,
-            name = this.name,
-            password = this.password,
-            surname = this.surname,
-        )
+    private fun User.toDto() = UserDto(
+        id = this.id,
+        email = this.email,
+        login = this.login,
+        name = this.name,
+        password = this.password,
+        surname = this.surname,
+    )
 
-    private fun UsersDto.toEntity(): Users =
-        Users(
-            id = 0,
-            email = this.email,
-            login = this.login,
-            name = this.name,
-            password = this.password,
-            surname = this.surname,
-            user_id = null,
-            user_to_liked_article = null,
-            users_comment = null
-        )
+    private fun UserDto.toEntity() = User(
+        email = this.email!!,
+        login = this.login!!,
+        name = this.name!!,
+        password = this.password!!,
+        surname = this.surname!!,
+    )
 }

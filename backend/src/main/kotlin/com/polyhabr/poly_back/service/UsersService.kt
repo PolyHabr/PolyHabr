@@ -1,18 +1,19 @@
 package com.polyhabr.poly_back.service
 
-import com.polyhabr.poly_back.dto.UsersDto
+import com.polyhabr.poly_back.controller.model.UserModel
+import com.polyhabr.poly_back.dto.UserDto
 
 interface UsersService {
-    fun getAll(): List<UsersDto>
+    fun getAll(): List<UserDto>
 
-    fun getById(id: Int): UsersDto
+    fun getById(id: Long): UserDto
 
-    fun search(prefix: String): List<UsersDto>
+    fun search(prefix: String): List<UserDto>
 
-    fun create(dto: UsersDto): Int
+    fun create(userModel: UserModel): Long?
 
-    fun update(id: Int, dto: UsersDto)
+    fun update(id: Long, userModel: UserModel)
 
-    fun delete(id: Int)
-//    abstract fun <Users> Users(id: Int, email: String, login: String, name: String, password: String, surname: String): Users
+    fun delete(id: Long)
+//    abstract fun <Users> Users(id: Long, email: String, login: String, name: String, password: String, surname: String): Users
 }

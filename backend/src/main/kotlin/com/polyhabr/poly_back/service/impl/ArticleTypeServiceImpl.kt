@@ -11,7 +11,7 @@ class ArticleTypeServiceImpl(
     private val articleTypeRepository: ArticleTypeRepository
 ) : ArticleTypeService {
     override fun getAll(): List<ArticleTypeDto> {
-        return articleTypeRepository.findAll().map{
+        return articleTypeRepository.findAll().map {
             it.toDto()
         }
     }

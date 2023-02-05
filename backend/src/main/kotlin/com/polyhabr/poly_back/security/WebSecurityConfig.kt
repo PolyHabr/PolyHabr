@@ -14,7 +14,8 @@ open class SecurityConfig {
     @Bean
     @Throws(Exception::class)
     open fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http.authorizeRequests().antMatchers("/**").permitAll() // config to permit all requests
+        http.csrf().disable()
+            .authorizeRequests().antMatchers("/**").permitAll() // config to permit all requests
         return http.build()
     }
 

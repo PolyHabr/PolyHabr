@@ -20,10 +20,10 @@ class ArticleServiceImpl(
         ArticleDto(
             id = this.id,
             date = this.date,
-            file_pdf = this.file_pdf,
+            filePdf = this.filePdf,
             likes = this.likes,
-            preview_text = this.preview_text,
-            type_id = this.articlesType,
-            user_id = this.users,
+            previewText = this.previewText,
+            typeId = this.type,
+            userId = this.user,
         )
 }

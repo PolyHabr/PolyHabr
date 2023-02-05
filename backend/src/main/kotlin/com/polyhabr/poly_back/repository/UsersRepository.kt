@@ -1,9 +1,8 @@
 package com.polyhabr.poly_back.repository
 
-import com.polyhabr.poly_back.entity.Users
+import com.polyhabr.poly_back.entity.User
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface UsersRepository:  JpaRepository<Users, Int> {
-
-    fun findByNameStartsWithIgnoreCaseOrderByName(prefix: String): List<Users>
+interface UsersRepository : JpaRepository<User, Long> {
+    fun findByNameStartsWithIgnoreCaseOrderByName(prefix: String): List<User>
 }
