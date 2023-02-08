@@ -1,4 +1,4 @@
-package com.polyhabr.poly_back.security
+package com.polyhabr.poly_back.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

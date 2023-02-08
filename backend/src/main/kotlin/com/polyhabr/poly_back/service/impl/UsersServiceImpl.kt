@@ -1,7 +1,7 @@
 package com.polyhabr.poly_back.service.impl
 
-import com.polyhabr.poly_back.controller.model.UserModel
-import com.polyhabr.poly_back.controller.model.toDto
+import com.polyhabr.poly_back.controller.model.user.request.UserRequest
+import com.polyhabr.poly_back.controller.model.user.request.toDto
 import com.polyhabr.poly_back.dto.UserDto
 import com.polyhabr.poly_back.entity.User
 import com.polyhabr.poly_back.repository.UsersRepository
@@ -30,20 +30,20 @@ class UsersServiceImpl(
         usersRepository.findByNameStartsWithIgnoreCaseOrderByName(prefix)
             .map { it.toDto() }
 
-    override fun create(userModel: UserModel): Long? {
+    override fun create(userRequest: UserRequest): Long? {
         return usersRepository.save(
-            userModel
+            userRequest
                 .toDto()
                 .toEntity()
         ).id
     }
 
-    override fun update(id: Long, userModel: UserModel) {
+    override fun update(id: Long, userRequest: UserRequest): Boolean {
         val existingUser = usersRepository.findByIdOrNull(id)
             ?: throw RuntimeException("User not found")
-        existingUser.name = userModel.name ?: throw RuntimeException("name not found")
+        existingUser.name = userRequest.name ?: throw RuntimeException("name not found")
 
-        usersRepository.save(existingUser)
+        return usersRepository.save(existingUser).id?.let { true } ?: false
     }
 
     override fun delete(id: Long) {
