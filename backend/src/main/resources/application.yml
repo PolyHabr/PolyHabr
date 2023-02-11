@@ -38,3 +38,53 @@ server:
 #    org.springframework: info
 #    org.springframework.boot.autoconfigure: error
 #    org.hibernate: info
+#spring:
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/PolyHabr
+#    username: postrges
+#    password: "1234"
+#  jpa:
+#    properties:
+#      hibernate:
+#        ddl-auto: create-drop
+#        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+#        show_sql: true
+#        temp:
+#          use_jdbc_metadata_default: false
+#  sql:
+#    init:
+#      platform: postgres
+
+spring:
+  jpa:
+    defer-datasource-initialization: true
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: "postgres"
+    driverClassName: org.postgresql.Driver
+  sql:
+    init:
+      platform: postgres
+
+
+
+#server.port = 8733
+#spring.jpa.database=POSTGRESQL
+#spring.sql.init.platform= postgres
+#spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+#spring.datasource.username=postgres
+#spring.datasource.password=1234
+#spring.jpa.show-sql=true
+#spring.jpa.generate-ddl=true
+#spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation= true
+#spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
+#spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+
+
