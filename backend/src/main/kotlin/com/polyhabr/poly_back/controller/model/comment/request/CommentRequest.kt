@@ -22,7 +22,6 @@ data class CommentRequest(
     @field:NotNull
     var userId: Long? = null,
 ): Serializable
-{}
 
 fun CommentRequest.toDto() = CommentDto(
     text = this.text,
