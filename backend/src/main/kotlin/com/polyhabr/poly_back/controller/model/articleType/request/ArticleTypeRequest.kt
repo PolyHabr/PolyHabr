@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull
 )
 
 data class ArticleTypeRequest(
-    @field:Schema(example = "math")
+    @field:Schema(example = "abstract")
     @field:NotNull
     var name: String,
 )
