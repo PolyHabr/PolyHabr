@@ -6,6 +6,9 @@ import com.polyhabr.poly_back.dto.UserDto
 import com.polyhabr.poly_back.entity.User
 import com.polyhabr.poly_back.repository.UsersRepository
 import com.polyhabr.poly_back.service.UsersService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import kotlin.RuntimeException
@@ -14,10 +17,18 @@ import kotlin.RuntimeException
 class UsersServiceImpl(
     private val usersRepository: UsersRepository
 ) : UsersService {
-    override fun getAll(): List<UserDto> {
-        return usersRepository.findAll().map {
-            it.toDto()
-        }
+    override fun getAll(
+        offset: Int,
+        size: Int,
+    ): Page<UserDto> {
+        return usersRepository
+            .findAll(
+                PageRequest.of(
+                    offset,
+                    size,
+                )
+            )
+            .map { it.toDto() }
     }
 
     override fun getById(id: Long): UserDto {
@@ -26,8 +37,8 @@ class UsersServiceImpl(
             ?: throw RuntimeException("User not found")
     }
 
-    override fun search(prefix: String): List<UserDto> =
-        usersRepository.findByNameStartsWithIgnoreCaseOrderByName(prefix)
+    override fun search(prefix: String, offset: Int, size: Int): List<UserDto> =
+        usersRepository.findUsersByName(prefix)
             .map { it.toDto() }
 
     override fun create(userRequest: UserRequest): Long? {
