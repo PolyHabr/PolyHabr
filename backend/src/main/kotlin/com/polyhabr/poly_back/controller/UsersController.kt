@@ -14,6 +14,8 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
+import javax.validation.constraints.Positive
+import javax.validation.constraints.PositiveOrZero
 
 @RestController
 @Validated
@@ -42,9 +44,16 @@ class UsersController(
         ]
     )
     @GetMapping
-    fun getAll(): ResponseEntity<UserListResponse> {
-        val response = usersService.getAll().toResponse()
-        return ResponseEntity.ok(response)
+    fun getAll(
+        @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
+        @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+    ): ResponseEntity<UserListResponse> {
+        val rawResponse = usersService
+            .getAll(
+                offset = offset,
+                size = size,
+            )
+        return ResponseEntity.ok(rawResponse.toListResponse())
     }
 
     @Operation(summary = "User find by id")
@@ -63,7 +72,7 @@ class UsersController(
     )
     @GetMapping("/byId")
     fun getById(
-        @RequestParam("id") id: Long
+        @Positive @RequestParam("id") id: Long
     ): ResponseEntity<UserResponse> {
         val response = usersService
             .getById(id)
@@ -86,11 +95,14 @@ class UsersController(
         ]
     )
     @GetMapping("/search")
-    fun searchUsers(
-        @RequestParam("prefix") prefix: String
+    fun searchUsersByName(
+        @Schema(example = "Alex") @RequestParam("prefix") prefix: String?,
+        @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
+        @Schema(example = "1") @Positive @RequestParam("size") size: Int,
     ): ResponseEntity<UserListResponse> {
-        val response = usersService.search(prefix).toResponse()
-        return ResponseEntity.ok(response)
+        val rawResponse = usersService
+            .searchByName(prefix, offset, size)
+        return ResponseEntity.ok(rawResponse.toListResponse())
     }
 
     @Operation(summary = "User create")
@@ -133,8 +145,8 @@ class UsersController(
     )
     @PutMapping("/update")
     fun update(
-        @RequestParam("id") id: Long,
-        @RequestBody userRequest: UserRequest
+        @Positive @RequestParam("id") id: Long,
+        @Valid @RequestBody userRequest: UserRequest
     ): ResponseEntity<UserUpdateResponse> {
         val success = usersService.update(id, userRequest)
         val response = UserUpdateResponse(success)
@@ -150,7 +162,7 @@ class UsersController(
     )
     @DeleteMapping("/delete")
     fun delete(
-        @RequestParam(value = "id") id: Long
+        @Positive @RequestParam(value = "id") id: Long
     ): ResponseEntity<Unit> {
         return try {
             usersService.delete(id)
