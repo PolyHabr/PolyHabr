@@ -3,14 +3,13 @@ package com.polyhabr.poly_back.service
 import com.polyhabr.poly_back.controller.model.user.request.UserRequest
 import com.polyhabr.poly_back.dto.UserDto
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.Sort
 
 interface UsersService {
     fun getAll(offset: Int, size: Int): Page<UserDto>
 
     fun getById(id: Long): UserDto
 
-    fun search(prefix: String, offset: Int, size: Int): List<UserDto>
+    fun searchByName(prefix: String?, offset: Int, size: Int): Page<UserDto>
 
     fun create(userRequest: UserRequest): Long?
 

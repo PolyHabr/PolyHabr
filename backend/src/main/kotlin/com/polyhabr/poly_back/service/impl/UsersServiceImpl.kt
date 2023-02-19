@@ -8,7 +8,7 @@ import com.polyhabr.poly_back.repository.UsersRepository
 import com.polyhabr.poly_back.service.UsersService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import kotlin.RuntimeException
@@ -37,8 +37,14 @@ class UsersServiceImpl(
             ?: throw RuntimeException("User not found")
     }
 
-    override fun search(prefix: String, offset: Int, size: Int): List<UserDto> =
-        usersRepository.findUsersByName(prefix)
+    override fun searchByName(prefix: String?, offset: Int, size: Int): Page<UserDto> =
+        usersRepository
+            .findUsersByName(
+                PageRequest.of(
+                    offset,
+                    size,
+                ), prefix ?: ""
+            )
             .map { it.toDto() }
 
     override fun create(userRequest: UserRequest): Long? {

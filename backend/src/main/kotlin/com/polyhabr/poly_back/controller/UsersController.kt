@@ -2,7 +2,6 @@ package com.polyhabr.poly_back.controller
 
 import com.polyhabr.poly_back.controller.model.user.request.UserRequest
 import com.polyhabr.poly_back.controller.model.user.response.*
-import com.polyhabr.poly_back.dto.UserDto
 import com.polyhabr.poly_back.service.UsersService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -15,8 +14,6 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
 import javax.validation.constraints.Positive
 import javax.validation.constraints.PositiveOrZero
 
@@ -98,14 +95,14 @@ class UsersController(
         ]
     )
     @GetMapping("/search")
-    fun searchUsers(
-        @Schema(example = "Alex") @NotNull @NotBlank @RequestParam("prefix") prefix: String,
+    fun searchUsersByName(
+        @Schema(example = "Alex") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-    ): List<UserDto> {
-        // TODO it's not working
-        val response = usersService.search(prefix, offset, size)
-        return response
+    ): ResponseEntity<UserListResponse> {
+        val rawResponse = usersService
+            .searchByName(prefix, offset, size)
+        return ResponseEntity.ok(rawResponse.toListResponse())
     }
 
     @Operation(summary = "User create")
