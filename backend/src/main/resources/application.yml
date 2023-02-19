@@ -55,12 +55,20 @@ server:
 #  sql:
 #    init:
 #      platform: postgres
-
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
 spring:
   jpa:
     defer-datasource-initialization: true
     database: POSTGRESQL
     show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
     hibernate:
       ddl-auto: create-drop
   datasource:
