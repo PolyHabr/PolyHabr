@@ -3,12 +3,11 @@ package com.polyhabr.poly_back.service.impl
 import com.polyhabr.poly_back.controller.model.user.request.UserRequest
 import com.polyhabr.poly_back.controller.model.user.request.toDto
 import com.polyhabr.poly_back.dto.UserDto
-import com.polyhabr.poly_back.entity.User
-import com.polyhabr.poly_back.repository.UsersRepository
+import com.polyhabr.poly_back.entity.auth.User
+import com.polyhabr.poly_back.repository.auth.UsersRepository
 import com.polyhabr.poly_back.service.UsersService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import kotlin.RuntimeException

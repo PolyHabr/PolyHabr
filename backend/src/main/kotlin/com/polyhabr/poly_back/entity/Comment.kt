@@ -1,5 +1,6 @@
 package com.polyhabr.poly_back.entity
 
+import com.polyhabr.poly_back.entity.auth.User
 import javax.persistence.*
 import javax.validation.constraints.Size
 

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import javax.validation.ConstraintViolationException
@@ -20,6 +21,7 @@ import javax.validation.constraints.PositiveOrZero
 @RestController
 @Validated
 @RequestMapping("/users")
+@CrossOrigin(origins = ["*"], maxAge = 3600)
 class UsersController(
     private val usersService: UsersService,
 ) {
@@ -44,6 +46,7 @@ class UsersController(
         ]
     )
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
