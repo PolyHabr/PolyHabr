@@ -25,9 +25,9 @@ open class Article(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
-    open var type: ArticleType,
+    open var typeId: ArticleType?,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    open var user: User
+    open var userId: User?
 ) : BaseEntity<Long>()

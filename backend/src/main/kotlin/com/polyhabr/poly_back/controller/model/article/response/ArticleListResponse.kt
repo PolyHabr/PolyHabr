@@ -1,14 +1,22 @@
 package com.polyhabr.poly_back.controller.model.article.response
 
 import com.polyhabr.poly_back.dto.ArticleDto
+import io.swagger.v3.oas.annotations.media.Schema
+import org.springframework.data.domain.Page
+
 data class ArticleListResponse(
-    val articles: List<ArticleResponse>,
-    val page: Int,
+    @field:Schema(description = "List of articles")
+    val contents: List<ArticleResponse>,
+    @field:Schema(description = "Total number of elements")
+    val totalElements: Long,
+    @field:Schema(description = "Total number of pages")
+    val totalPages: Int,
 )
 
-fun List<ArticleDto>.toResponse(): ArticleListResponse{
+fun Page<ArticleDto>.toListResponse(): ArticleListResponse{
     return ArticleListResponse(
-        articles = this.map{ it.toResponse()},
-        page = 0, // todo
+        contents = this.content.map{ it.toResponse()},
+        totalElements = this.totalElements,
+        totalPages = this.totalPages,
     )
 }
