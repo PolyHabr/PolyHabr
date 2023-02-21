@@ -8,12 +8,12 @@ import javax.validation.constraints.NotNull
     name = "TagTypeRequest",
     description = "Data object for Tag Type",
 )
-data class TagTupeRequest(
+data class TagTypeRequest(
     @field:Schema(example = "#math")
     @field:NotNull
     var name: String? = null,
 )
 
-fun TagTupeRequest.toDto()= TagTypeDto(
+fun TagTypeRequest.toDto()= TagTypeDto(
     name = this.name!!,
 )

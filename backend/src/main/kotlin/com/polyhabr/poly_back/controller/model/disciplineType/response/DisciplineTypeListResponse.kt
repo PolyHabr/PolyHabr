@@ -1,15 +1,22 @@
 package com.polyhabr.poly_back.controller.model.disciplineType.response
 
 import com.polyhabr.poly_back.dto.DisciplineTypeDto
+import io.swagger.v3.oas.annotations.media.Schema
+import org.springframework.data.domain.Page
 
 data class DisciplineTypeListResponse(
-    val discipleTypes: List<DisciplineTypeResponse>,
-    val page: Int,
+    @field:Schema(description = "List of discipline types")
+    val contents: List<DisciplineTypeResponse>,
+    @field:Schema(description = "Total number of elements")
+    val totalElements: Long,
+    @field:Schema(description = "Total number of pages")
+    val totalPages: Int,
 )
 
-fun List<DisciplineTypeDto>.toResponse(): DisciplineTypeListResponse {
+fun Page<DisciplineTypeDto>.toListResponse(): DisciplineTypeListResponse {
     return DisciplineTypeListResponse(
-        discipleTypes = this.map {it.toResponse()},
-        page = 0, // todo
+        contents = this.content.map { it.toResponse() },
+        totalElements = this.totalElements,
+        totalPages = this.totalPages,
     )
 }

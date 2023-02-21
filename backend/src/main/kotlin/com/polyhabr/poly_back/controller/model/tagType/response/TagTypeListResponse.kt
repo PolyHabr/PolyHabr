@@ -1,15 +1,22 @@
 package com.polyhabr.poly_back.controller.model.tagType.response
 
 import com.polyhabr.poly_back.dto.TagTypeDto
+import io.swagger.v3.oas.annotations.media.Schema
+import org.springframework.data.domain.Page
 
 data class TagTypeListResponse(
-    val tagTypes: List<TagTypeResponse>,
-    val page: Int,
+    @field:Schema(description = "List of tag types")
+    val contents: List<TagTypeResponse>,
+    @field:Schema(description = "Total number of elements")
+    val totalElements: Long,
+    @field:Schema(description = "Total number of pages")
+    val totalPages: Int,
 )
 
-fun List<TagTypeDto>.toResponse(): TagTypeListResponse{
+fun Page<TagTypeDto>.toListResponse(): TagTypeListResponse{
     return TagTypeListResponse(
-        tagTypes = this.map {it.toResponse()},
-        page = 0, // todo
+        contents = this.content.map { it.toResponse() },
+        totalElements = this.totalElements,
+        totalPages = this.totalPages,
     )
 }
