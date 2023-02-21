@@ -1,5 +1,7 @@
 package com.polyhabr.poly_back.entity
 
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import javax.persistence.*
 import javax.validation.constraints.Size
 
@@ -12,10 +14,12 @@ open class Comment() : BaseEntity<Long>() {
     open var text: String? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "article_id")
     open var articleId: Article? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     open var userId: User? = null
 
