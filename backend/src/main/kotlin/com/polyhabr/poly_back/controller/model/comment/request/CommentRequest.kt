@@ -1,6 +1,8 @@
 package com.polyhabr.poly_back.controller.model.comment.request
 
 import com.polyhabr.poly_back.dto.CommentDto
+import com.polyhabr.poly_back.entity.Article
+import com.polyhabr.poly_back.entity.User
 import io.swagger.v3.oas.annotations.media.Schema
 import java.io.Serializable
 import javax.validation.constraints.NotNull
@@ -16,15 +18,15 @@ data class CommentRequest(
 
     @field:Schema(example = "article id")
     @field:NotNull
-    var articleId: Long? = null,
+    var articleId: Article? = null,
 
     @field:Schema(example = "user id")
     @field:NotNull
-    var userId: Long? = null,
+    var userId: User? = null,
 ): Serializable
 
 fun CommentRequest.toDto() = CommentDto(
-    text = this.text,
-    articleId = this.articleId,
-    userId = this.userId,
+    text = this.text!!,
+    articleId = this.articleId!!,
+    userId = this.userId!!,
 )

@@ -6,8 +6,8 @@ import com.polyhabr.poly_back.entity.User
 
 data class CommentResponse (
     val text: String,
-    val articleId: Long,
-    val userId: Long,
+    val articleId: Article,
+    val userId: User,
 )
 
 fun CommentDto.toResponse(): CommentResponse{

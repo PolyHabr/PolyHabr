@@ -5,7 +5,7 @@ import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "comment")
-open class Comment : BaseEntity<Long>() {
+open class Comment() : BaseEntity<Long>() {
 
     @Size(max = 255)
     @Column(name = "text")
@@ -13,9 +13,15 @@ open class Comment : BaseEntity<Long>() {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
-    open var article: Article? = null
+    open var articleId: Article? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    open var user: User? = null
+    open var userId: User? = null
+
+    constructor(text: String, articleId: Article, userId: User) : this() {
+        this.text = text
+        this.articleId = articleId
+        this.userId = userId
+    }
 }

@@ -12,9 +12,9 @@ import javax.validation.constraints.NotNull
 data class ArticleTypeRequest(
     @field:Schema(example = "abstract")
     @field:NotNull
-    var name: String,
+    var name: String? = null,
 )
 
 fun ArticleTypeRequest.toDto() = ArticleTypeDto(
-    name = this.name,
+    name = this.name!!,
 )
