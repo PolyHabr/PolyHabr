@@ -20,7 +20,7 @@ import javax.validation.constraints.PositiveOrZero
 @RestController
 @Validated
 @RequestMapping("/article_types")
-class AticleTypeController(
+class ArticleTypeController(
     private val articleTypeService: ArticleTypeService,
 ) {
     @ExceptionHandler(ConstraintViolationException::class)
