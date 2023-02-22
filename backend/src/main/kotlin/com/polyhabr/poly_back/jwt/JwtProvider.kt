@@ -11,7 +11,7 @@ import java.util.*
 
 
 @Component
-public class JwtProvider {
+class JwtProvider {
 
     private val logger: Logger = LoggerFactory.getLogger(JwtProvider::class.java)
 
@@ -28,7 +28,7 @@ public class JwtProvider {
         return Jwts.builder()
             .setSubject(username)
             .setIssuedAt(Date())
-            .setExpiration(Date((Date()).getTime() + jwtExpiration!! * 1000))
+            .setExpiration(Date((Date()).time + jwtExpiration!! * 1000))
             .signWith(SignatureAlgorithm.HS512, jwtSecret)
             .compact()
     }
@@ -56,6 +56,6 @@ public class JwtProvider {
         return Jwts.parser()
             .setSigningKey(jwtSecret)
             .parseClaimsJws(token)
-            .getBody().getSubject()
+            .body.subject
     }
 }

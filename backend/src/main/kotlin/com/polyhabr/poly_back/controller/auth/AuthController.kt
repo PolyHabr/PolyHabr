@@ -49,34 +49,34 @@ class AuthController {
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {
 
-        val userCandidate: Optional<User> = userRepository.findByLogin(loginRequest.username!!)
-
-        if (userCandidate.isPresent) {
-            val user: User = userCandidate.get()
+        userRepository.findByLogin(loginRequest.username!!)?.let { user ->
             val authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password)
             )
             SecurityContextHolder.getContext().authentication = authentication
+
             val jwt: String = jwtProvider.generateJwtToken(user.login)
             val authorities: List<GrantedAuthority> =
                 user.roles!!.stream()
                     .map { role -> SimpleGrantedAuthority(role.name) }
                     .collect(Collectors.toList<GrantedAuthority>())
+
             return ResponseEntity.ok(JwtResponse(jwt, user.login, authorities))
-        } else {
-            return ResponseEntity(
-                ResponseMessage("User not found!"),
-                HttpStatus.BAD_REQUEST
-            )
-        }
+        } ?: return ResponseEntity(
+            ResponseMessage("User not found!"),
+            HttpStatus.BAD_REQUEST
+        )
     }
 
     @PostMapping("/signup")
     fun registerUser(@Valid @RequestBody newUser: NewUser): ResponseEntity<*> {
 
-        val userCandidate: Optional<User> = userRepository.findByLogin(newUser.username!!)
-
-        if (!userCandidate.isPresent) {
+        userRepository.findByLogin(newUser.username!!)?.let {
+            return ResponseEntity(
+                ResponseMessage("User already exists!"),
+                HttpStatus.BAD_REQUEST
+            )
+        } ?: run {
             if (usernameExists(newUser.username!!)) {
                 return ResponseEntity(
                     ResponseMessage("Username is already taken!"),
@@ -103,19 +103,14 @@ class AuthController {
             userRepository.save(user)
 
             return ResponseEntity(ResponseMessage("User registered successfully!"), HttpStatus.OK)
-        } else {
-            return ResponseEntity(
-                ResponseMessage("User already exists!"),
-                HttpStatus.BAD_REQUEST
-            )
         }
     }
 
     private fun emailExists(email: String): Boolean {
-        return userRepository.findByLogin(email).isPresent
+        return userRepository.findByLogin(email) != null
     }
 
     private fun usernameExists(username: String): Boolean {
-        return userRepository.findByLogin(username).isPresent
+        return userRepository.findByLogin(username) != null
     }
 }
