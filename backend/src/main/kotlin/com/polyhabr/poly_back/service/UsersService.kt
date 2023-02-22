@@ -1,20 +1,20 @@
 package com.polyhabr.poly_back.service
 
 import com.polyhabr.poly_back.controller.model.user.request.UserRequest
+import com.polyhabr.poly_back.controller.model.user.request.UserUpdateRequest
 import com.polyhabr.poly_back.dto.UserDto
 import org.springframework.data.domain.Page
 
 interface UsersService {
     fun getAll(offset: Int, size: Int): Page<UserDto>
 
-    fun getById(id: Long): UserDto
+    fun getById(id: Long): UserDto?
 
     fun searchByName(prefix: String?, offset: Int, size: Int): Page<UserDto>
 
     fun create(userRequest: UserRequest): Long?
 
-    fun update(id: Long, userRequest: UserRequest): Boolean
+    fun update(userRequest: UserUpdateRequest): Pair<Boolean, String>
 
-    fun delete(id: Long)
-//    abstract fun <Users> Users(id: Long, email: String, login: String, name: String, password: String, surname: String): Users
+    fun delete(): Pair<Boolean, String>
 }
