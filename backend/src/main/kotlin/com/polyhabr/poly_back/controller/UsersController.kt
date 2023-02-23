@@ -1,6 +1,6 @@
 package com.polyhabr.poly_back.controller
 
-import com.polyhabr.poly_back.controller.model.user.request.UserRequest
+import com.polyhabr.poly_back.controller.model.user.request.UserUpdateRequest
 import com.polyhabr.poly_back.controller.model.user.response.*
 import com.polyhabr.poly_back.service.UsersService
 import io.swagger.v3.oas.annotations.Operation
@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
@@ -20,6 +22,7 @@ import javax.validation.constraints.PositiveOrZero
 @RestController
 @Validated
 @RequestMapping("/users")
+@CrossOrigin(origins = ["*"], maxAge = 3600)
 class UsersController(
     private val usersService: UsersService,
 ) {
@@ -44,9 +47,11 @@ class UsersController(
         ]
     )
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+        principal: Principal
     ): ResponseEntity<UserListResponse> {
         val rawResponse = usersService
             .getAll(
@@ -63,7 +68,7 @@ class UsersController(
                 responseCode = "200", description = "User", content = [
                     Content(
                         mediaType = "application/json",
-                        schema = Schema(implementation = UserResponse::class)
+                        schema = Schema(implementation = UserMeResponse::class)
                     )
                 ]
             ),
@@ -71,13 +76,16 @@ class UsersController(
         ]
     )
     @GetMapping("/byId")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getById(
         @Positive @RequestParam("id") id: Long
-    ): ResponseEntity<UserResponse> {
+    ): ResponseEntity<UserOtherResponse>? {
         val response = usersService
             .getById(id)
-            .toResponse()
-        return ResponseEntity.ok(response)
+            ?.toOtherResponse()
+        return response?.let {
+            ResponseEntity.ok(it)
+        } ?: ResponseEntity.badRequest().build()
     }
 
     @Operation(summary = "Search users by prefix")
@@ -95,6 +103,7 @@ class UsersController(
         ]
     )
     @GetMapping("/search")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun searchUsersByName(
         @Schema(example = "Alex") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
@@ -103,30 +112,6 @@ class UsersController(
         val rawResponse = usersService
             .searchByName(prefix, offset, size)
         return ResponseEntity.ok(rawResponse.toListResponse())
-    }
-
-    @Operation(summary = "User create")
-    @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200", description = "UserCreateResponse", content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = UserCreateResponse::class)
-                    )
-                ]
-            ),
-            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
-        ]
-    )
-    @PostMapping("/create")
-    fun create(
-        @Valid @RequestBody userRequest: UserRequest
-    ): ResponseEntity<UserCreateResponse> {
-        val id = usersService.create(userRequest)
-        val success = id != null
-        val response = UserCreateResponse(id = id, isSuccess = success)
-        return ResponseEntity.ok(response)
     }
 
     @Operation(summary = "Update user by id")
@@ -144,12 +129,12 @@ class UsersController(
         ]
     )
     @PutMapping("/update")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun update(
-        @Positive @RequestParam("id") id: Long,
-        @Valid @RequestBody userRequest: UserRequest
+        @Valid @RequestBody userRequest: UserUpdateRequest,
     ): ResponseEntity<UserUpdateResponse> {
-        val success = usersService.update(id, userRequest)
-        val response = UserUpdateResponse(success)
+        val (success, message) = usersService.update(userRequest)
+        val response = UserUpdateResponse(success, message)
         return ResponseEntity.ok(response)
     }
 
@@ -161,14 +146,13 @@ class UsersController(
         ]
     )
     @DeleteMapping("/delete")
-    fun delete(
-        @Positive @RequestParam(value = "id") id: Long
-    ): ResponseEntity<Unit> {
-        return try {
-            usersService.delete(id)
-            ResponseEntity.ok().build()
-        } catch (e: Exception) {
-            ResponseEntity.badRequest().build()
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    fun delete(): ResponseEntity<String> {
+        val (success, message) = usersService.delete()
+        return if (success) {
+            ResponseEntity.ok().body(message)
+        } else {
+            ResponseEntity.internalServerError().body(message)
         }
     }
 }

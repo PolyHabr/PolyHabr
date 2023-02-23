@@ -55,6 +55,11 @@ server:
 #  sql:
 #    init:
 #      platform: postgres
+assm:
+  app:
+    jwtSecret: jwtAssmSecretKey
+    jwtExpiration: 86400
+
 logging:
   level:
     org:
@@ -71,7 +76,9 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
         default_schema: public
-
+        jdbc:
+          lob:
+            non_contextual_creation: true
     hibernate:
       ddl-auto: create-drop
   datasource:
@@ -81,7 +88,11 @@ spring:
     driverClassName: org.postgresql.Driver
   sql:
     init:
-      platform: postgres
+      platform: postgres\
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
 
 
 

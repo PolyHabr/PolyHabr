@@ -2,6 +2,7 @@ package com.polyhabr.poly_back.entity
 
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import com.polyhabr.poly_back.entity.auth.User
 import javax.persistence.*
 import javax.validation.constraints.Size
 

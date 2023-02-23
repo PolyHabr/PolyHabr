@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page
 
 data class UserListResponse(
     @field:Schema(description = "List of users")
-    val contents: List<UserResponse>,
+    val contents: List<UserOtherResponse>,
     @field:Schema(description = "Total number of elements")
     val totalElements: Long,
     @field:Schema(description = "Total number of pages")
@@ -15,7 +15,7 @@ data class UserListResponse(
 
 fun Page<UserDto>.toListResponse(): UserListResponse {
     return UserListResponse(
-        contents = this.content.map { it.toResponse() },
+        contents = this.content.map { it.toOtherResponse() },
         totalElements = this.totalElements,
         totalPages = this.totalPages,
     )
