@@ -30,6 +30,9 @@ open class User(
     @Column(name = "enabled")
     var enabled: Boolean = false,
 
+    @Column(name = "verification_code", length = 64)
+    var verificationCode: String? = null,
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "users_roles",

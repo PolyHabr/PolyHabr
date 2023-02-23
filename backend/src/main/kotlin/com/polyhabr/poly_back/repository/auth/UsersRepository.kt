@@ -13,6 +13,9 @@ interface UsersRepository : JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.name LIKE %:pname%")
     fun findUsersByName(pageable: Pageable, @Param("pname") pname: String): Page<User>
 
+    @Query("SELECT u FROM User u WHERE u.verificationCode = ?1")
+    fun findByVerificationCode(code: String): User?
+
     fun existsByLogin(@Param("login") login: String): Boolean
 
     fun findByLogin(@Param("login") login: String): User?

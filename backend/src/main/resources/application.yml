@@ -66,6 +66,21 @@ logging:
       hibernate:
         type: trace
 spring:
+  mail:
+    host: smtp.mail.ru
+    port: 587
+    username: polyhabr@mail.ru
+    password: 13MrZBNdaf8MWHBs5Jkp
+    properties:
+      mail:
+        smtp:
+          ssl: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          auth: true
+          starttls:
+            enable: true
   jpa:
     defer-datasource-initialization: true
     database: POSTGRESQL

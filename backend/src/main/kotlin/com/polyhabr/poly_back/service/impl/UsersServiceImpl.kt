@@ -12,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.util.*
-import kotlin.RuntimeException
+import java.io.UnsupportedEncodingException
+import javax.mail.MessagingException
+
 
 @Service
 class UsersServiceImpl(
@@ -24,6 +27,9 @@ class UsersServiceImpl(
 
     @Autowired
     lateinit var encoder: PasswordEncoder
+
+    @Autowired
+    lateinit var mailSender: JavaMailSender
     override fun getAll(
         offset: Int,
         size: Int,
@@ -84,6 +90,40 @@ class UsersServiceImpl(
         } catch (e: Exception) {
             false to "Internal server error"
         }
+    }
+
+    @Throws(MessagingException::class, UnsupportedEncodingException::class)
+    override fun sendVerificationEmail(user: User, siteURL: String) {
+        val toAddress: String = user.email
+        val fromAddress = "polyhabr@mail.ru"
+        val senderName = "PolyHabr"
+        val subject = "Please verify your registration"
+        var content = ("Dear [[name]],<br>"
+                + "Please click the link below to verify your registration:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                + "Thank you,<br>"
+                + "Your company name.")
+        val message = mailSender.createMimeMessage()
+        val helper = MimeMessageHelper(message)
+        helper.setFrom(fromAddress, senderName)
+        helper.setTo(toAddress)
+        helper.setSubject(subject)
+        content = content.replace("[[name]]", user.name)
+        val verifyURL = siteURL + "/api/auth/verify?code=" + user.verificationCode
+        content = content.replace("[[URL]]", verifyURL)
+        helper.setText(content, true)
+        mailSender.send(message)
+    }
+
+    override fun verify(verificationCode: String): Boolean {
+        usersRepository.findByVerificationCode(verificationCode)
+            ?.takeIf { !it.enabled }
+            ?.let {
+                it.verificationCode = null
+                it.enabled = true
+                usersRepository.save(it)
+                return true
+            } ?: return false
     }
 
     private fun User.toDto() = UserDto(
