@@ -2,7 +2,7 @@ package com.polyhabr.poly_back.controller
 
 import com.polyhabr.poly_back.controller.model.article.response.ArticleListResponse
 import com.polyhabr.poly_back.controller.model.article.response.*
-import com.polyhabr.poly_back.controller.model.request.ArticleRequest
+import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
 import com.polyhabr.poly_back.service.ArticleService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content

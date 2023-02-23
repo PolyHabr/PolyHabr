@@ -2,7 +2,7 @@ package com.polyhabr.poly_back.controller.model.userToLikedArticle.response
 
 import com.polyhabr.poly_back.dto.UserToLikedArticleDto
 import com.polyhabr.poly_back.entity.Article
-import com.polyhabr.poly_back.entity.User
+import com.polyhabr.poly_back.entity.auth.User
 
 data class UserToLikedArticleResponse(
     val articleId: Article,

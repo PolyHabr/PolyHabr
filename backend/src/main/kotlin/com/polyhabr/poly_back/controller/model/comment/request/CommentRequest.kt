@@ -2,7 +2,7 @@ package com.polyhabr.poly_back.controller.model.comment.request
 
 import com.polyhabr.poly_back.dto.CommentDto
 import com.polyhabr.poly_back.entity.Article
-import com.polyhabr.poly_back.entity.User
+import com.polyhabr.poly_back.entity.auth.User
 import io.swagger.v3.oas.annotations.media.Schema
 import java.io.Serializable
 import javax.validation.constraints.NotNull

@@ -2,7 +2,7 @@ package com.polyhabr.poly_back.controller.model.article.response
 
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.entity.ArticleType
-import com.polyhabr.poly_back.entity.User
+import com.polyhabr.poly_back.entity.auth.User
 import java.time.LocalDate
 
 data class ArticleResponse(

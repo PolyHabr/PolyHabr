@@ -1,7 +1,7 @@
 package com.polyhabr.poly_back.service.impl
 
-import com.polyhabr.poly_back.controller.model.request.ArticleRequest
-import com.polyhabr.poly_back.controller.model.request.toDto
+import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
+import com.polyhabr.poly_back.controller.model.article.request.toDto
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.entity.Article
 import com.polyhabr.poly_back.repository.ArticleRepository

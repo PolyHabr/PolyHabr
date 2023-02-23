@@ -1,6 +1,6 @@
 package com.polyhabr.poly_back.service
 
-import com.polyhabr.poly_back.controller.model.request.ArticleRequest
+import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
 import com.polyhabr.poly_back.dto.ArticleDto
 import org.springframework.data.domain.Page
 

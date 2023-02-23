@@ -1,8 +1,8 @@
-package com.polyhabr.poly_back.controller.model.request
+package com.polyhabr.poly_back.controller.model.article.request
 
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.entity.ArticleType
-import com.polyhabr.poly_back.entity.User
+import com.polyhabr.poly_back.entity.auth.User
 import io.swagger.v3.oas.annotations.media.Schema
 import java.io.Serializable
 import java.time.LocalDate
