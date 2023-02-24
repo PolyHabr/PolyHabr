@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.query.Param
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
@@ -47,6 +48,8 @@ class AuthController {
     @Autowired
     lateinit var jwtProvider: JwtProvider
 
+    @Autowired
+    lateinit var mailSender: JavaMailSender
 
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {
@@ -113,6 +116,32 @@ class AuthController {
     @GetMapping("/verify")
     fun verifyUser(@Param("code") code: String): ResponseEntity<String> {
         return if (usersService.verify(code)) {
+            ResponseEntity.ok().build()
+        } else {
+            ResponseEntity.badRequest().build()
+        }
+    }
+
+    @PostMapping("/forgotPassword")
+    fun resetPassword(
+        @RequestParam("email") email: String,
+    ): ResponseEntity<String> {
+        usersService.sendResetPasswordEmail(email)
+        return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/changePassword")
+    fun verifyChangePassword(@Param("token") token: String): ResponseEntity<String> {
+        return if (usersService.validatePasswordResetToken(token)) {
+            ResponseEntity.ok().build()
+        } else {
+            ResponseEntity.badRequest().build()
+        }
+    }
+
+    @PutMapping("/savePassword")
+    fun verifyChangePassword(@Valid @RequestBody passwordChange: PasswordChange): ResponseEntity<String> {
+        return if (usersService.changeUserPassword(passwordChange)) {
             ResponseEntity.ok().build()
         } else {
             ResponseEntity.badRequest().build()

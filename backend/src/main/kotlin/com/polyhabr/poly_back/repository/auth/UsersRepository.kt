@@ -22,6 +22,8 @@ interface UsersRepository : JpaRepository<User, Long> {
 
     fun findByEmail(@Param("email") email: String): User?
 
+    fun findByResetToken(@Param("reset_token") resetToken: String): User?
+
     @Transactional
     fun deleteByLogin(@Param("login") login: String)
 }

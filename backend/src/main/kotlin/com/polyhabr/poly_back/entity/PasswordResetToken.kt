@@ -9,16 +9,16 @@ import javax.persistence.OneToOne
 
 
 @Entity
-open class PasswordResetToken : BaseEntity<Long>() {
-    companion object {
-        private const val EXPIRATION = 60 * 24
-    }
-
-    private var token: String? = null
+open class PasswordResetToken(
+    open var token: String? = null,
 
     @OneToOne(targetEntity = User::class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
-    private var user: User? = null
+    open var user: User? = null,
 
-    private var expiryDate: Date? = null
+    open var expiryDate: Date? = null
+) : BaseEntity<Long>() {
+    companion object {
+        const val FIVE_MIN_EXPIRATION_IN_MILIS = 5 * 60 * 1000
+    }
 }
