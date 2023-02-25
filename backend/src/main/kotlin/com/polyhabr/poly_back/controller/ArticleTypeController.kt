@@ -84,7 +84,7 @@ class ArticleTypeController(
             .toResponse()
         return response.let {
             ResponseEntity.ok(response)
-        }?: ResponseEntity.badRequest().build()
+        }
     }
 
     @Operation(summary = "Search article types by prefix")
@@ -128,7 +128,7 @@ class ArticleTypeController(
         ]
     )
     @PostMapping("/create")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody articleTypeRequest: ArticleTypeRequest
     ): ResponseEntity<ArticleTypeCreateResponse> {
@@ -153,7 +153,7 @@ class ArticleTypeController(
         ]
     )
     @PutMapping("/update")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     fun update(
         @Positive @RequestParam("id") id: Long,
         @Valid @RequestBody articleTypeRequest: ArticleTypeRequest
@@ -171,7 +171,7 @@ class ArticleTypeController(
         ]
     )
     @DeleteMapping("/delete")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     fun delete(
         @Positive @RequestParam(value = "id") id: Long
     ): ResponseEntity<String> {

@@ -52,30 +52,6 @@ class CommentServiceImpl(
 
 
     override fun create(commentRequest: CommentRequest): Long? {
-//        usersRepository.findByLogin(currentLogin())?.let { currentUser ->
-//            commentRequest.articleId?.let {
-//                articleRepository.findByIdOrNull(it)?.let { currentArticle ->
-//                    return commentRepository.save(
-//                        commentRequest
-//                            .toDtoWithoutUser()
-//                            .apply {
-//                                articleId = currentArticle
-//                                userId = currentUser
-//                            }
-//                            .toEntity()
-//                    ).id
-//                } ?: throw RuntimeException("Article not found")
-//            } ?: run {
-//                return commentRepository.save(
-//                    commentRequest
-//                        .toDtoWithoutUser()
-//                        .apply {
-//                            userId = currentUser
-//                        }
-//                        .toEntity()
-//                ).id
-//            }
-//        }
         usersRepository.findByLogin(currentLogin())?.let { currentUser ->
             commentRequest.articleId?.let {
                 articleRepository.findByIdOrNull(it)?.let { currentArticle ->
@@ -103,39 +79,30 @@ class CommentServiceImpl(
     }
 
     override fun update(id: Long, commentRequest: CommentRequest): Pair<Boolean, String> {
-        commentRepository.findByIdOrNull(id)?.let { currentCommentType ->
-            currentCommentType.apply {
-                commentRequest.text?.let { text = it }
-            }
-            return commentRepository.save(currentCommentType).id?.let { true to "Ok" }
-                ?: (false to "Error while update")
-        } ?: return false to "Comment not found"
-
-
-//        val existingComment = commentRepository.findByIdOrNull(id)
-//            ?: throw RuntimeException("User not found")
-//        existingComment.text = commentRequest.text ?: throw RuntimeException("text not found")
-//
-//        return commentRepository.save(existingComment).id?.let { true } ?: false
+        usersRepository.findByLogin(currentLogin())?.let { _ ->
+            commentRepository.findByIdOrNull(id)?.let { currentCommentType ->
+                currentCommentType.apply {
+                    commentRequest.text?.let { text = it }
+                }
+                return commentRepository.save(currentCommentType).id?.let { true to "Ok" }
+                    ?: (false to "Error while update")
+            } ?: return false to "Comment not found"
+        } ?: throw RuntimeException("User not found")
     }
 
     override fun delete(id: Long): Pair<Boolean, String> {
         return try {
-            commentRepository.findByIdOrNull(id)?.let { currentCommentType ->
-                currentCommentType.id?.let { id ->
-                    commentRepository.deleteById(id)
-                    true to "Comment deleted"
-                } ?: (false to "Comment id not found")
-            } ?: (false to "Comment not found")
+            usersRepository.findByLogin(currentLogin())?.let { _ ->
+                commentRepository.findByIdOrNull(id)?.let { currentCommentType ->
+                    currentCommentType.id?.let { id ->
+                        commentRepository.deleteById(id)
+                        true to "Comment deleted"
+                    } ?: (false to "Comment id not found")
+                } ?: (false to "Comment not found")
+            } ?: (false to "User not found")
         } catch (e: Exception) {
             false to "Internal server error"
         }
-
-
-//        val existingComment = commentRepository.findByIdOrNull(id)
-//            ?: throw RuntimeException("Comment not found")
-//        val existedId = existingComment.id ?: throw RuntimeException("id not found")
-//        commentRepository.deleteById(existedId)
     }
 
     private fun Comment.toDto(): CommentDto =

@@ -127,7 +127,7 @@ class DisciplineTypeController(
         ]
     )
     @PostMapping("/create")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody disciplineTypeRequest: DisciplineTypeRequest
     ): ResponseEntity<DisciplineTypeCreateResponse> {
@@ -152,7 +152,7 @@ class DisciplineTypeController(
         ]
     )
     @PutMapping("/update")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     fun update(
         @Positive @RequestParam("id") id: Long,
         @Valid @RequestBody disciplineTypeRequest: DisciplineTypeRequest
@@ -170,6 +170,7 @@ class DisciplineTypeController(
         ]
     )
     @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('ADMIN')")
     fun delete(
         @Positive @RequestParam(value = "id") id: Long
     ): ResponseEntity<Unit> {

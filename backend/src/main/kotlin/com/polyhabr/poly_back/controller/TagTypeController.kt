@@ -83,7 +83,7 @@ class TagTypeController(
             .toResponse()
         return response.let {
             ResponseEntity.ok(response)
-        }?: ResponseEntity.badRequest().build()
+        }
     }
 
     @Operation(summary = "Search tag types by prefix")
@@ -127,7 +127,7 @@ class TagTypeController(
         ]
     )
     @PostMapping("/create")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody tagTypeRequest: TagTypeRequest
     ): ResponseEntity<TagTypeCreateResponse> {
@@ -152,7 +152,7 @@ class TagTypeController(
         ]
     )
     @PutMapping("/update")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     fun update(
         @Positive @RequestParam("id") id: Long,
         @Valid @RequestBody tagTypeRequest: TagTypeRequest
@@ -170,7 +170,7 @@ class TagTypeController(
         ]
     )
     @DeleteMapping("/delete")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     fun delete(
         @Positive @RequestParam(value = "id") id: Long
     ): ResponseEntity<String> {
