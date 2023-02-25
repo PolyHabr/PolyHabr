@@ -4,25 +4,25 @@ import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.jwt.JwtProvider
 import com.polyhabr.poly_back.repository.auth.RoleRepository
 import com.polyhabr.poly_back.repository.auth.UsersRepository
-import javax.validation.Valid
-import java.util.*
-import java.util.stream.Collectors
-
+import com.polyhabr.poly_back.service.UsersService
+import net.bytebuddy.utility.RandomString
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.query.Param
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.util.*
+import java.util.stream.Collectors
+import javax.validation.Valid
+
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
 @RestController
@@ -37,6 +37,9 @@ class AuthController {
     lateinit var userRepository: UsersRepository
 
     @Autowired
+    lateinit var usersService: UsersService
+
+    @Autowired
     lateinit var roleRepository: RoleRepository
 
     @Autowired
@@ -45,6 +48,8 @@ class AuthController {
     @Autowired
     lateinit var jwtProvider: JwtProvider
 
+    @Autowired
+    lateinit var mailSender: JavaMailSender
 
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {
@@ -70,7 +75,6 @@ class AuthController {
 
     @PostMapping("/signup")
     fun registerUser(@Valid @RequestBody newUser: NewUser): ResponseEntity<*> {
-
         userRepository.findByLogin(newUser.username!!)?.let {
             return ResponseEntity(
                 ResponseMessage("User already exists!"),
@@ -96,13 +100,51 @@ class AuthController {
                 surname = newUser.lastName!!,
                 email = newUser.email!!,
                 password = encoder.encode(newUser.password),
-                enabled = true
+                enabled = false,
+                verificationCode = RandomString.make(64)
             )
             user.roles = listOf(roleRepository.findByName("ROLE_USER"))
 
-            userRepository.save(user)
+            val savedUser = userRepository.save(user)
+
+            usersService.sendVerificationEmail(savedUser)
 
             return ResponseEntity(ResponseMessage("User registered successfully!"), HttpStatus.OK)
+        }
+    }
+
+    @GetMapping("/verify")
+    fun verifyUser(@Param("code") code: String): ResponseEntity<String> {
+        return if (usersService.verify(code)) {
+            ResponseEntity.ok().build()
+        } else {
+            ResponseEntity.badRequest().build()
+        }
+    }
+
+    @PostMapping("/forgotPassword")
+    fun resetPassword(
+        @RequestParam("email") email: String,
+    ): ResponseEntity<String> {
+        usersService.sendResetPasswordEmail(email)
+        return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/changePassword")
+    fun verifyChangePassword(@Param("token") token: String): ResponseEntity<String> {
+        return if (usersService.validatePasswordResetToken(token)) {
+            ResponseEntity.ok().build()
+        } else {
+            ResponseEntity.badRequest().build()
+        }
+    }
+
+    @PutMapping("/savePassword")
+    fun verifyChangePassword(@Valid @RequestBody passwordChange: PasswordChange): ResponseEntity<String> {
+        return if (usersService.changeUserPassword(passwordChange)) {
+            ResponseEntity.ok().build()
+        } else {
+            ResponseEntity.badRequest().build()
         }
     }
 

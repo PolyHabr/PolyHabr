@@ -30,11 +30,17 @@ open class User(
     @Column(name = "enabled")
     var enabled: Boolean = false,
 
+    @Column(name = "verification_code", length = 64)
+    var verificationCode: String? = null,
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "users_roles",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
-    var roles: Collection<Role>? = null
+    var roles: Collection<Role>? = null,
+
+    @Column(name = "reset_token")
+    var resetToken: String? = null,
 ) : BaseEntity<Long>()

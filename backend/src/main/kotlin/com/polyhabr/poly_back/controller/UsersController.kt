@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import java.security.Principal
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
@@ -51,7 +50,6 @@ class UsersController(
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-        principal: Principal
     ): ResponseEntity<UserListResponse> {
         val rawResponse = usersService
             .getAll(
