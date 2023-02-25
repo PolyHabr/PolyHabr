@@ -13,8 +13,8 @@ interface CommentService {
 
     fun create(commentRequest: CommentRequest): Long?
 
-    fun update(id: Long, commentRequest: CommentRequest): Boolean
+    fun update(id: Long, commentRequest: CommentRequest): Pair<Boolean, String>
 
-    fun delete(id: Long)
+    fun delete(id: Long): Pair<Boolean, String>
 
 }

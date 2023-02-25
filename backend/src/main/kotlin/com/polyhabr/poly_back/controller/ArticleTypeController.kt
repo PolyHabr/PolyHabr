@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
@@ -44,9 +46,11 @@ class ArticleTypeController(
         ]
     )
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+        principal: Principal
     ): ResponseEntity<ArticleTypeListResponse> {
         val rawResponse = articleTypeService
             .getAll(
@@ -71,13 +75,16 @@ class ArticleTypeController(
         ]
     )
     @GetMapping("/byId")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getById(
         @Positive @RequestParam("id") id: Long
     ): ResponseEntity<ArticleTypeResponse> {
         val response = articleTypeService
             .getById(id)
             .toResponse()
-        return ResponseEntity.ok(response)
+        return response.let {
+            ResponseEntity.ok(response)
+        }?: ResponseEntity.badRequest().build()
     }
 
     @Operation(summary = "Search article types by prefix")
@@ -95,6 +102,7 @@ class ArticleTypeController(
         ]
     )
     @GetMapping("/search")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun searchArticleTypesByName(
         @Schema(example = "physics") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
@@ -120,6 +128,7 @@ class ArticleTypeController(
         ]
     )
     @PostMapping("/create")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody articleTypeRequest: ArticleTypeRequest
     ): ResponseEntity<ArticleTypeCreateResponse> {
@@ -144,12 +153,13 @@ class ArticleTypeController(
         ]
     )
     @PutMapping("/update")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun update(
         @Positive @RequestParam("id") id: Long,
         @Valid @RequestBody articleTypeRequest: ArticleTypeRequest
     ): ResponseEntity<ArticleTypeUpdateResponse> {
-        val success = articleTypeService.update(id, articleTypeRequest)
-        val response = ArticleTypeUpdateResponse(success)
+        val (success, message) = articleTypeService.update(id, articleTypeRequest)
+        val response = ArticleTypeUpdateResponse(success, message)
         return ResponseEntity.ok(response)
     }
 
@@ -161,14 +171,15 @@ class ArticleTypeController(
         ]
     )
     @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun delete(
         @Positive @RequestParam(value = "id") id: Long
-    ): ResponseEntity<Unit> {
-        return try {
-            articleTypeService.delete(id)
-            ResponseEntity.ok().build()
-        } catch (e: Exception) {
-            ResponseEntity.badRequest().build()
+    ): ResponseEntity<String> {
+        val (success, message) = articleTypeService.delete(id)
+        return if (success) {
+            ResponseEntity.ok().body(message)
+        } else {
+            ResponseEntity.internalServerError().body(message)
         }
     }
 }

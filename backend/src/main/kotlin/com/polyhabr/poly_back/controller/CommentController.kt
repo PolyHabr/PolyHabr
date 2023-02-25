@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
@@ -45,9 +47,11 @@ class CommentController(
         ]
     )
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+        principal: Principal
     ): ResponseEntity<CommentListResponse> {
         val rawResponse = commentService
             .getAll(
@@ -72,13 +76,16 @@ class CommentController(
         ]
     )
     @GetMapping("/byId")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getById(
         @Positive @RequestParam("id") id: Long
     ): ResponseEntity<CommentResponse> {
         val response = commentService
             .getById(id)
             .toResponse()
-        return ResponseEntity.ok(response)
+        return response.let {
+            ResponseEntity.ok(response)
+        }?: ResponseEntity.badRequest().build()
     }
 
     @Operation(summary = "Search comments by prefix")
@@ -96,6 +103,7 @@ class CommentController(
         ]
     )
     @GetMapping("/search")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun searchCommentsByName(
         @Schema(example = "Nice") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
@@ -121,6 +129,7 @@ class CommentController(
         ]
     )
     @PostMapping("/create")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody commentRequest: CommentRequest
     ): ResponseEntity<CommentCreateResponse> {
@@ -145,12 +154,13 @@ class CommentController(
         ]
     )
     @PutMapping("/update")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun update(
         @Positive @RequestParam("id") id: Long,
         @Valid @RequestBody commentRequest: CommentRequest
     ): ResponseEntity<CommentUpdateResponse> {
-        val success = commentService.update(id, commentRequest)
-        val response = CommentUpdateResponse(success)
+        val (success, message) = commentService.update(id, commentRequest)
+        val response = CommentUpdateResponse(success, message)
         return ResponseEntity.ok(response)
     }
 
@@ -162,14 +172,15 @@ class CommentController(
         ]
     )
     @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun delete(
         @Positive @RequestParam(value = "id") id: Long
-    ): ResponseEntity<Unit> {
-        return try {
-            commentService.delete(id)
-            ResponseEntity.ok().build()
-        } catch (e: Exception) {
-            ResponseEntity.badRequest().build()
+    ): ResponseEntity<String> {
+        val (success, message) = commentService.delete(id)
+        return if (success) {
+            ResponseEntity.ok().body(message)
+        } else {
+            ResponseEntity.internalServerError().body(message)
         }
     }
 }

@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
@@ -20,7 +22,7 @@ import javax.validation.constraints.PositiveOrZero
 @RestController
 @Validated
 @RequestMapping("/discipline_type")
-class DisciplineTypeContrroller(
+class DisciplineTypeController(
     private val disciplineTypeService: DisciplineTypeService,
 ) {
     @ExceptionHandler(ConstraintViolationException::class)
@@ -43,9 +45,11 @@ class DisciplineTypeContrroller(
         ]
     )
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+        principal: Principal
     ): ResponseEntity<DisciplineTypeListResponse> {
         val rawResponse = disciplineTypeService
             .getAll(
@@ -70,13 +74,16 @@ class DisciplineTypeContrroller(
         ]
     )
     @GetMapping("/byId")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getById(
         @Positive @RequestParam("id") id: Long
     ): ResponseEntity<DisciplineTypeResponse> {
         val response = disciplineTypeService
             .getById(id)
             .toResponse()
-        return ResponseEntity.ok(response)
+        return response.let {
+            ResponseEntity.ok(response)
+        }?: ResponseEntity.badRequest().build()
     }
 
     @Operation(summary = "Search discipline types by prefix")
@@ -94,6 +101,7 @@ class DisciplineTypeContrroller(
         ]
     )
     @GetMapping("/search")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun searchDisciplineTypesByName(
         @Schema(example = "physics") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
@@ -119,6 +127,7 @@ class DisciplineTypeContrroller(
         ]
     )
     @PostMapping("/create")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody disciplineTypeRequest: DisciplineTypeRequest
     ): ResponseEntity<DisciplineTypeCreateResponse> {
@@ -143,12 +152,13 @@ class DisciplineTypeContrroller(
         ]
     )
     @PutMapping("/update")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun update(
         @Positive @RequestParam("id") id: Long,
         @Valid @RequestBody disciplineTypeRequest: DisciplineTypeRequest
     ): ResponseEntity<DisciplineTypeUpdateResponse> {
-        val success = disciplineTypeService.update(id, disciplineTypeRequest)
-        val response = DisciplineTypeUpdateResponse(success)
+        val (success, message) = disciplineTypeService.update(id, disciplineTypeRequest)
+        val response = DisciplineTypeUpdateResponse(success, message)
         return ResponseEntity.ok(response)
     }
 

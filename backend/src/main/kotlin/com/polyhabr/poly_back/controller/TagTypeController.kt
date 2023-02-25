@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
@@ -43,9 +45,11 @@ class TagTypeController(
         ]
     )
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+        principal: Principal
     ): ResponseEntity<TagTypeListResponse> {
         val rawResponse = tagTypeService
             .getAll(
@@ -70,13 +74,16 @@ class TagTypeController(
         ]
     )
     @GetMapping("/byId")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getById(
         @Positive @RequestParam("id") id: Long
     ): ResponseEntity<TagTypeResponse> {
         val response = tagTypeService
             .getById(id)
             .toResponse()
-        return ResponseEntity.ok(response)
+        return response.let {
+            ResponseEntity.ok(response)
+        }?: ResponseEntity.badRequest().build()
     }
 
     @Operation(summary = "Search tag types by prefix")
@@ -94,6 +101,7 @@ class TagTypeController(
         ]
     )
     @GetMapping("/search")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun searchTagTypesByName(
         @Schema(example = "physics") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
@@ -119,6 +127,7 @@ class TagTypeController(
         ]
     )
     @PostMapping("/create")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody tagTypeRequest: TagTypeRequest
     ): ResponseEntity<TagTypeCreateResponse> {
@@ -143,12 +152,13 @@ class TagTypeController(
         ]
     )
     @PutMapping("/update")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun update(
         @Positive @RequestParam("id") id: Long,
         @Valid @RequestBody tagTypeRequest: TagTypeRequest
     ): ResponseEntity<TagTypeUpdateResponse> {
-        val success = tagTypeService.update(id, tagTypeRequest)
-        val response = TagTypeUpdateResponse(success)
+        val (success, message) = tagTypeService.update(id, tagTypeRequest)
+        val response = TagTypeUpdateResponse(success, message)
         return ResponseEntity.ok(response)
     }
 
@@ -160,14 +170,15 @@ class TagTypeController(
         ]
     )
     @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun delete(
         @Positive @RequestParam(value = "id") id: Long
-    ): ResponseEntity<Unit> {
-        return try {
-            tagTypeService.delete(id)
-            ResponseEntity.ok().build()
-        } catch (e: Exception) {
-            ResponseEntity.badRequest().build()
+    ): ResponseEntity<String> {
+        val (success, message) = tagTypeService.delete(id)
+        return if (success) {
+            ResponseEntity.ok().body(message)
+        } else {
+            ResponseEntity.internalServerError().body(message)
         }
     }
 }

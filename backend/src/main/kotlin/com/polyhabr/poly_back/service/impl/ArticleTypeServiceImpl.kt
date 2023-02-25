@@ -50,19 +50,40 @@ class ArticleTypeServiceImpl(
         ).id
     }
 
-    override fun update(id: Long, articleTypeRequest: ArticleTypeRequest): Boolean {
-        val existingArticleType = articleTypeRepository.findByIdOrNull(id)
-            ?: throw RuntimeException("Article type not found")
-        existingArticleType.name = articleTypeRequest.name ?: throw RuntimeException("name not found")
+    override fun update(id: Long, articleTypeRequest: ArticleTypeRequest): Pair<Boolean, String> {
+        articleTypeRepository.findByIdOrNull(id)?.let { currentArticleType ->
+            currentArticleType.apply {
+                articleTypeRequest.name?.let { name = it }
+            }
+            return articleTypeRepository.save(currentArticleType).id?.let { true to "Ok" } ?: (false to "Error while update")
+        }?: return false to "Article type not found"
 
-        return articleTypeRepository.save(existingArticleType).id?.let { true } ?: false
+//        val existingArticleType = articleTypeRepository.findByIdOrNull(id)
+//            ?: throw RuntimeException("Article type not found")
+//        existingArticleType.name = articleTypeRequest.name ?: throw RuntimeException("name not found")
+//
+//        return articleTypeRepository.save(existingArticleType).id?.let { true } ?: false
     }
 
-    override fun delete(id: Long) {
-        val existingArticleType = articleTypeRepository.findByIdOrNull(id)
-            ?: throw RuntimeException("Article type not found")
-        val existedId = existingArticleType.id ?: throw RuntimeException("id not found")
-        articleTypeRepository.deleteById(existedId)
+    override fun delete(id: Long): Pair<Boolean, String> {
+        return try {
+            articleTypeRepository.findByIdOrNull(id)?.let { currentArticleType ->
+                currentArticleType.id?.let { id ->
+                    articleTypeRepository.deleteById(id)
+                    true to "Article type deleted"
+                }?: (false to "Article type id not found")
+            }?: (false to "Article type not found")
+        }
+        catch (e:Exception){
+            false to "Internal server error"
+        }
+
+
+
+//        val existingArticleType = articleTypeRepository.findByIdOrNull(id)
+//            ?: throw RuntimeException("Article type not found")
+//        val existedId = existingArticleType.id ?: throw RuntimeException("id not found")
+//        articleTypeRepository.deleteById(existedId)
     }
 
     private fun ArticleType.toDto(): ArticleTypeDto =

@@ -50,19 +50,39 @@ class TagTypeServiceImpl(
         ).id
     }
 
-    override fun update(id: Long, tagTypeRequest: TagTypeRequest): Boolean {
-        val existingTagType = tagTypeRepository.findByIdOrNull(id)
-            ?: throw RuntimeException("Tag type not found")
-        existingTagType.name = tagTypeRequest.name ?: throw RuntimeException("name not found")
+    override fun update(id: Long, tagTypeRequest: TagTypeRequest): Pair<Boolean, String> {
+        tagTypeRepository.findByIdOrNull(id)?.let { currentTagType ->
+            currentTagType.apply {
+                tagTypeRequest.name?.let { name = it }
+            }
+            return tagTypeRepository.save(currentTagType).id?.let { true to "Ok" } ?: (false to "Error while update")
+        } ?: return false to "Tag type not found"
 
-        return tagTypeRepository.save(existingTagType).id?.let { true } ?: false
+
+//        val existingTagType = tagTypeRepository.findByIdOrNull(id)
+//            ?: throw RuntimeException("Tag type not found")
+//        existingTagType.name = tagTypeRequest.name ?: throw RuntimeException("name not found")
+//
+//        return tagTypeRepository.save(existingTagType).id?.let { true } ?: false
     }
 
-    override fun delete(id: Long) {
-        val existingTagType = tagTypeRepository.findByIdOrNull(id)
-            ?: throw RuntimeException("Tag type not found")
-        val existedId = existingTagType.id ?: throw RuntimeException("id not found")
-        tagTypeRepository.deleteById(existedId)
+    override fun delete(id: Long): Pair<Boolean, String> {
+        return try {
+            tagTypeRepository.findByIdOrNull(id)?.let { currentTagType ->
+                currentTagType.id?.let { id ->
+                    tagTypeRepository.deleteById(id)
+                    true to "Tag type deleted"
+                } ?: (false to "Tag type id not found")
+            } ?: (false to "Tag type not found")
+        } catch (e: Exception) {
+            false to "Internal server error"
+        }
+
+
+//        val existingTagType = tagTypeRepository.findByIdOrNull(id)
+//            ?: throw RuntimeException("Tag type not found")
+//        val existedId = existingTagType.id ?: throw RuntimeException("id not found")
+//        tagTypeRepository.deleteById(existedId)
     }
 
     private fun TagType.toDto(): TagTypeDto =

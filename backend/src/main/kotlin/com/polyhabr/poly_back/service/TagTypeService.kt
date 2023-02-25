@@ -13,8 +13,8 @@ interface TagTypeService {
 
     fun create(tagTypeRequest: TagTypeRequest): Long?
 
-    fun update(id: Long, tagTypeRequest: TagTypeRequest): Boolean
+    fun update(id: Long, tagTypeRequest: TagTypeRequest): Pair<Boolean, String>
 
-    fun delete(id: Long)
+    fun delete(id: Long): Pair<Boolean, String>
 
 }

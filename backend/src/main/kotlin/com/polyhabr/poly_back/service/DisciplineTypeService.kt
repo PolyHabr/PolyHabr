@@ -13,8 +13,8 @@ interface DisciplineTypeService {
 
     fun create(disciplineTypeRequest: DisciplineTypeRequest): Long?
 
-    fun update(id: Long, disciplineTypeRequest: DisciplineTypeRequest): Boolean
+    fun update(id: Long, disciplineTypeRequest: DisciplineTypeRequest): Pair<Boolean, String>
 
-    fun delete(id: Long)
+    fun delete(id: Long): Pair<Boolean, String>
 
 }

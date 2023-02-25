@@ -50,19 +50,39 @@ class DisciplineTypeServiceImpl(
         ).id
     }
 
-    override fun update(id: Long, disciplineTypeRequest: DisciplineTypeRequest): Boolean {
-        val existingDisciplineType = disciplineTypeRepository.findByIdOrNull(id)
-            ?: throw RuntimeException("Discipline type not found")
-        existingDisciplineType.name = disciplineTypeRequest.name ?: throw RuntimeException("name not found")
+    override fun update(id: Long, disciplineTypeRequest: DisciplineTypeRequest): Pair<Boolean, String> {
+        disciplineTypeRepository.findByIdOrNull(id)?.let { currentDisciplineType ->
+            currentDisciplineType.apply {
+                disciplineTypeRequest.name?.let { name = it }
+            }
+            return disciplineTypeRepository.save(currentDisciplineType).id?.let { true to "Ok" } ?: (false to "Error while update")
+        }?: return false to "Discipline type not found"
 
-        return disciplineTypeRepository.save(existingDisciplineType).id?.let { true } ?: false
+//        val existingDisciplineType = disciplineTypeRepository.findByIdOrNull(id)
+//            ?: throw RuntimeException("Discipline type not found")
+//        existingDisciplineType.name = disciplineTypeRequest.name ?: throw RuntimeException("name not found")
+//
+//        return disciplineTypeRepository.save(existingDisciplineType).id?.let { true } ?: false
     }
 
-    override fun delete(id: Long) {
-        val existingDisciplineType = disciplineTypeRepository.findByIdOrNull(id)
-            ?: throw RuntimeException("Discipline type not found")
-        val existedId = existingDisciplineType.id ?: throw RuntimeException("id not found")
-        disciplineTypeRepository.deleteById(existedId)
+    override fun delete(id: Long): Pair<Boolean, String> {
+        return try {
+            disciplineTypeRepository.findByIdOrNull(id)?.let { currentDisciplineType ->
+                currentDisciplineType.id?.let { id ->
+                    disciplineTypeRepository.deleteById(id)
+                    true to "Discipline type deleted"
+                }?: (false to "Discipline type id not found")
+            }?: (false to "Discipline type not found")
+        }
+        catch (e:Exception){
+            false to "Internal server error"
+        }
+
+
+//        val existingDisciplineType = disciplineTypeRepository.findByIdOrNull(id)
+//            ?: throw RuntimeException("Discipline type not found")
+//        val existedId = existingDisciplineType.id ?: throw RuntimeException("id not found")
+//        disciplineTypeRepository.deleteById(existedId)
     }
 
     private fun DisciplineType.toDto(): DisciplineTypeDto =
