@@ -11,5 +11,5 @@ interface ArticleTypeRepository: JpaRepository<ArticleType, Long>{
     @Query("SELECT at FROM ArticleType at WHERE at.name LIKE %:pname%")
     fun findArticleTypesByName(pageable: Pageable, @Param("pname") pname: String): Page<ArticleType>
 
-    fun findArticleTypeById (@Param("id") id: ArticleType?): ArticleType?
+    fun findByName(@Param("name") name: String): ArticleType?
 }

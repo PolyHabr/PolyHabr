@@ -36,16 +36,8 @@ data class ArticleRequest(
 
     @field:Schema(example = "type id")
     @field:NotNull
-    val typeId: ArticleType? = null,
+    val type: String? = null,
 ): Serializable
-
-fun ArticleRequest.toDto() = ArticleDto(
-    date = this.date!!,
-    filePdf = this.filePdf!!,
-    likes = this.likes!!,
-    previewText = this.previewText!!,
-    typeId = this.typeId!!,
-)
 
 fun ArticleRequest.toDtoWithoutType(): ArticleDto =
     ArticleDto(

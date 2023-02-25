@@ -1,7 +1,6 @@
 package com.polyhabr.poly_back.service.impl
 
 import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
-import com.polyhabr.poly_back.controller.model.article.request.toDto
 import com.polyhabr.poly_back.controller.model.article.request.toDtoWithoutType
 import com.polyhabr.poly_back.controller.utils.currentLogin
 import com.polyhabr.poly_back.dto.ArticleDto
@@ -52,27 +51,31 @@ class ArticleServiceImpl(
             .map { it.toDto() }
 
     override fun create(articleRequest: ArticleRequest): Long? {
-        val currentUser = usersRepository.findByLogin(currentLogin())
-        val currentArticleType = articleTypeRepository.findArticleTypeById(articleRequest.typeId)
-        println(articleRequest.typeId)
-//        usersRepository.findByLogin(currentLogin())?.let { currentUser ->
-        return articleRepository.save(
-            articleRequest
-                .toDtoWithoutType()
-                .apply {
-                    typeId = currentArticleType
-                    userId = currentUser
-                }
-                .toEntity()
-        ).id
-//        } ?: throw RuntimeException("Article not found")
+        usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+            articleRequest.type?.let {
+                articleTypeRepository.findByName(it)?.let { articleType ->
+                    return articleRepository.save(
+                        articleRequest
+                            .toDtoWithoutType()
+                            .apply {
+                                typeId = articleType
+                                userId = currentUser
+                            }
+                            .toEntity()
+                    ).id
+                } ?: throw RuntimeException("Article type not found")
+            } ?: run {
+                return articleRepository.save(
+                    articleRequest
+                        .toDtoWithoutType()
+                        .apply {
+                            userId = currentUser
+                        }
+                        .toEntity()
+                ).id
+            }
+        } ?: throw RuntimeException("User not found")
     }
-//        return articleRepository.save(
-//            articleRequest
-//                .toDto()
-//                .toEntity()
-//        ).id
-
 
     override fun update(id: Long, articleRequest: ArticleRequest): Pair<Boolean, String> {
         articleRepository.findByIdOrNull(id)?.let { currentArticle ->
