@@ -11,4 +11,6 @@ import org.springframework.data.repository.query.Param
 interface ArticleRepository: JpaRepository<Article, Long>{
     @Query("SELECT a FROM Article a WHERE a.previewText LIKE %:pname%")
     fun findArticleByName(pageable: Pageable, @Param("pname") pname: String): Page<Article>
+
+//    fun findArticleById (@Param("id") id: Long): Article
 }

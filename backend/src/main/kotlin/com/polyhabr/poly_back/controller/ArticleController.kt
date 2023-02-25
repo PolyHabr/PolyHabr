@@ -11,8 +11,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
@@ -45,10 +47,12 @@ class ArticleController(
         ]
     )
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-    ): ResponseEntity<ArticleListResponse>{
+        principal: Principal
+    ): ResponseEntity<ArticleListResponse> {
         val rawResponse = articleService
             .getAll(
                 offset = offset,
@@ -72,13 +76,17 @@ class ArticleController(
         ]
     )
     @GetMapping("/byId")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getById(
         @Positive @RequestParam("id") id: Long
     ): ResponseEntity<ArticleResponse> {
         val response = articleService
             .getById(id)
             .toResponse()
-        return ResponseEntity.ok(response)
+        return response.let {
+            ResponseEntity.ok(response)
+        } ?: ResponseEntity.badRequest().build()
+
     }
 
     @Operation(summary = "Search articles by prefix")
@@ -96,6 +104,7 @@ class ArticleController(
         ]
     )
     @GetMapping("/search")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun searchArticlesByName(
         @Schema(example = "physics") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
@@ -121,6 +130,7 @@ class ArticleController(
         ]
     )
     @PostMapping("/create")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody articleRequest: ArticleRequest
     ): ResponseEntity<ArticleCreateResponse> {
@@ -145,12 +155,13 @@ class ArticleController(
         ]
     )
     @PutMapping("/update")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun update(
         @Positive @RequestParam("id") id: Long,
         @Valid @RequestBody articleRequest: ArticleRequest
     ): ResponseEntity<ArticleUpdateResponse> {
-        val success = articleService.update(id, articleRequest)
-        val response = ArticleUpdateResponse(success)
+        val (success, message) = articleService.update(id, articleRequest)
+        val response = ArticleUpdateResponse(success, message)
         return ResponseEntity.ok(response)
     }
 
@@ -162,14 +173,16 @@ class ArticleController(
         ]
     )
     @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun delete(
         @Positive @RequestParam(value = "id") id: Long
-    ): ResponseEntity<Unit> {
-        return try {
-            articleService.delete(id)
-            ResponseEntity.ok().build()
-        } catch (e: Exception) {
-            ResponseEntity.badRequest().build()
+    ): ResponseEntity<String> {
+        val (success, message) = articleService.delete(id)
+        return if (success){
+            ResponseEntity.ok().body(message)
+        }
+        else {
+            ResponseEntity.internalServerError().body(message)
         }
     }
 

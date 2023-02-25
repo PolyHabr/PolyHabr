@@ -13,8 +13,8 @@ interface ArticleService {
 
     fun create(articleRequest: ArticleRequest): Long?
 
-    fun update(id: Long, articleRequest: ArticleRequest): Boolean
+    fun update(id: Long, articleRequest: ArticleRequest): Pair<Boolean, String>
 
-    fun delete(id: Long)
+    fun delete(id: Long): Pair<Boolean, String>
 
 }

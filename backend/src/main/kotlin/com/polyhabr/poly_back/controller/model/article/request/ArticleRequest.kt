@@ -1,6 +1,7 @@
 package com.polyhabr.poly_back.controller.model.article.request
 
 import com.polyhabr.poly_back.dto.ArticleDto
+import com.polyhabr.poly_back.entity.Article
 import com.polyhabr.poly_back.entity.ArticleType
 import com.polyhabr.poly_back.entity.auth.User
 import io.swagger.v3.oas.annotations.media.Schema
@@ -36,10 +37,6 @@ data class ArticleRequest(
     @field:Schema(example = "type id")
     @field:NotNull
     val typeId: ArticleType? = null,
-
-    @field:Schema(example = "user id")
-    @field:NotNull
-    val userId: User? = null,
 ): Serializable
 
 fun ArticleRequest.toDto() = ArticleDto(
@@ -48,5 +45,12 @@ fun ArticleRequest.toDto() = ArticleDto(
     likes = this.likes!!,
     previewText = this.previewText!!,
     typeId = this.typeId!!,
-    userId = this.userId!!,
 )
+
+fun ArticleRequest.toDtoWithoutType(): ArticleDto =
+    ArticleDto(
+        date = this.date!!,
+        filePdf = this.filePdf!!,
+        likes = this.likes!!,
+        previewText = this.previewText!!,
+    )
