@@ -1,5 +1,7 @@
 package com.polyhabr.poly_back.entity
 
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import com.polyhabr.poly_back.entity.auth.User
 import java.time.LocalDate
 import javax.persistence.*
@@ -25,10 +27,12 @@ open class Article(
     open var previewText: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "type_id")
-    open var type: ArticleType,
+    open var typeId: ArticleType?,
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
-    open var user: User
+    open var userId: User?
 ) : BaseEntity<Long>()
