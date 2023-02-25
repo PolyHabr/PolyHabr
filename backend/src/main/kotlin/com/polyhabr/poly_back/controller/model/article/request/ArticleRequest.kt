@@ -1,9 +1,6 @@
 package com.polyhabr.poly_back.controller.model.article.request
 
 import com.polyhabr.poly_back.dto.ArticleDto
-import com.polyhabr.poly_back.entity.Article
-import com.polyhabr.poly_back.entity.ArticleType
-import com.polyhabr.poly_back.entity.auth.User
 import io.swagger.v3.oas.annotations.media.Schema
 import java.io.Serializable
 import java.time.LocalDate
@@ -34,9 +31,9 @@ data class ArticleRequest(
     @field:NotNull
     val previewText: String? = null,
 
-    @field:Schema(example = "type id")
+    @field:Schema(example = "type name")
     @field:NotNull
-    val type: String? = null,
+    val typeName: String? = null,
 ): Serializable
 
 fun ArticleRequest.toDtoWithoutType(): ArticleDto =

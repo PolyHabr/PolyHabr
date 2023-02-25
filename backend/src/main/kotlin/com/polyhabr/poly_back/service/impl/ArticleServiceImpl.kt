@@ -52,7 +52,7 @@ class ArticleServiceImpl(
 
     override fun create(articleRequest: ArticleRequest): Long? {
         usersRepository.findByLogin(currentLogin())?.let { currentUser ->
-            articleRequest.type?.let {
+            articleRequest.typeName?.let {
                 articleTypeRepository.findByName(it)?.let { articleType ->
                     return articleRepository.save(
                         articleRequest
