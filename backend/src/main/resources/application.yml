@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:8733} # 8445 is the default port for the proxy
+  port: ${PORT:8445} # 8445 is the default port for the proxy
 
 poly_back:
   auth_server:
