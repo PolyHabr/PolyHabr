@@ -3,6 +3,9 @@ package com.polyhabr.poly_back.controller
 import com.polyhabr.poly_back.controller.model.article.response.ArticleListResponse
 import com.polyhabr.poly_back.controller.model.article.response.*
 import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
+import com.polyhabr.poly_back.controller.model.article.request.ArticleUpdateRequest
+import com.polyhabr.poly_back.controller.model.article.request.toDto
+import com.polyhabr.poly_back.controller.model.article.request.toDtoWithoutType
 import com.polyhabr.poly_back.service.ArticleService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -85,8 +88,7 @@ class ArticleController(
             .toResponse()
         return response.let {
             ResponseEntity.ok(response)
-        } ?: ResponseEntity.badRequest().build()
-
+        }
     }
 
     @Operation(summary = "Search articles by prefix")
@@ -134,8 +136,7 @@ class ArticleController(
     fun create(
         @Valid @RequestBody articleRequest: ArticleRequest
     ): ResponseEntity<ArticleCreateResponse> {
-        val id = articleService.create(articleRequest)
-        val success = id != null
+        val (success, id) = articleService.create(articleRequest.toDtoWithoutType())
         val response = ArticleCreateResponse(id = id, isSuccess = success)
         return ResponseEntity.ok(response)
     }
@@ -158,9 +159,9 @@ class ArticleController(
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun update(
         @Positive @RequestParam("id") id: Long,
-        @Valid @RequestBody articleRequest: ArticleRequest
+        @RequestBody articleUpdateRequest: ArticleUpdateRequest
     ): ResponseEntity<ArticleUpdateResponse> {
-        val (success, message) = articleService.update(id, articleRequest)
+        val (success, message) = articleService.update(id, articleUpdateRequest.toDto())
         val response = ArticleUpdateResponse(success, message)
         return ResponseEntity.ok(response)
     }
@@ -178,10 +179,9 @@ class ArticleController(
         @Positive @RequestParam(value = "id") id: Long
     ): ResponseEntity<String> {
         val (success, message) = articleService.delete(id)
-        return if (success){
+        return if (success) {
             ResponseEntity.ok().body(message)
-        }
-        else {
+        } else {
             ResponseEntity.internalServerError().body(message)
         }
     }

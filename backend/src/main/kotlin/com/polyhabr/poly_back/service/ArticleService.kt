@@ -1,7 +1,9 @@
 package com.polyhabr.poly_back.service
 
 import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
+import com.polyhabr.poly_back.controller.model.article.request.ArticleUpdateRequest
 import com.polyhabr.poly_back.dto.ArticleDto
+import com.polyhabr.poly_back.dto.ArticleUpdateDto
 import org.springframework.data.domain.Page
 
 interface ArticleService {
@@ -11,9 +13,9 @@ interface ArticleService {
 
     fun searchByName(prefix: String?, offset: Int, size: Int): Page<ArticleDto>
 
-    fun create(articleRequest: ArticleRequest): Long?
+    fun create(articleDto: ArticleDto): Pair<Boolean, Long?>
 
-    fun update(id: Long, articleRequest: ArticleRequest): Pair<Boolean, String>
+    fun update(id: Long, articleUpdateDto: ArticleUpdateDto): Pair<Boolean, String>
 
     fun delete(id: Long): Pair<Boolean, String>
 

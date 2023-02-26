@@ -8,6 +8,6 @@ data class TagTypeResponse(
 
 fun TagTypeDto.toResponse(): TagTypeResponse{
     return TagTypeResponse(
-        name = this.name!!,
+        name = this.name,
     )
 }

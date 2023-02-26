@@ -57,13 +57,6 @@ class TagTypeServiceImpl(
             }
             return tagTypeRepository.save(currentTagType).id?.let { true to "Ok" } ?: (false to "Error while update")
         } ?: return false to "Tag type not found"
-
-
-//        val existingTagType = tagTypeRepository.findByIdOrNull(id)
-//            ?: throw RuntimeException("Tag type not found")
-//        existingTagType.name = tagTypeRequest.name ?: throw RuntimeException("name not found")
-//
-//        return tagTypeRepository.save(existingTagType).id?.let { true } ?: false
     }
 
     override fun delete(id: Long): Pair<Boolean, String> {
@@ -77,21 +70,15 @@ class TagTypeServiceImpl(
         } catch (e: Exception) {
             false to "Internal server error"
         }
-
-
-//        val existingTagType = tagTypeRepository.findByIdOrNull(id)
-//            ?: throw RuntimeException("Tag type not found")
-//        val existedId = existingTagType.id ?: throw RuntimeException("id not found")
-//        tagTypeRepository.deleteById(existedId)
     }
 
     private fun TagType.toDto(): TagTypeDto =
         TagTypeDto(
-            id = this.id,
-            name = this.name,
+            id = this.id!!,
+            name = this.name!!,
         )
 
     private fun TagTypeDto.toEntity() = TagType(
-        name = this.name!!,
+        name = this.name,
     )
 }

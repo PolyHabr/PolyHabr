@@ -83,7 +83,7 @@ class DisciplineTypeController(
             .toResponse()
         return response.let {
             ResponseEntity.ok(response)
-        }?: ResponseEntity.badRequest().build()
+        }
     }
 
     @Operation(summary = "Search discipline types by prefix")

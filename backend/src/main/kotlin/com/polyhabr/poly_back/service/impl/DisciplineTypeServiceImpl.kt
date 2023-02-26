@@ -55,14 +55,9 @@ class DisciplineTypeServiceImpl(
             currentDisciplineType.apply {
                 disciplineTypeRequest.name?.let { name = it }
             }
-            return disciplineTypeRepository.save(currentDisciplineType).id?.let { true to "Ok" } ?: (false to "Error while update")
-        }?: return false to "Discipline type not found"
-
-//        val existingDisciplineType = disciplineTypeRepository.findByIdOrNull(id)
-//            ?: throw RuntimeException("Discipline type not found")
-//        existingDisciplineType.name = disciplineTypeRequest.name ?: throw RuntimeException("name not found")
-//
-//        return disciplineTypeRepository.save(existingDisciplineType).id?.let { true } ?: false
+            return disciplineTypeRepository.save(currentDisciplineType).id?.let { true to "Ok" }
+                ?: (false to "Error while update")
+        } ?: return false to "Discipline type not found"
     }
 
     override fun delete(id: Long): Pair<Boolean, String> {
@@ -71,27 +66,20 @@ class DisciplineTypeServiceImpl(
                 currentDisciplineType.id?.let { id ->
                     disciplineTypeRepository.deleteById(id)
                     true to "Discipline type deleted"
-                }?: (false to "Discipline type id not found")
-            }?: (false to "Discipline type not found")
-        }
-        catch (e:Exception){
+                } ?: (false to "Discipline type id not found")
+            } ?: (false to "Discipline type not found")
+        } catch (e: Exception) {
             false to "Internal server error"
         }
-
-
-//        val existingDisciplineType = disciplineTypeRepository.findByIdOrNull(id)
-//            ?: throw RuntimeException("Discipline type not found")
-//        val existedId = existingDisciplineType.id ?: throw RuntimeException("id not found")
-//        disciplineTypeRepository.deleteById(existedId)
     }
 
     private fun DisciplineType.toDto(): DisciplineTypeDto =
         DisciplineTypeDto(
-            id = this.id,
-            name = this.name,
+            id = this.id!!,
+            name = this.name!!,
         )
 
     private fun DisciplineTypeDto.toEntity() = DisciplineType(
-        name = this.name!!,
+        name = this.name,
     )
 }

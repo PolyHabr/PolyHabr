@@ -8,6 +8,6 @@ data class DisciplineTypeResponse(
 
 fun DisciplineTypeDto.toResponse(): DisciplineTypeResponse {
     return DisciplineTypeResponse(
-        name = this.name!!,
+        name = this.name,
     )
 }

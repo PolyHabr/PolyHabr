@@ -11,4 +11,5 @@ interface TagTypeRepository: JpaRepository<TagType, Long>{
     @Query("SELECT tt FROM TagType tt WHERE tt.name LIKE %:pname%")
     fun findTagTypesByName(pageable: Pageable, @Param("pname") pname: String): Page<TagType>
 
+    fun findByName(@Param("name") name: String): TagType?
 }

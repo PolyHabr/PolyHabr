@@ -2,7 +2,6 @@ package com.polyhabr.poly_back.controller.model.articleToDisciplineType.response
 
 import com.polyhabr.poly_back.dto.ArticleToDisciplineTypeDto
 import com.polyhabr.poly_back.entity.Article
-import com.polyhabr.poly_back.entity.ArticleToDisciplineType
 import com.polyhabr.poly_back.entity.DisciplineType
 
 data class ArticleToDisciplineTypeResponse(

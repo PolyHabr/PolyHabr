@@ -11,6 +11,15 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name = "article")
 open class Article(
+
+    @Size(max = 255)
+    @Column(name = "title")
+    open var title: String,
+
+    @Size(max = 255)
+    @Column(name = "preview_text")
+    open var previewText: String,
+
     @Column(name = "date")
     open var date: LocalDate,
 
@@ -21,10 +30,6 @@ open class Article(
     @NotNull
     @Column(name = "likes", nullable = false)
     open var likes: Int = 0,
-
-    @Size(max = 255)
-    @Column(name = "preview_text")
-    open var previewText: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
