@@ -1,13 +1,13 @@
 server:
   port: ${PORT:8733} # 8445 is the default port for the proxy
 
-#poly_back:
-#  auth_server:
-#    url: ${AUTH_SERVER_URL:}
-#    grant_type: ${AUTH_SERVER_GRANT_TYPE:}
-#    realm: ${AUTH_SERVER_REALM:}
-#    client_id: ${AUTH_SERVER_CLIENT_ID:}
-#    client_secret: ${AUTH_SERVER_CLIENT_SECRET:}
+poly_back:
+  auth_server:
+    url: ${AUTH_SERVER_URL:}
+    grant_type: ${AUTH_SERVER_GRANT_TYPE:}
+    realm: ${AUTH_SERVER_REALM:}
+    client_id: ${AUTH_SERVER_CLIENT_ID:}
+    client_secret: ${AUTH_SERVER_CLIENT_SECRET:}
 
 #spring:
 #  security:
@@ -61,11 +61,18 @@ assm:
     jwtExpiration: 86400
 
 logging:
+  file:
+    name: logs/proxy.log
   level:
-    org:
-      hibernate:
-        type: trace
+    web: info
+    org.springframework: info
+    org.springframework.boot.autoconfigure: error
+    org.hibernate: info
+
 spring:
+  sql:
+    init:
+      platform: ${DB_PLATFORM:postgres}
   mail:
     host: smtp.mail.ru
     port: 587
@@ -89,7 +96,7 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: ${DB_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
         default_schema: public
         jdbc:
           lob:
@@ -97,17 +104,16 @@ spring:
     hibernate:
       ddl-auto: create-drop
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: "postgres"
+    url: ${DB_URL:}
+    username: ${DB_USERNAME:}
+    password: ${DB_PASSWORD:}
     driverClassName: org.postgresql.Driver
-  sql:
-    init:
-      platform: postgres\
   mvc:
     view:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
+  main:
+    banner-mode: off
 
 
 
