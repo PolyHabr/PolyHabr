@@ -9,12 +9,16 @@ import com.polyhabr.poly_back.repository.auth.UsersRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
 
 @Component
 class DataLoader : ApplicationRunner {
+
+    @Autowired
+    lateinit var encoder: PasswordEncoder
 
     @Autowired
     lateinit var roleRepository: RoleRepository
@@ -51,7 +55,7 @@ class DataLoader : ApplicationRunner {
         val admin = userRepository.save(
             User(
                 login = "admin",
-                password = "admincool",
+                password = encoder.encode("admincool"),
                 name = "dmitry",
                 surname = "shabinsky",
                 email = "admin@notfake.com",
@@ -62,7 +66,7 @@ class DataLoader : ApplicationRunner {
         val user = userRepository.save(
             User(
                 login = "user",
-                password = "userbroke",
+                password = encoder.encode("userbroke"),
                 name = "vasya",
                 surname = "pupkin",
                 email = "userbroke@notfake.com",

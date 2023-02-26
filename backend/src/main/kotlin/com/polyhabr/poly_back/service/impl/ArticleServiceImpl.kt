@@ -40,18 +40,15 @@ class ArticleServiceImpl(
                     size,
                 )
             )
-        val listDisciplineToSave = mutableListOf<String>()
-        val listTagToSave = mutableListOf<String>()
-        articles.content.forEach { article ->
-            articleToDisciplineTypeRepository.findByArticle(article).forEach { articleToDisciplineType ->
+        return articles.map {
+            val listDisciplineToSave = mutableListOf<String>()
+            val listTagToSave = mutableListOf<String>()
+            articleToDisciplineTypeRepository.findByArticle(it).forEach { articleToDisciplineType ->
                 listDisciplineToSave.add(articleToDisciplineType.disciplineType?.name!!)
             }
-            articleToTagTypeRepository.findByArticle(article).forEach { articleToTagType ->
+            articleToTagTypeRepository.findByArticle(it).forEach { articleToTagType ->
                 listTagToSave.add(articleToTagType.tagType?.name!!)
             }
-        }
-
-        return articles.map {
             it.toDto(
                 disciplineList = listDisciplineToSave,
                 tagList = listTagToSave
@@ -86,17 +83,15 @@ class ArticleServiceImpl(
                     size,
                 ), prefix ?: ""
             )
-        val listDisciplineToSave = mutableListOf<String>()
-        val listTagToSave = mutableListOf<String>()
-        articles.content.forEach { article ->
-            articleToDisciplineTypeRepository.findByArticle(article).forEach { articleToDisciplineType ->
+        return articles.map {
+            val listDisciplineToSave = mutableListOf<String>()
+            val listTagToSave = mutableListOf<String>()
+            articleToDisciplineTypeRepository.findByArticle(it).forEach { articleToDisciplineType ->
                 listDisciplineToSave.add(articleToDisciplineType.disciplineType?.name!!)
             }
-            articleToTagTypeRepository.findByArticle(article).forEach { articleToTagType ->
+            articleToTagTypeRepository.findByArticle(it).forEach { articleToTagType ->
                 listTagToSave.add(articleToTagType.tagType?.name!!)
             }
-        }
-        return articles.map {
             it.toDto(
                 disciplineList = listDisciplineToSave,
                 tagList = listTagToSave

@@ -1,14 +1,12 @@
 package com.polyhabr.poly_back.controller.model.article.request
 
 import com.polyhabr.poly_back.dto.ArticleDto
-import com.polyhabr.poly_back.entity.DisciplineType
 import io.swagger.v3.oas.annotations.media.Schema
 import java.io.Serializable
 import java.time.LocalDate
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.PositiveOrZero
-import javax.validation.constraints.Size
 
 @Schema(
     name = "ArticleRequest",
@@ -34,7 +32,7 @@ data class ArticleRequest(
 
     @field:Schema(example = "type name, not null")
     @field:NotNull
-    val typeName: String? = null,
+    val articleType: String? = null,
 
     @field:Schema(example = "list discipline name, not null and not empty, max size 5")
     @field:NotNull
@@ -62,6 +60,6 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
         title = this.title!!,
         listDisciplineName = this.listDisciplineName,
         listTag = this.listTag,
-        typeName = this.typeName!!,
+        typeName = this.articleType!!,
     )
 }
