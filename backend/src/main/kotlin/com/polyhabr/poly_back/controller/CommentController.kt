@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import java.security.Principal
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
@@ -50,8 +49,8 @@ class CommentController(
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-        
-    ): ResponseEntity<CommentListResponse> {
+
+        ): ResponseEntity<CommentListResponse> {
         val rawResponse = commentService
             .getAll(
                 offset = offset,
@@ -59,6 +58,36 @@ class CommentController(
             )
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
+
+    @Operation(summary = "Comment list")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Comment list", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = CommentListResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
+    @GetMapping
+    fun getAll(
+        @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
+        @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+        @Positive @RequestParam("articleId") id: Long
+    ): ResponseEntity<CommentListResponse> {
+        val rawResponse = commentService
+            .getByArticleIdAll(
+                offset = offset,
+                size = size,
+                articleId = id
+            )
+        return ResponseEntity.ok(rawResponse.toListResponse())
+    }
+
 
     @Operation(summary = "Comment find by id")
     @ApiResponses(
@@ -85,6 +114,7 @@ class CommentController(
             ResponseEntity.ok(response)
         }
     }
+
 
     @Operation(summary = "Search comments by prefix")
     @ApiResponses(

@@ -34,6 +34,18 @@ class CommentServiceImpl(
             .map { it.toDto() }
     }
 
+    override fun getByArticleIdAll(offset: Int, size: Int, articleId: Long): Page<CommentDto> {
+        return commentRepository
+            .findAllByArticleId(
+                PageRequest.of(
+                    offset,
+                    size,
+                ),
+                articleId
+            )
+            .map { it.toDto() }
+    }
+
     override fun getById(id: Long): CommentDto {
         return commentRepository.findByIdOrNull(id)
             ?.toDto()

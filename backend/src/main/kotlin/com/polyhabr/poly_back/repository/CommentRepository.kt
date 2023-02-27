@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
-interface CommentRepository: JpaRepository<Comment, Long>{
+interface CommentRepository : JpaRepository<Comment, Long> {
+    @Query("SELECT u FROM Comment u WHERE u.text LIKE %:pname%")
+    fun findCommentsByName(pageable: Pageable, @Param("pname") pname: String): Page<Comment>
 
-@Query("SELECT u FROM Comment u WHERE u.text LIKE %:pname%")
-fun findCommentsByName(pageable: Pageable, @Param("pname") pname: String): Page<Comment>
+    @Query("SELECT u FROM Comment u WHERE u.articleId.id = :id")
+    fun findAllByArticleId(pageable: Pageable, @Param("id") id: Long): Page<Comment>
 }

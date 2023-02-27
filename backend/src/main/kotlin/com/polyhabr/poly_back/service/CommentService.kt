@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page
 interface CommentService {
     fun getAll(offset: Int, size: Int): Page<CommentDto>
 
+    fun getByArticleIdAll(offset: Int, size: Int, articleId: Long): Page<CommentDto>
+
     fun getById(id: Long): CommentDto
 
     fun searchByName(prefix: String?, offset: Int, size: Int): Page<CommentDto>
