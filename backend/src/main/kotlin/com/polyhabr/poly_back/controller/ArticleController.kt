@@ -135,11 +135,11 @@ class ArticleController(
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
         @RequestPart(name = "model") @Valid articleRequest: ArticleRequest,
-        @RequestPart(name = "file") file: MultipartFile
+        @RequestPart(name = "file") file: MultipartFile? = null
     ): ResponseEntity<ArticleCreateResponse> {
         try {
-            articleRequest.file?.data = file.bytes
-            articleRequest.file?.name = file.originalFilename
+            articleRequest.file?.data = file?.bytes
+            articleRequest.file?.name = file?.originalFilename
         } catch (e: IOException) {
             return ResponseEntity.badRequest().build()
         }
