@@ -1,6 +1,6 @@
 package com.polyhabr.poly_back.controller
 
-import com.polyhabr.poly_back.controller.model.file.FileRequest
+import com.polyhabr.poly_back.controller.model.file.FileOnlyRequest
 import com.polyhabr.poly_back.controller.model.file.toDto
 import com.polyhabr.poly_back.service.FileService
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -30,7 +30,7 @@ class FileController(
         ]
     )
     fun create(
-        @RequestPart(name = "model") @Valid model: FileRequest,
+        @RequestPart(name = "model") @Valid model: FileOnlyRequest,
         @RequestPart(name = "file") file: MultipartFile
     ): ResponseEntity<*>? {
         try {

@@ -3,7 +3,6 @@ package com.polyhabr.poly_back.service.impl
 import com.polyhabr.poly_back.controller.utils.currentLogin
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.dto.ArticleUpdateDto
-import com.polyhabr.poly_back.dto.UserToLikedArticleDto
 import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.repository.*
 import com.polyhabr.poly_back.repository.auth.UsersRepository

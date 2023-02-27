@@ -1,6 +1,6 @@
 package com.polyhabr.poly_back.service.impl
 
-import com.polyhabr.poly_back.controller.model.file.FileRequest
+import com.polyhabr.poly_back.controller.model.file.FileOnlyRequest
 import com.polyhabr.poly_back.controller.utils.currentLogin
 import com.polyhabr.poly_back.dto.FileCreatingDto
 import com.polyhabr.poly_back.entity.File

@@ -135,15 +135,9 @@ class ArticleController(
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
         @RequestPart(name = "model") @Valid articleRequest: ArticleRequest,
-        @RequestPart(name = "file") file: MultipartFile? = null
+        @RequestPart(name = "file") @Schema(description = "nullable, pfd byte") file: MultipartFile? = null
     ): ResponseEntity<ArticleCreateResponse> {
-        try {
-            articleRequest.file?.data = file?.bytes
-            articleRequest.file?.name = file?.originalFilename
-        } catch (e: IOException) {
-            return ResponseEntity.badRequest().build()
-        }
-        val (success, id) = articleService.create(articleRequest.toDtoWithoutType())
+        val (success, id) = articleService.create(articleRequest.toDtoWithoutType(file?.bytes, file?.originalFilename))
         val response = ArticleCreateResponse(id = id, isSuccess = success)
         return ResponseEntity.ok(response)
     }

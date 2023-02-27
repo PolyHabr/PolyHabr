@@ -72,6 +72,26 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
         listTag = this.listTag,
         typeName = this.articleType!!,
         text = this.text!!,
-        fileDto = this.file?.toDto()
+    )
+}
+
+fun ArticleRequest.toDtoWithoutType(data: ByteArray?, originName: String?): ArticleDto {
+    if (this.listDisciplineName!!.size > 5) {
+        throw IllegalArgumentException("listDisciplineName size must be less than 5")
+    }
+    if (this.listTag!!.size > 5) {
+        throw IllegalArgumentException("listTag size must be less than 5")
+    }
+    return ArticleDto(
+        date = LocalDate.now(),
+        filePdf = this.filePdf,
+        likes = this.likes ?: 0,
+        previewText = this.previewText!!,
+        title = this.title!!,
+        listDisciplineName = this.listDisciplineName,
+        listTag = this.listTag,
+        typeName = this.articleType!!,
+        text = this.text!!,
+        fileDto = this.file?.toDto(data, originName)
     )
 }

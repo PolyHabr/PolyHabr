@@ -83,9 +83,13 @@ class DataLoader : ApplicationRunner {
         val discipline2 = disciplineTypeRepository.save(DisciplineType("Математика"))
         val discipline3 = disciplineTypeRepository.save(DisciplineType("Программировани"))
 
-        val articleType1 = articleTypeRepository.save(ArticleType("Статья"))
-        val articleType2 = articleTypeRepository.save(ArticleType("Конспект"))
-        val articleType3 = articleTypeRepository.save(ArticleType("Расчётное задание"))
+        val articleType1 = articleTypeRepository.save(ArticleType("Курсовая работа"))
+        val articleType2 = articleTypeRepository.save(ArticleType("Доклад"))
+        val articleType3 = articleTypeRepository.save(ArticleType("Лабораторная работа"))
+        val articleType4 = articleTypeRepository.save(ArticleType("Отчёт"))
+        val articleType5 = articleTypeRepository.save(ArticleType("Самостоятельная работа"))
+        val articleType6 = articleTypeRepository.save(ArticleType("Исследовательская работа"))
+
 
         val article1 = articleRepository.save(
             Article(
