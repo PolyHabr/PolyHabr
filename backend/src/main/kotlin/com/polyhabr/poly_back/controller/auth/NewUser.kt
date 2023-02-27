@@ -16,7 +16,7 @@ class NewUser : Serializable {
     @field:Schema(example = "polyhabr", pattern = "^[A-Za-z0-9]+\$")
     @field:NotBlank
     @field:NotNull
-    @field:Size(min = 5, max = 20)
+    @field:Size(min = 3, max = 20)
     @field:Pattern(regexp = "^[A-Za-z0-9]+\$")
     @JsonProperty("username")
     var username: String? = null
