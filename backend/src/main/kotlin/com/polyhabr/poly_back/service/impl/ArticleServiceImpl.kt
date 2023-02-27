@@ -115,7 +115,11 @@ class ArticleServiceImpl(
                     val listTagToSave = mutableListOf<TagType>()
                     articleDto.listTag.forEach { name ->
                         val tagType = tagTypeRepository.findByName(name)
-                            ?: throw RuntimeException("Tag by name not found")
+                            ?: run {
+                                return@run tagTypeRepository.save(
+                                    TagType(name)
+                                )
+                            }
                         listTagToSave.add(tagType)
                     }
 
