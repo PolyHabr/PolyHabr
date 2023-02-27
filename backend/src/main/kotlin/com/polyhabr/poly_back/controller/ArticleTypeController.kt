@@ -49,7 +49,7 @@ class ArticleTypeController(
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-        principal: Principal
+        
     ): ResponseEntity<ArticleTypeListResponse> {
         val rawResponse = articleTypeService
             .getAll(

@@ -50,7 +50,7 @@ class CommentController(
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-        principal: Principal
+        
     ): ResponseEntity<CommentListResponse> {
         val rawResponse = commentService
             .getAll(
