@@ -6,8 +6,10 @@ import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.entity.ArticleType
 import com.polyhabr.poly_back.entity.auth.toDto
 import java.time.LocalDate
+import javax.persistence.Id
 
 data class ArticleResponse(
+    val id: Long,
     val date: LocalDate,
     val filePdf: String? = null,
     val likes: Int,
@@ -23,6 +25,7 @@ data class ArticleResponse(
 
 fun ArticleDto.toResponse(): ArticleResponse {
     return ArticleResponse(
+        id = this.id!!,
         date = this.date,
         filePdf = this.filePdf,
         likes = this.likes,
