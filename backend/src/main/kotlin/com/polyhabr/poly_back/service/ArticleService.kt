@@ -4,6 +4,7 @@ import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
 import com.polyhabr.poly_back.controller.model.article.request.ArticleUpdateRequest
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.dto.ArticleUpdateDto
+import com.polyhabr.poly_back.dto.UserToLikedArticleDto
 import org.springframework.data.domain.Page
 
 interface ArticleService {
@@ -18,5 +19,7 @@ interface ArticleService {
     fun update(id: Long, articleUpdateDto: ArticleUpdateDto): Pair<Boolean, String>
 
     fun delete(id: Long): Pair<Boolean, String>
+
+    fun updateLikes(id: Long, isPlus: Boolean)
 
 }

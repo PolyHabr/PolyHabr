@@ -4,6 +4,7 @@ import com.polyhabr.poly_back.controller.model.article.request.ArticleUpdateRequ
 import com.polyhabr.poly_back.controller.utils.currentLogin
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.dto.ArticleUpdateDto
+import com.polyhabr.poly_back.dto.UserToLikedArticleDto
 import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.repository.*
 import com.polyhabr.poly_back.repository.auth.UsersRepository
@@ -21,6 +22,7 @@ class ArticleServiceImpl(
     private val articleRepository: ArticleRepository,
     private val usersRepository: UsersRepository,
     private val articleTypeRepository: ArticleTypeRepository,
+    private val userToLikedArticleRepository: UserToLikedArticleRepository,
     private val disciplineTypeRepository: DisciplineTypeRepository,
     private val tagTypeRepository: TagTypeRepository,
     private val articleToTagTypeRepository: ArticleToTagTypeRepository,
@@ -189,6 +191,39 @@ class ArticleServiceImpl(
             false to "Internal server error"
         }
     }
+
+    override fun updateLikes(id: Long, isPlus: Boolean) {
+        transactionTemplate.execute {
+            usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                if (isPlus) {
+                    if (userToLikedArticleRepository.findArticleWithLike(id, currentUser.id) != null) {
+                        throw Exception("Impossible")
+                    } else {
+                        articleRepository.addLikeByArticleId(id)
+                        articleRepository.findByIdOrNull(id)?.let { article ->
+                            userToLikedArticleRepository.save(
+                                UserToLikedArticle(
+                                    user = currentUser,
+                                    article = article
+                                )
+                            )
+                        } ?: throw Exception("Impossible")
+                    }
+                } else {
+                    if (userToLikedArticleRepository.findArticleWithLike(id, currentUser.id) == null) {
+                        throw Exception("Impossible")
+                    } else {
+                        articleRepository.decreaseLikeByArticleId(id)
+                        userToLikedArticleRepository.findArticleWithLike(id, currentUser.id)?.let {
+                            userToLikedArticleRepository.deleteById(it)
+                        } ?: throw Exception("Impossible")
+                    }
+                }
+
+            } ?: throw Exception("Go log in man")
+        } ?: throw Exception("Internal exception")
+    }
+
 
     private fun Article.toDto(
         disciplineList: List<String>,

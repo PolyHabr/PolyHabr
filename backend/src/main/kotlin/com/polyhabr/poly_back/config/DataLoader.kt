@@ -65,7 +65,7 @@ class DataLoader : ApplicationRunner {
         )
         val user = userRepository.save(
             User(
-                login = "user",
+                login = "uservasya",
                 password = encoder.encode("userbroke"),
                 name = "vasya",
                 surname = "pupkin",

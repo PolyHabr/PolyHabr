@@ -1,11 +1,11 @@
 package com.polyhabr.poly_back.controller
 
+import com.polyhabr.poly_back.controller.model.article.request.*
 import com.polyhabr.poly_back.controller.model.article.response.ArticleListResponse
 import com.polyhabr.poly_back.controller.model.article.response.*
-import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
-import com.polyhabr.poly_back.controller.model.article.request.ArticleUpdateRequest
-import com.polyhabr.poly_back.controller.model.article.request.toDto
-import com.polyhabr.poly_back.controller.model.article.request.toDtoWithoutType
+import com.polyhabr.poly_back.controller.model.userToLikedArticle.request.UserToLikedArticleRequest
+import com.polyhabr.poly_back.controller.model.userToLikedArticle.request.toDto
+import com.polyhabr.poly_back.controller.model.userToLikedArticle.response.UserToLikedArticleUpdateResponse
 import com.polyhabr.poly_back.service.ArticleService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -186,4 +186,49 @@ class ArticleController(
         }
     }
 
+    @Operation(summary = "Add like in article by id")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "ArticleUpdateResponse", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ArticleUpdateResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
+    @PutMapping("/add_like")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    fun addLike(
+        @Positive @RequestParam("articleId") id: Long,
+    ): ResponseEntity<Unit> {
+        articleService.updateLikes(id = id, isPlus = true)
+        return ResponseEntity.ok().build()
+    }
+
+    @Operation(summary = "Decrease like in article by id")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "ArticleUpdateResponse", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ArticleUpdateResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
+    @PutMapping("/decrease_like")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    fun decreaseLike(
+        @Positive @RequestParam("articleId") id: Long,
+    ): ResponseEntity<Unit> {
+        articleService.updateLikes(id = id, isPlus = false)
+        return ResponseEntity.ok().build()
+    }
 }

@@ -25,3 +25,9 @@ fun ArticleUpdateRequest.toDto(): ArticleUpdateDto {
         typeName = this.typeName,
     )
 }
+
+fun ArticleUpdateRequest.toDtoOnlyLike(): ArticleUpdateDto{
+    return ArticleUpdateDto(
+        likes = this.likes
+    )
+}
