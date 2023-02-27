@@ -11,6 +11,7 @@ data class ArticleDto(
     var likes: Int,
     var previewText: String,
     var title: String,
+    val text: String,
     var typeId: ArticleType? = null,
     val typeName: String? = null,
     var userId: User? = null,

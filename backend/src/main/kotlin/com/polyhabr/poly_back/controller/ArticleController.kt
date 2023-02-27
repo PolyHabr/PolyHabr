@@ -50,7 +50,6 @@ class ArticleController(
         ]
     )
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
@@ -79,7 +78,6 @@ class ArticleController(
         ]
     )
     @GetMapping("/byId")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getById(
         @Positive @RequestParam("id") id: Long
     ): ResponseEntity<ArticleResponse> {
@@ -106,7 +104,6 @@ class ArticleController(
         ]
     )
     @GetMapping("/search")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun searchArticlesByName(
         @Schema(example = "physics") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,

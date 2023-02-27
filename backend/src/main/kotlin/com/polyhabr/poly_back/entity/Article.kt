@@ -1,29 +1,28 @@
 package com.polyhabr.poly_back.entity
 
+import com.polyhabr.poly_back.entity.auth.User
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
-import com.polyhabr.poly_back.entity.auth.User
 import java.time.LocalDate
 import javax.persistence.*
 import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "article")
 open class Article(
 
-    @Size(max = 255)
-    @Column(name = "title")
+    @Column(name = "title", length = 100)
     open var title: String,
 
-    @Size(max = 255)
-    @Column(name = "preview_text")
+    @Column(name = "text", length = 10000)
+    open var text: String,
+
+    @Column(name = "preview_text", length = 400)
     open var previewText: String,
 
     @Column(name = "date")
     open var date: LocalDate,
 
-    @Size(max = 255)
     @Column(name = "file_pdf")
     open var filePdf: String? = null,
 

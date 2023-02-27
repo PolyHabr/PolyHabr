@@ -45,7 +45,6 @@ class TagTypeController(
         ]
     )
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
@@ -74,7 +73,6 @@ class TagTypeController(
         ]
     )
     @GetMapping("/byId")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getById(
         @Positive @RequestParam("id") id: Long
     ): ResponseEntity<TagTypeResponse> {
@@ -101,7 +99,6 @@ class TagTypeController(
         ]
     )
     @GetMapping("/search")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun searchTagTypesByName(
         @Schema(example = "physics") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,

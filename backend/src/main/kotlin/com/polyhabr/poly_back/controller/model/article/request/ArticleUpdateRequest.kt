@@ -10,6 +10,7 @@ import java.io.Serializable
 )
 data class ArticleUpdateRequest(
     val title: String? = null,
+    val text: String? = null,
     val previewText: String? = null,
     val filePdf: String? = null,
     val likes: Int? = 0,
@@ -23,5 +24,6 @@ fun ArticleUpdateRequest.toDto(): ArticleUpdateDto {
         previewText = this.previewText,
         title = this.title,
         typeName = this.typeName,
+        text = this.text,
     )
 }

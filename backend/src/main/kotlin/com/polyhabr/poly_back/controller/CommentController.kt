@@ -47,7 +47,6 @@ class CommentController(
         ]
     )
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
@@ -76,7 +75,6 @@ class CommentController(
         ]
     )
     @GetMapping("/byId")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getById(
         @Positive @RequestParam("id") id: Long
     ): ResponseEntity<CommentResponse> {
@@ -85,7 +83,7 @@ class CommentController(
             .toResponse()
         return response.let {
             ResponseEntity.ok(response)
-        }?: ResponseEntity.badRequest().build()
+        }
     }
 
     @Operation(summary = "Search comments by prefix")
@@ -103,7 +101,6 @@ class CommentController(
         ]
     )
     @GetMapping("/search")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun searchCommentsByName(
         @Schema(example = "Nice") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,

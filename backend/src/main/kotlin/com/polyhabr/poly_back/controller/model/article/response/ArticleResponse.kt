@@ -2,7 +2,6 @@ package com.polyhabr.poly_back.controller.model.article.response
 
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.entity.ArticleType
-import com.polyhabr.poly_back.entity.auth.User
 import java.time.LocalDate
 
 data class ArticleResponse(
@@ -13,6 +12,7 @@ data class ArticleResponse(
     val typeId: ArticleType,
     val userId: Long,
     val title: String? = null,
+    val text: String? = null,
     val listDisciplineName: List<String>,
     val listTag: List<String>,
 )
@@ -28,5 +28,6 @@ fun ArticleDto.toResponse(): ArticleResponse {
         title = this.title,
         listDisciplineName = this.listDisciplineName,
         listTag = this.listTag,
+        text = this.text,
     )
 }
