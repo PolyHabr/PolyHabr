@@ -59,7 +59,7 @@ class CommentController(
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
 
-    @Operation(summary = "Comment list")
+    @Operation(summary = "Comment list by article id")
     @ApiResponses(
         value = [
             ApiResponse(
@@ -73,7 +73,7 @@ class CommentController(
             ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
         ]
     )
-    @GetMapping
+    @GetMapping("/byArticleId")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
