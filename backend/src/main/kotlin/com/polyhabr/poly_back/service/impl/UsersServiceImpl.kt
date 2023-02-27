@@ -6,8 +6,11 @@ import com.polyhabr.poly_back.controller.model.user.request.UserUpdateRequest
 import com.polyhabr.poly_back.controller.model.user.request.toDto
 import com.polyhabr.poly_back.controller.utils.currentLogin
 import com.polyhabr.poly_back.dto.UserDto
+import com.polyhabr.poly_back.dto.toEntity
 import com.polyhabr.poly_back.entity.PasswordResetToken
 import com.polyhabr.poly_back.entity.auth.User
+import com.polyhabr.poly_back.entity.auth.toDto
+import com.polyhabr.poly_back.entity.auth.toDtoWithoutPasswordAndEmail
 import com.polyhabr.poly_back.repository.PasswordTokenRepository
 import com.polyhabr.poly_back.repository.auth.UsersRepository
 import com.polyhabr.poly_back.service.UsersService
@@ -203,28 +206,4 @@ class UsersServiceImpl(
         )
         passwordTokenRepository.save(myToken)
     }
-
-    private fun User.toDto() = UserDto(
-        id = this.id,
-        email = this.email,
-        login = this.login,
-        name = this.name,
-        password = this.password,
-        surname = this.surname,
-    )
-
-    private fun User.toDtoWithoutPasswordAndEmail() = UserDto(
-        id = this.id,
-        login = this.login,
-        name = this.name,
-        surname = this.surname,
-    )
-
-    private fun UserDto.toEntity() = User(
-        email = this.email!!,
-        login = this.login!!,
-        name = this.name!!,
-        password = this.password!!,
-        surname = this.surname!!,
-    )
 }

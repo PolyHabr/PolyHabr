@@ -1,7 +1,10 @@
 package com.polyhabr.poly_back.controller.model.article.response
 
+import com.polyhabr.poly_back.controller.model.user.response.UserOtherResponse
+import com.polyhabr.poly_back.controller.model.user.response.toOtherResponse
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.entity.ArticleType
+import com.polyhabr.poly_back.entity.auth.toDto
 import java.time.LocalDate
 
 data class ArticleResponse(
@@ -10,11 +13,12 @@ data class ArticleResponse(
     val likes: Int,
     val previewText: String,
     val typeId: ArticleType,
-    val userId: Long,
+    val user: UserOtherResponse? = null,
     val title: String? = null,
     val text: String? = null,
     val listDisciplineName: List<String>,
     val listTag: List<String>,
+    val fileId: String? = null,
 )
 
 fun ArticleDto.toResponse(): ArticleResponse {
@@ -24,10 +28,11 @@ fun ArticleDto.toResponse(): ArticleResponse {
         likes = this.likes,
         previewText = this.previewText,
         typeId = this.typeId!!,
-        userId = this.userId?.id!!,
+        user = this.userId?.toDto()?.toOtherResponse()!!,
         title = this.title,
         listDisciplineName = this.listDisciplineName,
         listTag = this.listTag,
         text = this.text,
+        fileId = this.fileId
     )
 }

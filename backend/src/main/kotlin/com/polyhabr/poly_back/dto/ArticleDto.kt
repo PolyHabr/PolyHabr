@@ -17,4 +17,6 @@ data class ArticleDto(
     var userId: User? = null,
     val listDisciplineName: List<String>,
     val listTag: List<String>,
+    val fileDto: FileCreatingDto? = null,
+    var fileId: String? = null,
 )

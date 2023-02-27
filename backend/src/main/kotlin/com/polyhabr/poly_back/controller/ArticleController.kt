@@ -13,10 +13,13 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
+import java.io.IOException
 import java.security.Principal
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
@@ -53,8 +56,8 @@ class ArticleController(
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-        
-    ): ResponseEntity<ArticleListResponse> {
+
+        ): ResponseEntity<ArticleListResponse> {
         val rawResponse = articleService
             .getAll(
                 offset = offset,
@@ -128,11 +131,18 @@ class ArticleController(
             ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
         ]
     )
-    @PostMapping("/create")
+    @PostMapping(path = ["/create"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
-        @Valid @RequestBody articleRequest: ArticleRequest
+        @RequestPart(name = "model") @Valid articleRequest: ArticleRequest,
+        @RequestPart(name = "file") file: MultipartFile
     ): ResponseEntity<ArticleCreateResponse> {
+        try {
+            articleRequest.file?.data = file.bytes
+            articleRequest.file?.name = file.originalFilename
+        } catch (e: IOException) {
+            return ResponseEntity.badRequest().build()
+        }
         val (success, id) = articleService.create(articleRequest.toDtoWithoutType())
         val response = ArticleCreateResponse(id = id, isSuccess = success)
         return ResponseEntity.ok(response)

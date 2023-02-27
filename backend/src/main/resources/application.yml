@@ -66,6 +66,10 @@ logging:
       hibernate:
         type: trace
 spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 2MB
   mail:
     host: smtp.mail.ru
     port: 587

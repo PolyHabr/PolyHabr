@@ -1,5 +1,6 @@
 package com.polyhabr.poly_back.entity.auth
 
+import com.polyhabr.poly_back.dto.UserDto
 import com.polyhabr.poly_back.entity.BaseEntity
 import javax.persistence.*
 import javax.validation.constraints.Size
@@ -44,3 +45,19 @@ open class User(
     @Column(name = "reset_token")
     var resetToken: String? = null,
 ) : BaseEntity<Long>()
+
+fun User.toDto() = UserDto(
+    id = this.id,
+    email = this.email,
+    login = this.login,
+    name = this.name,
+    password = this.password,
+    surname = this.surname,
+)
+
+fun User.toDtoWithoutPasswordAndEmail() = UserDto(
+    id = this.id,
+    login = this.login,
+    name = this.name,
+    surname = this.surname,
+)
