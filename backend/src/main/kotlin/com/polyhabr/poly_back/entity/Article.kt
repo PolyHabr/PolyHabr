@@ -24,6 +24,7 @@ open class Article(
     open var date: LocalDate,
 
     @Column(name = "file_pdf")
+    @Deprecated("dont use this field")
     open var filePdf: String? = null,
 
     @NotNull
@@ -38,5 +39,10 @@ open class Article(
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
-    open var userId: User?
+    open var userId: User?,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "file_id")
+    open var file_id: File? = null
 ) : BaseEntity<Long>()

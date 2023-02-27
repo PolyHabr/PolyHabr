@@ -8,6 +8,7 @@ import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.repository.*
 import com.polyhabr.poly_back.repository.auth.UsersRepository
 import com.polyhabr.poly_back.service.ArticleService
+import com.polyhabr.poly_back.service.FileService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -26,6 +27,7 @@ class ArticleServiceImpl(
     private val tagTypeRepository: TagTypeRepository,
     private val articleToTagTypeRepository: ArticleToTagTypeRepository,
     private val articleToDisciplineTypeRepository: ArticleToDisciplineTypeRepository,
+    private val fileService: FileService
 ) : ArticleService {
 
     @Autowired
@@ -119,6 +121,10 @@ class ArticleServiceImpl(
                     }
 
                     return transactionTemplate.execute {
+                        val savedFile = articleDto.fileDto?.let { file ->
+                            fileService.create(file, file.originalName)
+                                ?: throw RuntimeException("Error while create article")
+                        }
                         val article = articleRepository.save(
                             articleDto
                                 .apply {
@@ -126,6 +132,9 @@ class ArticleServiceImpl(
                                     userId = currentUser
                                 }
                                 .toEntity()
+                                .apply {
+                                    file_id = savedFile
+                                }
                         )
                         if (article.id == null) {
                             throw RuntimeException("Error while create article")
@@ -179,9 +188,12 @@ class ArticleServiceImpl(
 
     override fun delete(id: Long): Pair<Boolean, String> {
         return try {
-            usersRepository.findByLogin(currentLogin())?.let { _ ->
+            usersRepository.findByLogin(currentLogin())?.let { currentUser ->
                 articleRepository.findByIdOrNull(id)?.let { currentArticle ->
                     currentArticle.id?.let { id ->
+                        if (currentUser.id != currentArticle.userId!!.id) {
+                            return false to "You can't delete this article"
+                        }
                         articleRepository.deleteById(id)
                         true to "Article deleted"
                     } ?: (false to "Article id not found")
@@ -241,6 +253,7 @@ class ArticleServiceImpl(
             listDisciplineName = disciplineList,
             listTag = tagList,
             text = this.text,
+            fileId = this.file_id?.id
         )
 
     private fun ArticleDto.toEntity() = Article(

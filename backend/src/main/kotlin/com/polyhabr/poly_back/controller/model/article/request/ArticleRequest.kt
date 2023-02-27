@@ -1,6 +1,9 @@
 package com.polyhabr.poly_back.controller.model.article.request
 
+import com.polyhabr.poly_back.controller.model.file.FileRequest
+import com.polyhabr.poly_back.controller.model.file.toDto
 import com.polyhabr.poly_back.dto.ArticleDto
+import com.polyhabr.poly_back.dto.FileCreatingDto
 import io.swagger.v3.oas.annotations.media.Schema
 import java.io.Serializable
 import java.time.LocalDate
@@ -47,6 +50,9 @@ data class ArticleRequest(
     @field:NotNull
     @field:NotEmpty
     val listTag: List<String>? = null,
+
+    @field:Schema(example = "file, nullable")
+    var file: FileRequest? = null,
 ) : Serializable
 
 fun ArticleRequest.toDtoWithoutType(): ArticleDto {
@@ -65,6 +71,7 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
         listDisciplineName = this.listDisciplineName,
         listTag = this.listTag,
         typeName = this.articleType!!,
-        text = this.text!!
+        text = this.text!!,
+        fileDto = this.file?.toDto()
     )
 }
