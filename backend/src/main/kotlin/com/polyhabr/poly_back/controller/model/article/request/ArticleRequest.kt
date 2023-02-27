@@ -19,6 +19,10 @@ data class ArticleRequest(
     @field:NotNull
     val title: String? = null,
 
+    @field:Schema(example = "text, not null")
+    @field:NotNull
+    val text: String? = null,
+
     @field:Schema(example = "some text, not null")
     @field:NotNull
     val previewText: String? = null,
@@ -61,5 +65,6 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
         listDisciplineName = this.listDisciplineName,
         listTag = this.listTag,
         typeName = this.articleType!!,
+        text = this.text!!
     )
 }

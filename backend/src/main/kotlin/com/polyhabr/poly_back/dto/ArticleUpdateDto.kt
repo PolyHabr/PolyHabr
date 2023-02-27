@@ -5,5 +5,6 @@ data class ArticleUpdateDto(
     var likes: Int? = null,
     var previewText: String? = null,
     var title: String? = null,
+    var text: String? = null,
     var typeName: String? = null,
 )

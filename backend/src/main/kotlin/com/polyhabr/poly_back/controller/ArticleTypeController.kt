@@ -46,11 +46,10 @@ class ArticleTypeController(
         ]
     )
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-        principal: Principal
+        
     ): ResponseEntity<ArticleTypeListResponse> {
         val rawResponse = articleTypeService
             .getAll(
@@ -75,7 +74,6 @@ class ArticleTypeController(
         ]
     )
     @GetMapping("/byId")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getById(
         @Positive @RequestParam("id") id: Long
     ): ResponseEntity<ArticleTypeResponse> {
@@ -102,7 +100,6 @@ class ArticleTypeController(
         ]
     )
     @GetMapping("/search")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun searchArticleTypesByName(
         @Schema(example = "physics") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,

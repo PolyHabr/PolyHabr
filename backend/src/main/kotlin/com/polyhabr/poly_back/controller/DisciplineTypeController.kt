@@ -45,11 +45,10 @@ class DisciplineTypeController(
         ]
     )
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-        principal: Principal
+        
     ): ResponseEntity<DisciplineTypeListResponse> {
         val rawResponse = disciplineTypeService
             .getAll(
@@ -74,7 +73,6 @@ class DisciplineTypeController(
         ]
     )
     @GetMapping("/byId")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getById(
         @Positive @RequestParam("id") id: Long
     ): ResponseEntity<DisciplineTypeResponse> {
@@ -101,7 +99,6 @@ class DisciplineTypeController(
         ]
     )
     @GetMapping("/search")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun searchDisciplineTypesByName(
         @Schema(example = "physics") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,

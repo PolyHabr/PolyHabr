@@ -1,6 +1,5 @@
 package com.polyhabr.poly_back.service.impl
 
-import com.polyhabr.poly_back.controller.model.article.request.ArticleUpdateRequest
 import com.polyhabr.poly_back.controller.utils.currentLogin
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.dto.ArticleUpdateDto
@@ -169,6 +168,7 @@ class ArticleServiceImpl(
                     articleUpdateDto.filePdf?.let { filePdf = it }
                     articleUpdateDto.likes?.let { likes = it }
                     articleUpdateDto.title?.let { title = it }
+                    articleUpdateDto.text?.let { text = it }
                     this.typeId = newArticleType
                 }
                 return articleRepository.save(currentArticle).id?.let { true to "Ok" }
@@ -240,6 +240,7 @@ class ArticleServiceImpl(
             title = this.title,
             listDisciplineName = disciplineList,
             listTag = tagList,
+            text = this.text,
         )
 
     private fun ArticleDto.toEntity() = Article(
@@ -250,5 +251,6 @@ class ArticleServiceImpl(
         typeId = this.typeId!!,
         userId = this.userId!!,
         title = this.title,
+        text = this.text,
     )
 }
