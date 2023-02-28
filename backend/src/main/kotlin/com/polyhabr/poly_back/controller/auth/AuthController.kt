@@ -22,6 +22,10 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 import java.util.stream.Collectors
 import javax.validation.Valid
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Pattern
+import javax.validation.constraints.Size
 
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
@@ -54,7 +58,7 @@ class AuthController {
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {
         userRepository.findByLogin(loginRequest.username!!)?.let { user ->
-            if (!user.enabled){
+            if (!user.enabled) {
                 throw Exception("Confirm your email")
             }
             val authentication = authenticationManager.authenticate(
@@ -153,6 +157,36 @@ class AuthController {
     @GetMapping("/changePassword")
     fun verifyChangePassword(@Param("token") token: String): ResponseEntity<String> {
         return if (usersService.validatePasswordResetToken(token)) {
+            ResponseEntity.ok().build()
+        } else {
+            ResponseEntity.badRequest().build()
+        }
+    }
+
+    @GetMapping("/checkFreeLogin")
+    fun checkFreeLogin(
+        @NotBlank
+        @NotNull
+        @Size(min = 3, max = 20)
+        @Pattern(regexp = "^[A-Za-z0-9]+\$")
+        @Param("login") login: String
+    ): ResponseEntity<Unit> {
+        return if (!usernameExists(login)) {
+            ResponseEntity.ok().build()
+        } else {
+            ResponseEntity.badRequest().build()
+        }
+    }
+
+    @GetMapping("/checkFreeEmail")
+    fun checkFreeEmail(
+        @NotBlank
+        @NotNull
+        @Size(min = 3, max = 50)
+        @Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)\$")
+        @Param("email") email: String
+    ): ResponseEntity<Unit> {
+        return if (!emailExists(email)) {
             ResponseEntity.ok().build()
         } else {
             ResponseEntity.badRequest().build()
