@@ -54,6 +54,9 @@ class AuthController {
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {
         userRepository.findByLogin(loginRequest.username!!)?.let { user ->
+            if (!user.enabled){
+                throw Exception("Confirm your email")
+            }
             val authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password)
             )
