@@ -201,7 +201,7 @@ class ArticleController(
             ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
         ]
     )
-    @PutMapping("/add_like")
+    @PostMapping("/add_like")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun addLike(
         @Positive @RequestParam("articleId") id: Long,
@@ -224,7 +224,7 @@ class ArticleController(
             ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
         ]
     )
-    @PutMapping("/decrease_like")
+    @PostMapping("/decrease_like")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun decreaseLike(
         @Positive @RequestParam("articleId") id: Long,
