@@ -21,7 +21,7 @@ import javax.validation.constraints.PositiveOrZero
 @RestController
 @Validated
 @RequestMapping("/users")
-@CrossOrigin(origins = ["*"], maxAge = 3600)
+@CrossOrigin(origins = ["*"], maxAge = 14400)
 class UsersController(
     private val usersService: UsersService,
 ) {

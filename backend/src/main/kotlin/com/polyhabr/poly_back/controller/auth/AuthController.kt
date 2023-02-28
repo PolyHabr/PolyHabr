@@ -28,7 +28,7 @@ import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 
-@CrossOrigin(origins = ["*"], maxAge = 3600)
+@CrossOrigin(origins = ["*"], maxAge = 14400)
 @RestController
 @Validated
 @RequestMapping("/api/auth")

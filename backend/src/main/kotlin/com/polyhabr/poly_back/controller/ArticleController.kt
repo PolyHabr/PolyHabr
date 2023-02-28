@@ -21,7 +21,7 @@ import javax.validation.Valid
 import javax.validation.constraints.Positive
 import javax.validation.constraints.PositiveOrZero
 
-@CrossOrigin(origins = ["*"], maxAge = 3600)
+@CrossOrigin(origins = ["*"], maxAge = 14400)
 @RestController
 @Validated
 @RequestMapping("/articles")

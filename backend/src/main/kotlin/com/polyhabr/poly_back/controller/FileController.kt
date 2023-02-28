@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
 import javax.validation.Valid
 
-
+@CrossOrigin(origins = ["*"], maxAge = 14400)
 @RestController
 @Validated
 @RequestMapping("/files")
