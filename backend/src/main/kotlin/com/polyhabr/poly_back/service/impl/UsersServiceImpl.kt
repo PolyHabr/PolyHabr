@@ -109,10 +109,10 @@ class UsersServiceImpl(
         val fromAddress = "polyhabr@mail.ru"
         val senderName = "PolyHabr"
         val subject = "Please verify your registration"
-        var content = ("Dear [[name]],<br>"
-                + "Please click the link below to verify your registration:<br>"
+        var content = ("Дорогой [[name]],<br>"
+                + "Пожалуйста, нажмите на ссылку ниже, чтобы подтвердить свою регистрацию:<br>"
                 + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                + "Thank you,<br>"
+                + "Спасибо Вам,<br>"
                 + "PolyHabr.")
         val message = mailSender.createMimeMessage()
         val helper = MimeMessageHelper(message)
@@ -141,10 +141,10 @@ class UsersServiceImpl(
             val fromAddress = "polyhabr@mail.ru"
             val senderName = "PolyHabr"
             val subject = "Reset Password"
-            var content = ("Dear [[name]],<br>"
-                    + "Please click the link below to reset your password:<br>"
+            var content = ("Дорогой [[name]],<br>"
+                    + "Пожалуйста, нажмите на ссылку ниже, чтобы сбросить пароль:<br>"
                     + "<h3><a href=\"[[URL]]\" target=\"_self\">RESET PASSWORD</a></h3>"
-                    + "Thank you,<br>"
+                    + "Спасибо Вам,<br>"
                     + "PolyHabr.")
             val message = mailSender.createMimeMessage()
             val helper = MimeMessageHelper(message)
