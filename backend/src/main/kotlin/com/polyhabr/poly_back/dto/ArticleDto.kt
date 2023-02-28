@@ -19,4 +19,5 @@ data class ArticleDto(
     val listTag: List<String>,
     val fileDto: FileCreatingDto? = null,
     var fileId: String? = null,
+    var viewCount: Long = 0
 )

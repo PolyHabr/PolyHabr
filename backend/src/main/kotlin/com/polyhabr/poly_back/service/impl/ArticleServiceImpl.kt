@@ -69,6 +69,7 @@ class ArticleServiceImpl(
                 articleToTagTypeRepository.findByArticle(article).forEach { articleToTagType ->
                     listTagToSave.add(articleToTagType.tagType?.name!!)
                 }
+                articleRepository.save(article.apply { this.view++ })
                 return@execute article.toDto(
                     disciplineList = listDisciplineToSave,
                     tagList = listTagToSave
@@ -281,7 +282,8 @@ class ArticleServiceImpl(
             listDisciplineName = disciplineList,
             listTag = tagList,
             text = this.text,
-            fileId = this.file_id?.id
+            fileId = this.file_id?.id,
+            viewCount = this.view
         )
 
     private fun ArticleDto.toEntity() = Article(
@@ -293,5 +295,6 @@ class ArticleServiceImpl(
         userId = this.userId!!,
         title = this.title,
         text = this.text,
+        view = this.viewCount
     )
 }

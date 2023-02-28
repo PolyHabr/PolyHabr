@@ -31,6 +31,10 @@ open class Article(
     @Column(name = "likes", nullable = false)
     open var likes: Int = 0,
 
+    @NotNull
+    @Column(name = "view", nullable = false)
+    open var view: Long = 0,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "type_id")

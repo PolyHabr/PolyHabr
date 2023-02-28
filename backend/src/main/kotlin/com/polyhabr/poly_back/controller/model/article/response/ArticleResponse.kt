@@ -21,6 +21,7 @@ data class ArticleResponse(
     val listDisciplineName: List<String>,
     val listTag: List<String>,
     val fileId: String? = null,
+    val viewCount: Long
 )
 
 fun ArticleDto.toResponse(): ArticleResponse {
@@ -36,6 +37,7 @@ fun ArticleDto.toResponse(): ArticleResponse {
         listDisciplineName = this.listDisciplineName,
         listTag = this.listTag,
         text = this.text,
-        fileId = this.fileId
+        fileId = this.fileId,
+        viewCount = this.viewCount
     )
 }
