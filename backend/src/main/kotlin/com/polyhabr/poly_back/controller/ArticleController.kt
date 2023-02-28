@@ -3,9 +3,6 @@ package com.polyhabr.poly_back.controller
 import com.polyhabr.poly_back.controller.model.article.request.*
 import com.polyhabr.poly_back.controller.model.article.response.ArticleListResponse
 import com.polyhabr.poly_back.controller.model.article.response.*
-import com.polyhabr.poly_back.controller.model.userToLikedArticle.request.UserToLikedArticleRequest
-import com.polyhabr.poly_back.controller.model.userToLikedArticle.request.toDto
-import com.polyhabr.poly_back.controller.model.userToLikedArticle.response.UserToLikedArticleUpdateResponse
 import com.polyhabr.poly_back.service.ArticleService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -19,8 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.io.IOException
-import java.security.Principal
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
@@ -92,7 +87,7 @@ class ArticleController(
         }
     }
 
-    @Operation(summary = "Search articles by prefix")
+    @Operation(summary = "Search articles by tittle")
     @ApiResponses(
         value = [
             ApiResponse(
@@ -106,14 +101,39 @@ class ArticleController(
             ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
         ]
     )
-    @GetMapping("/search")
-    fun searchArticlesByName(
+    @GetMapping("/searchByTittle")
+    fun searchArticlesByTittle(
         @Schema(example = "physics") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
     ): ResponseEntity<ArticleListResponse> {
         val rawResponse = articleService
             .searchByName(prefix, offset, size)
+        return ResponseEntity.ok(rawResponse.toListResponse())
+    }
+
+    @Operation(summary = "Search articles by tittle")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Article", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ArticleListResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
+    @GetMapping("/byUser")
+    fun searchArticlesByUser(
+        @Positive @RequestParam("id") id: Long,
+        @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
+        @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+    ): ResponseEntity<ArticleListResponse> {
+        val rawResponse = articleService
+            .getByUserId(id, offset, size)
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
 

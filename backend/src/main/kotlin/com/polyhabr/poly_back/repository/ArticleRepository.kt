@@ -13,6 +13,12 @@ interface ArticleRepository: JpaRepository<Article, Long>{
     @Query("SELECT a FROM Article a WHERE a.previewText LIKE %:pname%")
     fun findArticleByName(pageable: Pageable, @Param("pname") pname: String): Page<Article>
 
+    @Query("SELECT a FROM Article a WHERE a.title LIKE %:pname%")
+    fun findArticleByTitle(pageable: Pageable, @Param("pname") pname: String): Page<Article>
+
+    @Query("SELECT a FROM Article a WHERE a.userId.id = :id")
+    fun findArticleByUserId(pageable: Pageable, @Param("id") id: Long): Page<Article>
+
     @Modifying
     @Query("UPDATE Article a SET a.likes = a.likes + 1 WHERE a.id = :id")
     fun addLikeByArticleId(@Param("id") id: Long)

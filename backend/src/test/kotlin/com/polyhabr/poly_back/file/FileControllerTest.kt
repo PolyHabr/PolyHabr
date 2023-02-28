@@ -2,6 +2,10 @@
 //
 //import com.fasterxml.jackson.core.JsonProcessingException
 //import com.fasterxml.jackson.databind.ObjectMapper
+//import com.polyhabr.poly_back.controller.CommentController
+//import com.polyhabr.poly_back.controller.auth.AuthController
+//import com.polyhabr.poly_back.controller.auth.LoginUser
+//import com.polyhabr.poly_back.controller.model.file.FileOnlyRequest
 //import com.polyhabr.poly_back.dto.FileCreatingDto
 //import com.polyhabr.poly_back.entity.File
 //import com.polyhabr.poly_back.repository.FileRepository
@@ -45,6 +49,9 @@
 //    @Autowired
 //    lateinit var fileRepository: FileRepository
 //
+//    @Autowired
+//    lateinit var authController: AuthController
+//
 //    @BeforeEach
 //    fun setUp() {
 //        mvc = MockMvcBuilders.webAppContextSetup(context).build()
@@ -55,9 +62,14 @@
 //    @Test
 //    @Throws(Exception::class)
 //    fun create_withName_OK() {
-//        val dto = FileCreatingDto(
+//        val loginResponse = authController.manualLogin(
+//            LoginUser(
+//                username = "admin",
+//                password = "admincool"
+//            )
+//        )
+//        val dto = FileOnlyRequest(
 //            name = "test.png",
-//            username = "user@email.com"
 //        )
 //        val model = getFileModel(dto)
 //        val file = createDummyFile()
@@ -65,6 +77,7 @@
 //            MockMvcRequestBuilders.multipart("/files")
 //                .file(model)
 //                .file(file)
+//                .header("Authorization", "Bearer ${loginResponse.accessToken}")
 //        )
 //            .andDo(print())
 //            .andExpect(status().isCreated)
@@ -193,7 +206,7 @@
 //    }
 //
 //    @Throws(JsonProcessingException::class)
-//    private fun getFileModel(dto: FileCreatingDto): MockMultipartFile {
+//    private fun getFileModel(dto: FileOnlyRequest): MockMultipartFile {
 //        return MockMultipartFile(
 //            "model", "", "application/json",
 //            jsonMapper.writeValueAsString(dto).toByteArray()

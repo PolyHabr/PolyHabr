@@ -53,7 +53,6 @@ class AuthController {
 
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {
-
         userRepository.findByLogin(loginRequest.username!!)?.let { user ->
             val authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password)
@@ -66,11 +65,29 @@ class AuthController {
                     .map { role -> SimpleGrantedAuthority(role.name) }
                     .collect(Collectors.toList<GrantedAuthority>())
 
-            return ResponseEntity.ok(JwtResponse(jwt, user.login, authorities))
+            val response = JwtResponse(jwt, user.login, authorities)
+            return ResponseEntity.ok(response)
         } ?: return ResponseEntity(
             ResponseMessage("User not found!"),
             HttpStatus.BAD_REQUEST
         )
+    }
+
+    fun manualLogin(loginRequest: LoginUser): JwtResponse {
+        userRepository.findByLogin(loginRequest.username!!)?.let { user ->
+            val authentication = authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password)
+            )
+            SecurityContextHolder.getContext().authentication = authentication
+
+            val jwt: String = jwtProvider.generateJwtToken(user.login)
+            val authorities: List<GrantedAuthority> =
+                user.roles!!.stream()
+                    .map { role -> SimpleGrantedAuthority(role.name) }
+                    .collect(Collectors.toList<GrantedAuthority>())
+
+            return JwtResponse(jwt, user.login, authorities)
+        } ?: throw Exception("User not found")
     }
 
     @PostMapping("/signup")

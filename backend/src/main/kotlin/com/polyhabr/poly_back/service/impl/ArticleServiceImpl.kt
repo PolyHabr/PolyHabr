@@ -79,11 +79,36 @@ class ArticleServiceImpl(
 
     override fun searchByName(prefix: String?, offset: Int, size: Int): Page<ArticleDto> {
         val articles = articleRepository
-            .findArticleByName(
+            .findArticleByTitle(
                 PageRequest.of(
                     offset,
                     size,
                 ), prefix ?: ""
+            )
+        return articles.map {
+            val listDisciplineToSave = mutableListOf<String>()
+            val listTagToSave = mutableListOf<String>()
+            articleToDisciplineTypeRepository.findByArticle(it).forEach { articleToDisciplineType ->
+                listDisciplineToSave.add(articleToDisciplineType.disciplineType?.name!!)
+            }
+            articleToTagTypeRepository.findByArticle(it).forEach { articleToTagType ->
+                listTagToSave.add(articleToTagType.tagType?.name!!)
+            }
+            it.toDto(
+                disciplineList = listDisciplineToSave,
+                tagList = listTagToSave
+            )
+        }
+    }
+
+    override fun getByUserId(id: Long, offset: Int, size: Int): Page<ArticleDto> {
+        val articles = articleRepository
+            .findArticleByUserId(
+                PageRequest.of(
+                    offset,
+                    size,
+                ),
+                id
             )
         return articles.map {
             val listDisciplineToSave = mutableListOf<String>()
