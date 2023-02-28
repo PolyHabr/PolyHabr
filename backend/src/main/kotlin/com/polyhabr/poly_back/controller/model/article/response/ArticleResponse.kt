@@ -5,12 +5,14 @@ import com.polyhabr.poly_back.controller.model.user.response.toOtherResponse
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.entity.ArticleType
 import com.polyhabr.poly_back.entity.auth.toDto
+import com.polyhabr.poly_back.utility.DateTimeUtils
+import org.joda.time.DateTime
 import java.time.LocalDate
 import javax.persistence.Id
 
 data class ArticleResponse(
     val id: Long,
-    val date: LocalDate,
+    val date: String,
     val filePdf: String? = null,
     val likes: Int,
     val previewText: String,
@@ -27,7 +29,7 @@ data class ArticleResponse(
 fun ArticleDto.toResponse(): ArticleResponse {
     return ArticleResponse(
         id = this.id!!,
-        date = this.date,
+        date = this.date.toString(DateTimeUtils.defaultFormat),
         filePdf = this.filePdf,
         likes = this.likes,
         previewText = this.previewText,

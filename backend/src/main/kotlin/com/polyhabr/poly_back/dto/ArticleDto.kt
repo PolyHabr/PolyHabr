@@ -2,11 +2,12 @@ package com.polyhabr.poly_back.dto
 
 import com.polyhabr.poly_back.entity.ArticleType
 import com.polyhabr.poly_back.entity.auth.User
+import org.joda.time.DateTime
 import java.time.LocalDate
 
 data class ArticleDto(
     val id: Long? = null,
-    var date: LocalDate,
+    var date: DateTime,
     var filePdf: String? = null,
     var likes: Int,
     var previewText: String,

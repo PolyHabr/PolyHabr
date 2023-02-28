@@ -6,11 +6,13 @@ import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.repository.*
 import com.polyhabr.poly_back.repository.auth.RoleRepository
 import com.polyhabr.poly_back.repository.auth.UsersRepository
+import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
+import java.sql.Timestamp
 import java.time.LocalDate
 
 
@@ -100,7 +102,7 @@ class DataLoader : ApplicationRunner {
                     likes = 0,
                     typeId = articleType1,
                     userId = admin,
-                    date = LocalDate.now(),
+                    date = Timestamp(DateTime().millis),
                     text = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия"
                 )
             )

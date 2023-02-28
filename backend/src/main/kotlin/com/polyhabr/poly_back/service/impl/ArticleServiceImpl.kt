@@ -8,12 +8,16 @@ import com.polyhabr.poly_back.repository.*
 import com.polyhabr.poly_back.repository.auth.UsersRepository
 import com.polyhabr.poly_back.service.ArticleService
 import com.polyhabr.poly_back.service.FileService
+import org.joda.time.DateTime
+import org.joda.time.LocalTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.support.TransactionTemplate
+import java.sql.Timestamp
+import java.time.LocalDate
 
 
 @Service
@@ -272,7 +276,7 @@ class ArticleServiceImpl(
     ): ArticleDto =
         ArticleDto(
             id = this.id,
-            date = this.date,
+            date = DateTime(this.date.time),
             filePdf = this.filePdf,
             likes = this.likes,
             previewText = this.previewText,
@@ -287,7 +291,7 @@ class ArticleServiceImpl(
         )
 
     private fun ArticleDto.toEntity() = Article(
-        date = this.date,
+        date = Timestamp(this.date.millis),
         filePdf = this.filePdf!!,
         likes = this.likes,
         previewText = this.previewText,

@@ -10,13 +10,13 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 interface ArticleRepository : JpaRepository<Article, Long> {
-    @Query("SELECT a FROM Article a WHERE  LOWER(a.previewText) LIKE %:pname%")
+    @Query("SELECT a FROM Article a WHERE LOWER(a.previewText) LIKE %:pname% ORDER BY a.date DESC ")
     fun findArticleByName(pageable: Pageable, @Param("pname") pname: String): Page<Article>
 
-    @Query("SELECT a FROM Article a WHERE LOWER(a.title) LIKE %:pname%")
+    @Query("SELECT a FROM Article a WHERE LOWER(a.title) LIKE %:pname% ORDER BY a.date DESC")
     fun findArticleByTitle(pageable: Pageable, @Param("pname") pname: String): Page<Article>
 
-    @Query("SELECT a FROM Article a WHERE a.userId.id = :id")
+    @Query("SELECT a FROM Article a WHERE a.userId.id = :id ORDER BY a.date DESC")
     fun findArticleByUserId(pageable: Pageable, @Param("id") id: Long): Page<Article>
 
     @Modifying

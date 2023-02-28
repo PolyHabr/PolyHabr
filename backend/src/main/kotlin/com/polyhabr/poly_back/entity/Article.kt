@@ -3,6 +3,7 @@ package com.polyhabr.poly_back.entity
 import com.polyhabr.poly_back.entity.auth.User
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import java.sql.Timestamp
 import java.time.LocalDate
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -21,7 +22,7 @@ open class Article(
     open var previewText: String,
 
     @Column(name = "date")
-    open var date: LocalDate,
+    open var date: Timestamp,
 
     @Column(name = "file_pdf")
     @Deprecated("dont use this field")

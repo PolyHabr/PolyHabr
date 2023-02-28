@@ -5,6 +5,7 @@ import com.polyhabr.poly_back.controller.model.file.toDto
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.dto.FileCreatingDto
 import io.swagger.v3.oas.annotations.media.Schema
+import org.joda.time.DateTime
 import java.io.Serializable
 import java.time.LocalDate
 import javax.validation.constraints.NotEmpty
@@ -63,7 +64,7 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
         throw IllegalArgumentException("listTag size must be less than 5")
     }
     return ArticleDto(
-        date = LocalDate.now(),
+        date = DateTime.now(),
         filePdf = this.filePdf,
         likes = this.likes ?: 0,
         previewText = this.previewText!!,
@@ -83,7 +84,7 @@ fun ArticleRequest.toDtoWithoutType(data: ByteArray?, originName: String?): Arti
         throw IllegalArgumentException("listTag size must be less than 5")
     }
     return ArticleDto(
-        date = LocalDate.now(),
+        date = DateTime.now(),
         filePdf = this.filePdf,
         likes = this.likes ?: 0,
         previewText = this.previewText!!,
