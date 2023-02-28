@@ -13,6 +13,8 @@ interface UsersService {
 
     fun getById(id: Long): UserDto?
 
+    fun getMyUser(): UserDto?
+
     fun searchByName(prefix: String?, offset: Int, size: Int): Page<UserDto>
 
     fun create(userRequest: UserRequest): Long?

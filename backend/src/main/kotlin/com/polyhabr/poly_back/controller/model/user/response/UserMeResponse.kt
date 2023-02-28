@@ -6,7 +6,6 @@ data class UserMeResponse(
     val id: Long,
     val email: String,
     val login: String,
-    val password: String,
     val name: String,
     val surname: String,
 )
@@ -17,7 +16,6 @@ fun UserDto.toMeResponse(): UserMeResponse {
         email = this.email!!,
         login = this.login!!,
         name = this.name!!,
-        password = this.password!!,
         surname = this.surname!!,
     )
 }

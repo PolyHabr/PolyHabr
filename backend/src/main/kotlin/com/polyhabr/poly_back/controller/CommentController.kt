@@ -137,7 +137,7 @@ class CommentController(
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
     ): ResponseEntity<CommentListResponse> {
         val rawResponse = commentService
-            .searchByName(prefix, offset, size)
+            .searchByName(prefix?.lowercase(), offset, size)
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
 

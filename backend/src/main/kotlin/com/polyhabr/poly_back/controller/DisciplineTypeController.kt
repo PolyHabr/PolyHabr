@@ -105,7 +105,7 @@ class DisciplineTypeController(
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
     ): ResponseEntity<DisciplineTypeListResponse> {
         val rawResponse = disciplineTypeService
-            .searchByName(prefix, offset, size)
+            .searchByName(prefix?.lowercase(), offset, size)
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
 

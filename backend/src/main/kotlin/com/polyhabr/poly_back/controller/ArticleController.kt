@@ -21,6 +21,7 @@ import javax.validation.Valid
 import javax.validation.constraints.Positive
 import javax.validation.constraints.PositiveOrZero
 
+@CrossOrigin(origins = ["*"], maxAge = 3600)
 @RestController
 @Validated
 @RequestMapping("/articles")
@@ -51,7 +52,6 @@ class ArticleController(
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-
         ): ResponseEntity<ArticleListResponse> {
         val rawResponse = articleService
             .getAll(
@@ -108,7 +108,7 @@ class ArticleController(
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
     ): ResponseEntity<ArticleListResponse> {
         val rawResponse = articleService
-            .searchByName(prefix, offset, size)
+            .searchByName(prefix?.lowercase(), offset, size)
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
 

@@ -84,6 +84,30 @@ class UsersController(
         } ?: ResponseEntity.badRequest().build()
     }
 
+    @Operation(summary = "My user")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "User", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = UserMeResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
+    @GetMapping("/me")
+    fun getMyUser(): ResponseEntity<UserMeResponse>? {
+        val response = usersService
+            .getMyUser()
+            ?.toMeResponse()
+        return response?.let {
+            ResponseEntity.ok(it)
+        } ?: ResponseEntity.badRequest().build()
+    }
+
     @Operation(summary = "Search users by prefix")
     @ApiResponses(
         value = [
@@ -105,7 +129,7 @@ class UsersController(
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
     ): ResponseEntity<UserListResponse> {
         val rawResponse = usersService
-            .searchByName(prefix, offset, size)
+            .searchByName(prefix?.lowercase(), offset, size)
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
 

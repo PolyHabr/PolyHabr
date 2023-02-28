@@ -60,6 +60,11 @@ class UsersServiceImpl(
             ?.toDto()
     }
 
+    override fun getMyUser(): UserDto? {
+        return usersRepository.findByLogin(currentLogin())
+            ?.toDto()
+    }
+
     override fun searchByName(prefix: String?, offset: Int, size: Int): Page<UserDto> =
         usersRepository
             .findUsersByName(

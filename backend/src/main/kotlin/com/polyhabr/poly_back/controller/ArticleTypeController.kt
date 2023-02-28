@@ -106,7 +106,7 @@ class ArticleTypeController(
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
     ): ResponseEntity<ArticleTypeListResponse> {
         val rawResponse = articleTypeService
-            .searchByName(prefix, offset, size)
+            .searchByName(prefix?.lowercase(), offset, size)
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
 
