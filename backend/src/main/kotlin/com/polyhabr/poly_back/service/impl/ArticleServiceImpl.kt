@@ -39,25 +39,42 @@ class ArticleServiceImpl(
         size: Int,
         sorting: SortArticleRequest?,
     ): Page<ArticleDto> {
-        val diff = sorting?.getMillis()
+        val diff = sorting?.getMillis() ?: Long.MAX_VALUE
         val pageRequest = PageRequest.of(offset, size)
-        val articles = if (diff == null) {
-            articleRepository.findArticlesOrderDate(pageRequest)
-        } else if (sorting.fieldView == true) {
-            articleRepository.findArticlesWithLimitTimelineOrderView(
-                pageRequest,
-                nowmillis = DateTime.now().millis,
-                diffmillis = diff
-            )
-        } else if (sorting.fieldRating == true) {
-            articleRepository.findArticlesWithLimitTimelineOrderLike(
-                pageRequest,
-                nowmillis = DateTime.now().millis,
-                diffmillis = diff
-            )
-        } else {
-            articleRepository.findArticlesOrderDate(pageRequest)
-        }
+        val articles =
+            sorting?.fieldView?.let {
+                if (it) {
+                    articleRepository.findArticlesWithLimitTimelineOrderViewASC(
+                        pageRequest,
+                        nowmillis = DateTime.now().millis,
+                        diffmillis = diff
+                    )
+                } else {
+                    articleRepository.findArticlesWithLimitTimelineOrderView(
+                        pageRequest,
+                        nowmillis = DateTime.now().millis,
+                        diffmillis = diff
+                    )
+                }
+            } ?: run {
+                sorting?.fieldRating?.let {
+                    if (it) {
+                        articleRepository.findArticlesWithLimitTimelineOrderLikeASC(
+                            pageRequest,
+                            nowmillis = DateTime.now().millis,
+                            diffmillis = diff
+                        )
+                    } else {
+                        articleRepository.findArticlesWithLimitTimelineOrderLike(
+                            pageRequest,
+                            nowmillis = DateTime.now().millis,
+                            diffmillis = diff
+                        )
+                    }
+                }
+            } ?: run {
+                articleRepository.findArticlesOrderDate(pageRequest)
+            }
         return articles.map {
             val listDisciplineToSave = mutableListOf<String>()
             val listTagToSave = mutableListOf<String>()
@@ -94,29 +111,54 @@ class ArticleServiceImpl(
         } ?: throw RuntimeException("SQL error")
     }
 
-    override fun searchByName(prefix: String?, offset: Int, size: Int, sorting: SortArticleRequest?): Page<ArticleDto> {
+    override fun searchByName(
+        prefix: String?,
+        offset: Int,
+        size: Int,
+        sorting: SortArticleRequest?
+    ): Page<ArticleDto> {
         val searchText = prefix ?: ""
-        val diff = sorting?.getMillis()
+        val diff = sorting?.getMillis() ?: Long.MAX_VALUE
         val pageRequest = PageRequest.of(offset, size)
-        val articles = if (diff == null) {
-            articleRepository.searchByTitleArticlesOrderDate(pageable = pageRequest, titlesearch = searchText)
-        } else if (sorting.fieldView == true) {
-            articleRepository.searchByTitleArticlesWithLimitTimelineOrderView(
-                pageable = pageRequest,
-                nowmillis = DateTime.now().millis,
-                diffmillis = diff,
-                titlesearch = searchText
-            )
-        } else if (sorting.fieldRating == true) {
-            articleRepository.searchByTitleArticlesWithLimitTimelineOrderLike(
-                pageable = pageRequest,
-                nowmillis = DateTime.now().millis,
-                diffmillis = diff,
-                titlesearch = searchText
-            )
-        } else {
-            articleRepository.searchByTitleArticlesOrderDate(pageable = pageRequest, titlesearch = searchText)
-        }
+        val articles =
+            sorting?.fieldView?.let {
+                if (it) {
+                    articleRepository.searchByTitleArticlesWithLimitTimelineOrderViewASC(
+                        pageable = pageRequest,
+                        nowmillis = DateTime.now().millis,
+                        diffmillis = diff,
+                        titlesearch = searchText
+                    )
+                } else {
+                    articleRepository.searchByTitleArticlesWithLimitTimelineOrderView(
+                        pageable = pageRequest,
+                        nowmillis = DateTime.now().millis,
+                        diffmillis = diff,
+                        titlesearch = searchText
+                    )
+                }
+            } ?: run {
+                sorting?.fieldRating?.let {
+                    if (it) {
+                        articleRepository.searchByTitleArticlesWithLimitTimelineOrderLikeASC(
+                            pageable = pageRequest,
+                            nowmillis = DateTime.now().millis,
+                            diffmillis = diff,
+                            titlesearch = searchText
+                        )
+                    } else {
+                        articleRepository.searchByTitleArticlesWithLimitTimelineOrderLike(
+                            pageable = pageRequest,
+                            nowmillis = DateTime.now().millis,
+                            diffmillis = diff,
+                            titlesearch = searchText
+                        )
+                    }
+                }
+            } ?: run {
+                articleRepository.searchByTitleArticlesOrderDate(pageable = pageRequest, titlesearch = searchText)
+            }
+
         return articles.map {
             val listDisciplineToSave = mutableListOf<String>()
             val listTagToSave = mutableListOf<String>()
@@ -160,31 +202,26 @@ class ArticleServiceImpl(
 
     override fun create(articleDto: ArticleDto): Pair<Boolean, Long?> {
         usersRepository.findByLogin(currentLogin())?.let { currentUser ->
-            articleDto.typeName?.let {
-                articleTypeRepository.findByName(it)?.let { articleType ->
-                    val listDisciplineToSave = mutableListOf<DisciplineType>()
-                    articleDto.listDisciplineName.forEach { name ->
-                        val disciplineType = disciplineTypeRepository.findByName(name)
-                            ?: throw RuntimeException("Discipline by name not found")
-                        listDisciplineToSave.add(disciplineType)
-                    }
+            return transactionTemplate.execute {
+                return@execute articleDto.typeName?.let {
+                    articleTypeRepository.findByName(it)?.let { articleType ->
+                        val listDisciplineToSave = mutableListOf<DisciplineType>()
+                        articleDto.listDisciplineName.forEach { name ->
+                            val disciplineType = disciplineTypeRepository.findByName(name)
+                                ?: throw RuntimeException("Discipline by name not found")
+                            listDisciplineToSave.add(disciplineType)
+                        }
 
-                    val listTagToSave = mutableListOf<TagType>()
-                    articleDto.listTag.forEach { name ->
-                        val tagType = tagTypeRepository.findByName(name)
-                            ?: run {
-                                return@run tagTypeRepository.save(
-                                    TagType(name)
-                                )
-                            }
-                        listTagToSave.add(tagType)
-                    }
-
-                    return transactionTemplate.execute {
-//                        val savedFile = articleDto.fileDto?.let { file ->
-//                            fileService.create(file, file.originalName, articleId)
-//                                ?: throw RuntimeException("Error while create article")
-//                        }
+                        val listTagToSave = mutableListOf<TagType>()
+                        articleDto.listTag.forEach { name ->
+                            val tagType = tagTypeRepository.findByName(name)
+                                ?: run {
+                                    return@run tagTypeRepository.save(
+                                        TagType(name)
+                                    )
+                                }
+                            listTagToSave.add(tagType)
+                        }
                         val article = articleRepository.save(
                             articleDto
                                 .apply {
@@ -192,9 +229,6 @@ class ArticleServiceImpl(
                                     userId = currentUser
                                 }
                                 .toEntity()
-//                                .apply {
-//                                    file_id = savedFile
-//                                }
                         )
                         if (article.id == null) {
                             throw RuntimeException("Error while create article")
@@ -221,7 +255,7 @@ class ArticleServiceImpl(
                                 throw RuntimeException("Error while create article")
                             }
                         }
-                        return@execute true to article.id
+                        true to article.id
                     } ?: (false to null)
                 } ?: throw RuntimeException("Article type not found")
             } ?: throw RuntimeException("Article type not found")
@@ -303,9 +337,10 @@ class ArticleServiceImpl(
                 return@execute articles.map {
                     val listDisciplineToSave = mutableListOf<String>()
                     val listTagToSave = mutableListOf<String>()
-                    articleToDisciplineTypeRepository.findByArticle(it.articleId!!).forEach { articleToDisciplineType ->
-                        listDisciplineToSave.add(articleToDisciplineType.disciplineType?.name!!)
-                    }
+                    articleToDisciplineTypeRepository.findByArticle(it.articleId!!)
+                        .forEach { articleToDisciplineType ->
+                            listDisciplineToSave.add(articleToDisciplineType.disciplineType?.name!!)
+                        }
                     articleToTagTypeRepository.findByArticle(it.articleId!!).forEach { articleToTagType ->
                         listTagToSave.add(articleToTagType.tagType?.name!!)
                     }

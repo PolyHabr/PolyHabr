@@ -52,7 +52,7 @@ class ArticleController(
         @Schema(
             example = SortArticleRequest.docs,
             description = "list of field sort"
-        ) @RequestParam("sorting") sorting: SortArticleRequest? = null
+        ) @RequestBody sorting: SortArticleRequest? = null
     ): ResponseEntity<ArticleListResponse> {
         val rawResponse = articleService
             .getAll(

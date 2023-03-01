@@ -30,10 +30,6 @@ data class ArticleRequest(
     @field:Schema(example = "base 64, nullable")
     val filePdf: String? = null,
 
-    @field:Schema(example = "positive number, nullable")
-    @field:PositiveOrZero
-    val likes: Int? = 0,
-
     @field:Schema(example = "type name, not null")
     @field:NotNull
     val articleType: String? = null,
@@ -58,7 +54,7 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
     }
     return ArticleDto(
         date = DateTime.now(),
-        likes = this.likes ?: 0,
+        likes = 0,
         previewText = this.previewText!!,
         title = this.title!!,
         listDisciplineName = this.listDisciplineName,
@@ -79,7 +75,7 @@ fun ArticleRequest.toDtoWithoutType(data: ByteArray?, originName: String?): Arti
     }
     return ArticleDto(
         date = DateTime.now(),
-        likes = this.likes ?: 0,
+        likes = 0,
         previewText = this.previewText!!,
         title = this.title!!,
         listDisciplineName = this.listDisciplineName,

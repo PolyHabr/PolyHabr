@@ -3,6 +3,7 @@ package com.polyhabr.poly_back.controller
 import com.polyhabr.poly_back.controller.model.file.FileOnlyRequest
 import com.polyhabr.poly_back.controller.model.file.toDto
 import com.polyhabr.poly_back.service.FileService
+import com.polyhabr.poly_back.utility.Utility
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -33,9 +34,11 @@ class FileController(
     )
     fun create(
         @Schema(example = "physics") @RequestPart(name = "idArticle") @Positive articleId: Long,
-        @Schema(example = "physics") @RequestPart(name = "model") @Valid model: FileOnlyRequest,
         @RequestPart(name = "file") file: MultipartFile
     ): ResponseEntity<*>? {
+        val model = FileOnlyRequest(
+            name = Utility.getRandomString(30)
+        )
         try {
             model.data = file.bytes
         } catch (e: IOException) {

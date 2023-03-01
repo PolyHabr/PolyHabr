@@ -32,7 +32,7 @@ class FileServiceImpl(
                     extractNameAndExtension(actualName ?: getRandomString(15))
                 val toCreate = File(
                     username = dto.username,
-                    description = StringUtils.trimToNull(dto.description),
+                    description = dto.description ?: "",
                     name = nameAndExtension.first,
                     type = nameAndExtension.second,
                     data = dto.data,

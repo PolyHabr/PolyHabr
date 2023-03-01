@@ -18,7 +18,7 @@ open class Article(
     @Column(name = "text", length = 10000)
     open var text: String,
 
-    @Column(name = "preview_text", length = 400)
+    @Column(name = "preview_text", length = 1000)
     open var previewText: String,
 
     @Column(name = "date")

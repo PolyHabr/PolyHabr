@@ -30,7 +30,7 @@ data class SortArticleRequest(
                 "    var datRange: String? = null,"
     }
 
-    fun getMillis(): Long? {
+    fun getMillis(): Long {
         return when (datRange) {
             "1w" -> {
                 DateTimeUtils.wMillis
@@ -44,7 +44,7 @@ data class SortArticleRequest(
                 DateTimeUtils.yMillis
             }
 
-            else -> null
+            else -> Long.MAX_VALUE
         }
     }
 }
