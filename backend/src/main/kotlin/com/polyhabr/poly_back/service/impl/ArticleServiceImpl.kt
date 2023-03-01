@@ -297,22 +297,24 @@ class ArticleServiceImpl(
 
     override fun getFavArticle(offset: Int, size: Int): Page<ArticleDto> {
         usersRepository.findByLogin(currentLogin())?.let { currentUser ->
-            val pageRequest = PageRequest.of(offset, size)
-            val articles = articleToFavRepository.findByUserId(pageable = pageRequest, id = currentUser.id!!)
-            return articles.map {
-                val listDisciplineToSave = mutableListOf<String>()
-                val listTagToSave = mutableListOf<String>()
-                articleToDisciplineTypeRepository.findByArticle(it.articleId!!).forEach { articleToDisciplineType ->
-                    listDisciplineToSave.add(articleToDisciplineType.disciplineType?.name!!)
+            return transactionTemplate.execute {
+                val pageRequest = PageRequest.of(offset, size)
+                val articles = articleToFavRepository.findByUserId(pageable = pageRequest, id = currentUser.id!!)
+                return@execute articles.map {
+                    val listDisciplineToSave = mutableListOf<String>()
+                    val listTagToSave = mutableListOf<String>()
+                    articleToDisciplineTypeRepository.findByArticle(it.articleId!!).forEach { articleToDisciplineType ->
+                        listDisciplineToSave.add(articleToDisciplineType.disciplineType?.name!!)
+                    }
+                    articleToTagTypeRepository.findByArticle(it.articleId!!).forEach { articleToTagType ->
+                        listTagToSave.add(articleToTagType.tagType?.name!!)
+                    }
+                    it?.articleId?.toDto(
+                        disciplineList = listDisciplineToSave,
+                        tagList = listTagToSave
+                    ) ?: throw Exception("Internal server error, fav article dont find")
                 }
-                articleToTagTypeRepository.findByArticle(it.articleId!!).forEach { articleToTagType ->
-                    listTagToSave.add(articleToTagType.tagType?.name!!)
-                }
-                it?.articleId?.toDto(
-                    disciplineList = listDisciplineToSave,
-                    tagList = listTagToSave
-                ) ?: throw Exception("Internal server error, fav article dont find")
-            }
+            } ?: throw Exception("Internal server error, fav article dont find")
         } ?: throw Exception("You You are not logged in")
     }
 
