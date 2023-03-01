@@ -33,38 +33,38 @@ interface ArticleRepository : JpaRepository<Article, Long> {
     @Query("SELECT a FROM Article a ORDER BY a.date DESC ")
     fun findArticlesOrderDate(pageable: Pageable): Page<Article>
 
-    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis ORDER BY a.view DESC ")
+    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis ORDER BY a.view DESC, a.date DESC")
     fun findArticlesWithLimitTimelineOrderView(
         pageable: Pageable,
         @Param("nowmillis") nowmillis: Long,
         @Param("diffmillis") diffmillis: Long,
     ): Page<Article>
 
-    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis ORDER BY a.view ASC ")
+    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis ORDER BY a.view ASC, a.date DESC")
     fun findArticlesWithLimitTimelineOrderViewASC(
         pageable: Pageable,
         @Param("nowmillis") nowmillis: Long,
         @Param("diffmillis") diffmillis: Long,
     ): Page<Article>
 
-    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis ORDER BY a.likes DESC ")
+    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis ORDER BY a.likes DESC, a.date DESC")
     fun findArticlesWithLimitTimelineOrderLike(
         pageable: Pageable,
         @Param("nowmillis") nowmillis: Long,
         @Param("diffmillis") diffmillis: Long,
     ): Page<Article>
 
-    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis ORDER BY a.likes ASC ")
+    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis ORDER BY a.likes ASC, a.date DESC")
     fun findArticlesWithLimitTimelineOrderLikeASC(
         pageable: Pageable,
         @Param("nowmillis") nowmillis: Long,
         @Param("diffmillis") diffmillis: Long,
     ): Page<Article>
 
-    @Query("SELECT a FROM Article a where LOWER(a.title) LIKE %:titlesearch% ORDER BY a.date DESC ")
+    @Query("SELECT a FROM Article a where LOWER(a.title) LIKE %:titlesearch% ORDER BY a.date DESC, a.date DESC")
     fun searchByTitleArticlesOrderDate(pageable: Pageable,  @Param("titlesearch") titlesearch: String): Page<Article>
 
-    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis and LOWER(a.title) LIKE %:titlesearch% ORDER BY a.view DESC ")
+    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis and LOWER(a.title) LIKE %:titlesearch% ORDER BY a.view DESC, a.date DESC")
     fun searchByTitleArticlesWithLimitTimelineOrderView(
         pageable: Pageable,
         @Param("nowmillis") nowmillis: Long,
@@ -72,7 +72,7 @@ interface ArticleRepository : JpaRepository<Article, Long> {
         @Param("titlesearch") titlesearch: String
     ): Page<Article>
 
-    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis and LOWER(a.title) LIKE %:titlesearch% ORDER BY a.view ASC ")
+    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis and LOWER(a.title) LIKE %:titlesearch% ORDER BY a.view ASC, a.date DESC")
     fun searchByTitleArticlesWithLimitTimelineOrderViewASC(
         pageable: Pageable,
         @Param("nowmillis") nowmillis: Long,
@@ -80,7 +80,7 @@ interface ArticleRepository : JpaRepository<Article, Long> {
         @Param("titlesearch") titlesearch: String
     ): Page<Article>
 
-    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis and LOWER(a.title) LIKE %:titlesearch% ORDER BY a.likes DESC ")
+    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis and LOWER(a.title) LIKE %:titlesearch% ORDER BY a.likes DESC, a.date DESC")
     fun searchByTitleArticlesWithLimitTimelineOrderLike(
         pageable: Pageable,
         @Param("nowmillis") nowmillis: Long,
@@ -89,12 +89,11 @@ interface ArticleRepository : JpaRepository<Article, Long> {
     ): Page<Article>
 
 
-    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis and LOWER(a.title) LIKE %:titlesearch% ORDER BY a.likes ASC ")
+    @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis and LOWER(a.title) LIKE %:titlesearch% ORDER BY a.likes ASC, a.date DESC")
     fun searchByTitleArticlesWithLimitTimelineOrderLikeASC(
         pageable: Pageable,
         @Param("nowmillis") nowmillis: Long,
         @Param("diffmillis") diffmillis: Long,
         @Param("titlesearch") titlesearch: String
     ): Page<Article>
-
 }

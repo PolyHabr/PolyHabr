@@ -26,7 +26,6 @@ class JwtAuthTokenFilter : OncePerRequestFilter() {
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         try {
-
             val jwt = getJwt(request)
             if (jwt != null && tokenProvider!!.validateJwtToken(jwt)) {
                 val username = tokenProvider.getUserNameFromJwtToken(jwt)
