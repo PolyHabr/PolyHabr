@@ -24,14 +24,14 @@ data class ArticleResponse(
     val listTag: List<String>,
     val fileId: String? = null,
     val viewCount: Long,
-    val isSaveToFavourite: Boolean
+    val isSaveToFavourite: Boolean,
+    val pdfId: String?,
 )
 
 fun ArticleDto.toResponse(): ArticleResponse {
     return ArticleResponse(
         id = this.id!!,
         date = this.date.toString(DateTimeUtils.defaultFormat),
-        filePdf = this.filePdf,
         likes = this.likes,
         previewText = this.previewText,
         typeId = this.typeId!!,
@@ -42,6 +42,7 @@ fun ArticleDto.toResponse(): ArticleResponse {
         text = this.text,
         fileId = this.fileId,
         viewCount = this.viewCount,
-        isSaveToFavourite = isSaveToFavourite
+        isSaveToFavourite = isSaveToFavourite,
+        pdfId = pdfId
     )
 }

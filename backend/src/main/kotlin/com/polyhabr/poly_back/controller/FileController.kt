@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
 import javax.validation.Valid
+import javax.validation.constraints.Positive
 
 @CrossOrigin(origins = ["*"], maxAge = 14400)
 @RestController
@@ -30,6 +31,7 @@ class FileController(
         ]
     )
     fun create(
+        @RequestPart(name = "idArticle") @Positive articleId: Long,
         @RequestPart(name = "model") @Valid model: FileOnlyRequest,
         @RequestPart(name = "file") file: MultipartFile
     ): ResponseEntity<*>? {
@@ -38,7 +40,7 @@ class FileController(
         } catch (e: IOException) {
             return ResponseEntity.badRequest().build<Any>()
         }
-        val fileCreated = fileService.create(model.toDto(), file.originalFilename)
+        val fileCreated = fileService.create(model.toDto(), file.originalFilename, articleId)
         fileCreated?.let {
             return ResponseEntity.status(HttpStatus.CREATED).body<Any>(it)
         } ?: return ResponseEntity.badRequest().build<Any>()
@@ -75,12 +77,15 @@ class FileController(
         } ?: ResponseEntity.notFound().build()
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @ApiResponses(
         value = [ApiResponse(responseCode = "200", description = "A File was successfully deleted.")]
     )
-    fun delete(@PathVariable("id") id: String): ResponseEntity<*>? {
-        fileService.delete(id)
+    fun delete(
+        @RequestParam("idFile") fildId: String,
+        @RequestParam("idArticle") @Positive articleId: Long,
+    ): ResponseEntity<*>? {
+        fileService.delete(fildId, articleId)
         return ResponseEntity<Any?>(HttpStatus.NO_CONTENT)
     }
 }

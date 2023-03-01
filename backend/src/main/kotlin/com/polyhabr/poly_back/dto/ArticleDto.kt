@@ -8,7 +8,6 @@ import java.time.LocalDate
 data class ArticleDto(
     val id: Long? = null,
     var date: DateTime,
-    var filePdf: String? = null,
     var likes: Int,
     var previewText: String,
     var title: String,
@@ -18,8 +17,8 @@ data class ArticleDto(
     var userId: User? = null,
     val listDisciplineName: List<String>,
     val listTag: List<String>,
-    val fileDto: FileCreatingDto? = null,
     var fileId: String? = null,
     var viewCount: Long = 0,
-    val isSaveToFavourite: Boolean
+    val isSaveToFavourite: Boolean,
+    val pdfId: String?,
 )

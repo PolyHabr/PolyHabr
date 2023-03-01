@@ -1,13 +1,9 @@
 package com.polyhabr.poly_back.controller.model.article.request
 
-import com.polyhabr.poly_back.controller.model.file.FileRequest
-import com.polyhabr.poly_back.controller.model.file.toDto
 import com.polyhabr.poly_back.dto.ArticleDto
-import com.polyhabr.poly_back.dto.FileCreatingDto
 import io.swagger.v3.oas.annotations.media.Schema
 import org.joda.time.DateTime
 import java.io.Serializable
-import java.time.LocalDate
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.PositiveOrZero
@@ -51,9 +47,6 @@ data class ArticleRequest(
     @field:NotNull
     @field:NotEmpty
     val listTag: List<String>? = null,
-
-    @field:Schema(example = "file, nullable")
-    var file: FileRequest? = null,
 ) : Serializable
 
 fun ArticleRequest.toDtoWithoutType(): ArticleDto {
@@ -65,7 +58,6 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
     }
     return ArticleDto(
         date = DateTime.now(),
-        filePdf = this.filePdf,
         likes = this.likes ?: 0,
         previewText = this.previewText!!,
         title = this.title!!,
@@ -73,7 +65,8 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
         listTag = this.listTag,
         typeName = this.articleType!!,
         text = this.text!!,
-        isSaveToFavourite = false
+        isSaveToFavourite = false,
+        pdfId = null
     )
 }
 
@@ -86,7 +79,6 @@ fun ArticleRequest.toDtoWithoutType(data: ByteArray?, originName: String?): Arti
     }
     return ArticleDto(
         date = DateTime.now(),
-        filePdf = this.filePdf,
         likes = this.likes ?: 0,
         previewText = this.previewText!!,
         title = this.title!!,
@@ -94,7 +86,7 @@ fun ArticleRequest.toDtoWithoutType(data: ByteArray?, originName: String?): Arti
         listTag = this.listTag,
         typeName = this.articleType!!,
         text = this.text!!,
-        fileDto = this.file?.toDto(data, originName),
-        isSaveToFavourite = false
+        isSaveToFavourite = false,
+        pdfId = null
     )
 }

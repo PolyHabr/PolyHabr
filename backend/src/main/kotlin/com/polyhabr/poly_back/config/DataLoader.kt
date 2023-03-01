@@ -98,7 +98,6 @@ class DataLoader : ApplicationRunner {
                 Article(
                     title = "Необяснимо, но вполне логично! Что скрывает в себе квантовая механика?",
                     previewText = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосв",
-                    filePdf = "filePdf 1",
                     likes = 0,
                     typeId = articleType1,
                     userId = admin,

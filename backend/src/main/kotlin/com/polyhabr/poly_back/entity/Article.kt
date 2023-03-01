@@ -24,10 +24,6 @@ open class Article(
     @Column(name = "date")
     open var date: Long,
 
-    @Column(name = "file_pdf")
-    @Deprecated("dont use this field")
-    open var filePdf: String? = null,
-
     @NotNull
     @Column(name = "likes", nullable = false)
     open var likes: Int = 0,

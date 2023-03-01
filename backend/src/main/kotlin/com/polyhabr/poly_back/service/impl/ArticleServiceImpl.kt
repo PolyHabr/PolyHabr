@@ -16,8 +16,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.support.TransactionTemplate
-import java.sql.Timestamp
-import kotlin.math.abs
 
 
 @Service
@@ -183,10 +181,10 @@ class ArticleServiceImpl(
                     }
 
                     return transactionTemplate.execute {
-                        val savedFile = articleDto.fileDto?.let { file ->
-                            fileService.create(file, file.originalName)
-                                ?: throw RuntimeException("Error while create article")
-                        }
+//                        val savedFile = articleDto.fileDto?.let { file ->
+//                            fileService.create(file, file.originalName, articleId)
+//                                ?: throw RuntimeException("Error while create article")
+//                        }
                         val article = articleRepository.save(
                             articleDto
                                 .apply {
@@ -194,9 +192,9 @@ class ArticleServiceImpl(
                                     userId = currentUser
                                 }
                                 .toEntity()
-                                .apply {
-                                    file_id = savedFile
-                                }
+//                                .apply {
+//                                    file_id = savedFile
+//                                }
                         )
                         if (article.id == null) {
                             throw RuntimeException("Error while create article")
@@ -236,7 +234,6 @@ class ArticleServiceImpl(
                 val newArticleType = articleUpdateDto.typeName?.let { articleTypeRepository.findByName(it) }
                 currentArticle.apply {
                     articleUpdateDto.previewText?.let { previewText = it }
-                    articleUpdateDto.filePdf?.let { filePdf = it }
                     articleUpdateDto.likes?.let { likes = it }
                     articleUpdateDto.title?.let { title = it }
                     articleUpdateDto.text?.let { text = it }
@@ -365,7 +362,6 @@ class ArticleServiceImpl(
         ArticleDto(
             id = this.id,
             date = DateTime(this.date),
-            filePdf = this.filePdf,
             likes = this.likes,
             previewText = this.previewText,
             typeId = this.typeId,
@@ -376,12 +372,12 @@ class ArticleServiceImpl(
             text = this.text,
             fileId = this.file_id?.id,
             viewCount = this.view,
-            isSaveToFavourite = isFav
+            isSaveToFavourite = isFav,
+            pdfId = file_id?.id
         )
 
     private fun ArticleDto.toEntity() = Article(
         date = this.date.millis,
-        filePdf = this.filePdf!!,
         likes = this.likes,
         previewText = this.previewText,
         typeId = this.typeId!!,
