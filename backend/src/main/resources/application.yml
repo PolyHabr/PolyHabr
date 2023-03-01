@@ -1,40 +1,131 @@
 server:
-  port: ${PORT:8445}
+  port: ${PORT:8733} # 8445 is the default port for the proxy
 
-poly_back:
-  auth_server:
-    url: ${AUTH_SERVER_URL:}
-    grant_type: ${AUTH_SERVER_GRANT_TYPE:}
-    realm: ${AUTH_SERVER_REALM:}
-    client_id: ${AUTH_SERVER_CLIENT_ID:}
-    client_secret: ${AUTH_SERVER_CLIENT_SECRET:}
+#poly_back:
+#  auth_server:
+#    url: ${AUTH_SERVER_URL:}
+#    grant_type: ${AUTH_SERVER_GRANT_TYPE:}
+#    realm: ${AUTH_SERVER_REALM:}
+#    client_id: ${AUTH_SERVER_CLIENT_ID:}
+#    client_secret: ${AUTH_SERVER_CLIENT_SECRET:}
 
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: ${AUTH_SERVER_JWKS_URL:}
-  main:
-    banner-mode: off
-  sql:
-    init:
-      platform: ${DB_PLATFORM:postgres}
-  datasource:
-    url: ${DB_URL:}
-    username: ${DB_USERNAME:}
-    password: ${DB_PASSWORD:}
-  jpa:
-    properties:
-      hibernate:
-        dialect: ${DB_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
-        format_sql: true
+#spring:
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri: ${AUTH_SERVER_JWKS_URL:}
+#  main:
+#    banner-mode: off
+#  sql:
+#    init:
+#      platform: ${DB_PLATFORM:postgres}
+#  datasource:
+#    url: ${DB_URL:}
+#    username: ${DB_USERNAME:}
+#    password: ${DB_PASSWORD:}
+#  jpa:
+#    properties:
+#      hibernate:
+#        dialect: ${DB_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
+#        format_sql: true
+#
+#logging:
+#  file:
+#    name: logs/proxy.log
+#  level:
+#    web: info
+#    org.springframework: info
+#    org.springframework.boot.autoconfigure: error
+#    org.hibernate: info
+#spring:
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/PolyHabr
+#    username: postrges
+#    password: "1234"
+#  jpa:
+#    properties:
+#      hibernate:
+#        ddl-auto: create-drop
+#        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+#        show_sql: true
+#        temp:
+#          use_jdbc_metadata_default: false
+#  sql:
+#    init:
+#      platform: postgres
+assm:
+  app:
+    jwtSecret: jwtAssmSecretKey
+    jwtExpiration: 86400
 
 logging:
-  file:
-    name: logs/proxy.log
   level:
-    web: info
-    org.springframework: info
-    org.springframework.boot.autoconfigure: error
-    org.hibernate: info
+    org:
+      hibernate:
+        type: trace
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 2MB
+  mail:
+    host: smtp.mail.ru
+    port: 587
+    username: polyhabr@mail.ru
+    password: 13MrZBNdaf8MWHBs5Jkp
+    properties:
+      mail:
+        smtp:
+          ssl: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          auth: true
+          starttls:
+            enable: true
+  jpa:
+    defer-datasource-initialization: true
+    database: POSTGRESQL
+    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: "postgres"
+    driverClassName: org.postgresql.Driver
+  sql:
+    init:
+      platform: postgres\
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+
+
+
+#server.port = 8733
+#spring.jpa.database=POSTGRESQL
+#spring.sql.init.platform= postgres
+#spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+#spring.datasource.username=postgres
+#spring.datasource.password=1234
+#spring.jpa.show-sql=true
+#spring.jpa.generate-ddl=true
+#spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation= true
+#spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
+#spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+
+
