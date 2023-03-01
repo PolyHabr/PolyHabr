@@ -72,7 +72,14 @@ class AuthController {
                     .map { role -> SimpleGrantedAuthority(role.name) }
                     .collect(Collectors.toList<GrantedAuthority>())
 
-            val response = JwtResponse(jwt, user.login, authorities)
+            val isFirst = user.isFirst
+            userRepository.save(
+                user.apply {
+                    this.isFirst = false
+                }
+            )
+
+            val response = JwtResponse(jwt, user.login, authorities, isFirst)
             return ResponseEntity.ok(response)
         } ?: return ResponseEntity(
             ResponseMessage("User not found!"),

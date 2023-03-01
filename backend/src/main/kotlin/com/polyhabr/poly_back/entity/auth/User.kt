@@ -32,6 +32,9 @@ open class User(
     @Column(name = "enabled")
     var enabled: Boolean = false,
 
+    @Column(name = "enabled")
+    var isFirst: Boolean = true,
+
     @Column(name = "verification_code", length = 64)
     var verificationCode: String? = null,
 

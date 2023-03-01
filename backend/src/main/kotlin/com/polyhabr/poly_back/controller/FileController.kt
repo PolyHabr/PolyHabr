@@ -21,7 +21,7 @@ import java.io.IOException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
 
-//@CrossOrigin(origins = ["*"], maxAge = 14400)
+@CrossOrigin(origins = ["*"], maxAge = 14400)
 @RestController
 @Validated
 @RequestMapping("/files")
@@ -75,7 +75,6 @@ class FileController(
             ApiResponse(responseCode = "404", description = "File not found.")
         ]
     )
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun download(@PathVariable("id") id: String): ResponseEntity<ByteArray?>? {
         return fileService.findById(id)?.let { file ->
             return ResponseEntity.ok()
