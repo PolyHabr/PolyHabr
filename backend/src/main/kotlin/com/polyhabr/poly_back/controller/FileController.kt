@@ -36,7 +36,7 @@ class FileController(
             ApiResponse(responseCode = "201", description = "A File was successfully created.")
         ]
     )
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
 //        @Schema @RequestPart(name = "idArticle") @Positive articleId: Long,
 //        @Schema @RequestPart(name = "file") file: MultipartFile
