@@ -261,4 +261,86 @@ class ArticleController(
         articleService.updateLikes(id = id, isPlus = false)
         return ResponseEntity.ok().build()
     }
+
+    @Operation(summary = "Article Fav list")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Article list", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ArticleListResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
+    @GetMapping("/getFavArticles")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    fun getFavouriteArticle(
+        @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
+        @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+    ): ResponseEntity<ArticleListResponse> {
+        val rawResponse = articleService
+            .getFavArticle(
+                offset = offset,
+                size = size,
+            )
+        return ResponseEntity.ok(rawResponse.toListResponse())
+    }
+
+    @Operation(summary = "Add to fav article")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Article list", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ArticleListResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
+    @PostMapping("/addFavArticles")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    fun addToFavouriteArticle(
+        @Positive @RequestParam("articleId") articleId: Long,
+    ): ResponseEntity<Unit> {
+        articleService
+            .updateFavArticle(
+                idArticle = articleId,
+                goAddToFav = true
+            )
+        return ResponseEntity.ok().build()
+    }
+
+    @Operation(summary = "remove from fav article")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Article list", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ArticleListResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
+    @PostMapping("/removeFromArticles")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    fun removeFromFavouriteArticle(
+        @Positive @RequestParam("articleId") articleId: Long,
+    ): ResponseEntity<Unit> {
+        articleService
+            .updateFavArticle(
+                idArticle = articleId,
+                goAddToFav = false
+            )
+        return ResponseEntity.ok().build()
+    }
 }

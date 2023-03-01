@@ -22,4 +22,8 @@ interface ArticleService {
 
     fun updateLikes(id: Long, isPlus: Boolean)
 
+    fun getFavArticle(offset: Int, size: Int): Page<ArticleDto>
+
+    fun updateFavArticle(idArticle: Long, goAddToFav: Boolean)
+
 }

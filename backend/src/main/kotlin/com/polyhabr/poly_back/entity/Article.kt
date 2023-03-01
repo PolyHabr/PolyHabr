@@ -33,6 +33,10 @@ open class Article(
     open var likes: Int = 0,
 
     @NotNull
+    @Column(name = "is_fav", nullable = false)
+    open var isFav: Boolean = false,
+
+    @NotNull
     @Column(name = "view", nullable = false)
     open var view: Long = 0,
 

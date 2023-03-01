@@ -73,6 +73,7 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
         listTag = this.listTag,
         typeName = this.articleType!!,
         text = this.text!!,
+        isSaveToFavourite = false
     )
 }
 
@@ -93,6 +94,7 @@ fun ArticleRequest.toDtoWithoutType(data: ByteArray?, originName: String?): Arti
         listTag = this.listTag,
         typeName = this.articleType!!,
         text = this.text!!,
-        fileDto = this.file?.toDto(data, originName)
+        fileDto = this.file?.toDto(data, originName),
+        isSaveToFavourite = false
     )
 }

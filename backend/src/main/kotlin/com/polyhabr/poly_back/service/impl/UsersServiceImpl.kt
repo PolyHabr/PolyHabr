@@ -89,7 +89,15 @@ class UsersServiceImpl(
                 userRequest.email?.let { email = it }
                 userRequest.name?.let { name = it }
                 userRequest.surname?.let { surname = it }
-                userRequest.password?.let { password = encoder.encode(it) }
+                userRequest.newPassword?.let { newPass ->
+                    userRequest.password?.let { oldPass ->
+                        if (encoder.matches(oldPass, currentUser.password)) {
+                            password = encoder.encode(newPass)
+                        } else {
+                            throw Exception("incorrect old pass")
+                        }
+                    } ?: throw Exception("password is null")
+                }
             }
             return usersRepository.save(currentUser).id?.let { true to "Ok" } ?: (false to "Error while update")
         } ?: return false to "User not found"

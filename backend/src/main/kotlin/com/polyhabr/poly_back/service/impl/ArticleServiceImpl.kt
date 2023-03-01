@@ -30,7 +30,8 @@ class ArticleServiceImpl(
     private val tagTypeRepository: TagTypeRepository,
     private val articleToTagTypeRepository: ArticleToTagTypeRepository,
     private val articleToDisciplineTypeRepository: ArticleToDisciplineTypeRepository,
-    private val fileService: FileService
+    private val fileService: FileService,
+    private val articleToFavRepository: ArticleToFavRepository
 ) : ArticleService {
 
     @Autowired
@@ -297,6 +298,65 @@ class ArticleServiceImpl(
         } ?: throw Exception("Internal exception")
     }
 
+    override fun getFavArticle(offset: Int, size: Int): Page<ArticleDto> {
+        usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+            val pageRequest = PageRequest.of(offset, size)
+            val articles = articleToFavRepository.findByUserId(pageable = pageRequest, id = currentUser.id!!)
+            return articles.map {
+                val listDisciplineToSave = mutableListOf<String>()
+                val listTagToSave = mutableListOf<String>()
+                articleToDisciplineTypeRepository.findByArticle(it.articleId!!).forEach { articleToDisciplineType ->
+                    listDisciplineToSave.add(articleToDisciplineType.disciplineType?.name!!)
+                }
+                articleToTagTypeRepository.findByArticle(it.articleId!!).forEach { articleToTagType ->
+                    listTagToSave.add(articleToTagType.tagType?.name!!)
+                }
+                it?.articleId?.toDto(
+                    disciplineList = listDisciplineToSave,
+                    tagList = listTagToSave
+                ) ?: throw Exception("Internal server error, fav article dont find")
+            }
+        } ?: throw Exception("You You are not logged in")
+    }
+
+    override fun updateFavArticle(idArticle: Long, goAddToFav: Boolean) {
+        transactionTemplate.execute {
+            usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                articleToFavRepository.byArticleId(idArticle)?.let { articleToFav ->
+                    if (goAddToFav) {
+                        throw Exception("already added")
+                    }
+                    articleRepository.findById(idArticle).takeIf { it.isPresent }?.let {
+                        val currentArticle = it.get()
+                        articleToFavRepository.deleteById(articleToFav.id!!)
+                        articleRepository.save(
+                            currentArticle.apply {
+                                isFav = false
+                            }
+                        )
+                    } ?: throw throw Exception("Article not founded")
+                } ?: run {
+                    if (!goAddToFav) {
+                        throw Exception("already deleted")
+                    }
+                    articleRepository.findById(idArticle).takeIf { it.isPresent }?.let {
+                        val currentArticle = it.get()
+                        articleToFavRepository.save(
+                            ArticleToFav(
+                                articleId = currentArticle,
+                                userId = currentUser
+                            )
+                        )
+                        articleRepository.save(
+                            currentArticle.apply {
+                                isFav = true
+                            }
+                        )
+                    } ?: throw throw Exception("Article not founded")
+                }
+            } ?: throw Exception("You You are not logged in")
+        } ?: throw Exception("Internal error")
+    }
 
     private fun Article.toDto(
         disciplineList: List<String>,
@@ -315,7 +375,8 @@ class ArticleServiceImpl(
             listTag = tagList,
             text = this.text,
             fileId = this.file_id?.id,
-            viewCount = this.view
+            viewCount = this.view,
+            isSaveToFavourite = isFav
         )
 
     private fun ArticleDto.toEntity() = Article(

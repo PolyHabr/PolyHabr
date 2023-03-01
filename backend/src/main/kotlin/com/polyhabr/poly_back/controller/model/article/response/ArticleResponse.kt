@@ -23,7 +23,8 @@ data class ArticleResponse(
     val listDisciplineName: List<String>,
     val listTag: List<String>,
     val fileId: String? = null,
-    val viewCount: Long
+    val viewCount: Long,
+    val isSaveToFavourite: Boolean
 )
 
 fun ArticleDto.toResponse(): ArticleResponse {
@@ -40,6 +41,7 @@ fun ArticleDto.toResponse(): ArticleResponse {
         listTag = this.listTag,
         text = this.text,
         fileId = this.fileId,
-        viewCount = this.viewCount
+        viewCount = this.viewCount,
+        isSaveToFavourite = isSaveToFavourite
     )
 }

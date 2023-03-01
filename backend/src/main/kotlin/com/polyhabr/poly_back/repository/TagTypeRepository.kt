@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 interface TagTypeRepository: JpaRepository<TagType, Long>{
-    @Query("SELECT tt FROM TagType tt WHERE tt.name LIKE %:pname%")
+    @Query("SELECT tt FROM TagType tt WHERE tt.name LIKE %:pname% order by tt.id desc ")
     fun findTagTypesByName(pageable: Pageable, @Param("pname") pname: String): Page<TagType>
 
     fun findByName(@Param("name") name: String): TagType?
