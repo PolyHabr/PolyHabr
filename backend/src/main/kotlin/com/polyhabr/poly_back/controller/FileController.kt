@@ -3,6 +3,7 @@ package com.polyhabr.poly_back.controller
 import com.polyhabr.poly_back.controller.model.file.FileOnlyRequest
 import com.polyhabr.poly_back.controller.model.file.toDto
 import com.polyhabr.poly_back.service.FileService
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpHeaders
@@ -31,8 +32,8 @@ class FileController(
         ]
     )
     fun create(
-        @RequestPart(name = "idArticle") @Positive articleId: Long,
-        @RequestPart(name = "model") @Valid model: FileOnlyRequest,
+        @Schema(example = "physics") @RequestPart(name = "idArticle") @Positive articleId: Long,
+        @Schema(example = "physics") @RequestPart(name = "model") @Valid model: FileOnlyRequest,
         @RequestPart(name = "file") file: MultipartFile
     ): ResponseEntity<*>? {
         try {

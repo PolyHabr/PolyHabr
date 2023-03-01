@@ -1,7 +1,9 @@
 package com.polyhabr.poly_back.controller
 
 import com.polyhabr.poly_back.controller.model.disciplineType.request.DisciplineTypeRequest
+import com.polyhabr.poly_back.controller.model.disciplineType.request.UpdateMyDisciplineRequest
 import com.polyhabr.poly_back.controller.model.disciplineType.response.*
+import com.polyhabr.poly_back.controller.utils.SimpleSuccessResponse
 import com.polyhabr.poly_back.service.DisciplineTypeService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -31,6 +33,7 @@ class DisciplineTypeController(
     fun handleConstraintViolationException(e: ConstraintViolationException): ResponseEntity<String?>? {
         return ResponseEntity("not valid due to validation error: " + e.message, HttpStatus.BAD_REQUEST)
     }
+
     @Operation(summary = "Discipline type list")
     @ApiResponses(
         value = [
@@ -49,8 +52,8 @@ class DisciplineTypeController(
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-        
-    ): ResponseEntity<DisciplineTypeListResponse> {
+
+        ): ResponseEntity<DisciplineTypeListResponse> {
         val rawResponse = disciplineTypeService
             .getAll(
                 offset = offset,
@@ -58,6 +61,54 @@ class DisciplineTypeController(
             )
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
+
+    @Operation(summary = "My Discipline type list")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Discipline type list", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = DisciplineTypeSimpleListResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    fun geyMy(): ResponseEntity<DisciplineTypeSimpleListResponse> {
+        val rawResponse = DisciplineTypeSimpleListResponse(
+            disciplineTypeService.getMy().map { it.toResponse() }
+        )
+        return ResponseEntity.ok(rawResponse)
+    }
+
+    @Operation(summary = "Discipline type create")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "DisciplineTypeCreateResponse", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = SimpleSuccessResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
+    @PostMapping("/updateMyDiscipline")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun updateMyDiscipline(
+        @Valid @RequestBody updateResponse: UpdateMyDisciplineRequest
+    ): ResponseEntity<SimpleSuccessResponse> {
+        val success = disciplineTypeService.updateMy(updateResponse)
+        val response = SimpleSuccessResponse(isSuccess = success)
+        return ResponseEntity.ok(response)
+    }
+
 
     @Operation(summary = "Discipline type find by id")
     @ApiResponses(

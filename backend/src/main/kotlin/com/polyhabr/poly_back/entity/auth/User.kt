@@ -1,6 +1,7 @@
 package com.polyhabr.poly_back.entity.auth
 
 import com.polyhabr.poly_back.dto.UserDto
+import com.polyhabr.poly_back.entity.ArticleToDisciplineType
 import com.polyhabr.poly_back.entity.BaseEntity
 import javax.persistence.*
 import javax.validation.constraints.Size
