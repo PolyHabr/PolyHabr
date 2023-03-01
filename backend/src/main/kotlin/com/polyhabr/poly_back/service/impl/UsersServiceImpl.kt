@@ -142,7 +142,9 @@ class UsersServiceImpl(
     @Throws(MessagingException::class, UnsupportedEncodingException::class)
     override fun sendResetPasswordEmail(email: String, siteURL: String) {
         usersRepository.findByEmail(email)?.let { user ->
-
+            if (!user.enabled) {
+                throw Exception("Need activate user")
+            }
             val token = UUID.randomUUID().toString()
             createPasswordResetTokenForUser(user, token)
             user.apply {
