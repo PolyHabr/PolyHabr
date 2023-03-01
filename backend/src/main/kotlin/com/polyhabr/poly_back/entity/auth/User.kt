@@ -32,7 +32,7 @@ open class User(
     @Column(name = "enabled")
     var enabled: Boolean = false,
 
-    @Column(name = "enabled")
+    @Column(name = "is_first")
     var isFirst: Boolean = true,
 
     @Column(name = "verification_code", length = 64)
