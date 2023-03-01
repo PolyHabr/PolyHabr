@@ -62,7 +62,8 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
         typeName = this.articleType!!,
         text = this.text!!,
         isSaveToFavourite = false,
-        pdfId = null
+        pdfId = null,
+        previewImgId = null
     )
 }
 
@@ -83,6 +84,7 @@ fun ArticleRequest.toDtoWithoutType(data: ByteArray?, originName: String?): Arti
         typeName = this.articleType!!,
         text = this.text!!,
         isSaveToFavourite = false,
-        pdfId = null
+        pdfId = null,
+        previewImgId = null
     )
 }

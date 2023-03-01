@@ -49,5 +49,10 @@ open class Article(
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "file_id")
-    open var file_id: File? = null
+    open var file_id: File? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "preview_src_id")
+    open var preview_src_id: File? = null,
 ) : BaseEntity<Long>()

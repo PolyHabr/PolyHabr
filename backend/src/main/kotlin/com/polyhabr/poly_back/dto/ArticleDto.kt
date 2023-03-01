@@ -21,4 +21,5 @@ data class ArticleDto(
     var viewCount: Long = 0,
     val isSaveToFavourite: Boolean,
     val pdfId: String?,
+    val previewImgId: String?,
 )

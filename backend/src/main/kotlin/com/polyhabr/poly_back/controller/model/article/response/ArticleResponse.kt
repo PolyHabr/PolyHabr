@@ -26,6 +26,7 @@ data class ArticleResponse(
     val viewCount: Long,
     val isSaveToFavourite: Boolean,
     val pdfId: String?,
+    val previewImgId: String?,
 )
 
 fun ArticleDto.toResponse(): ArticleResponse {
@@ -43,6 +44,7 @@ fun ArticleDto.toResponse(): ArticleResponse {
         fileId = this.fileId,
         viewCount = this.viewCount,
         isSaveToFavourite = isSaveToFavourite,
-        pdfId = pdfId
+        pdfId = pdfId,
+        previewImgId = previewImgId
     )
 }

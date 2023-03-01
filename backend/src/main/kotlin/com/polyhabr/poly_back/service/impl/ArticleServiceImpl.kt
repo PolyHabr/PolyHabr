@@ -410,7 +410,8 @@ class ArticleServiceImpl(
             fileId = this.file_id?.id,
             viewCount = this.view,
             isSaveToFavourite = isFav,
-            pdfId = file_id?.id
+            pdfId = file_id?.id,
+            previewImgId = preview_src_id?.id
         )
 
     private fun ArticleDto.toEntity() = Article(

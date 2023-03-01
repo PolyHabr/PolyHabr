@@ -62,7 +62,7 @@ class DisciplineTypeController(
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
 
-    @Operation(summary = "My Discipline type list")
+    @Operation(summary = "GET My Discipline type list")
     @ApiResponses(
         value = [
             ApiResponse(
@@ -85,7 +85,7 @@ class DisciplineTypeController(
         return ResponseEntity.ok(rawResponse)
     }
 
-    @Operation(summary = "Discipline type create")
+    @Operation(summary = "updateMyDiscipline")
     @ApiResponses(
         value = [
             ApiResponse(
@@ -100,7 +100,7 @@ class DisciplineTypeController(
         ]
     )
     @PostMapping("/updateMyDiscipline")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun updateMyDiscipline(
         @Valid @RequestBody updateResponse: UpdateMyDisciplineRequest
     ): ResponseEntity<SimpleSuccessResponse> {
