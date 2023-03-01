@@ -9,10 +9,12 @@ import com.polyhabr.poly_back.repository.ArticleRepository
 import com.polyhabr.poly_back.repository.CommentRepository
 import com.polyhabr.poly_back.repository.auth.UsersRepository
 import com.polyhabr.poly_back.service.CommentService
+import org.joda.time.DateTime
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
 
 @Service
 class CommentServiceImpl(
@@ -123,11 +125,13 @@ class CommentServiceImpl(
             text = this.text,
             articleId = this.articleId,
             userId = this.userId,
+            data = DateTime(date)
         )
 
     private fun CommentDto.toEntity() = Comment(
         text = this.text!!,
         articleId = this.articleId!!,
         userId = this.userId!!,
+        date = data!!.millis
     )
 }

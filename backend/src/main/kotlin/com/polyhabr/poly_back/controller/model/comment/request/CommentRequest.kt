@@ -4,6 +4,7 @@ import com.polyhabr.poly_back.dto.CommentDto
 import com.polyhabr.poly_back.entity.Article
 import com.polyhabr.poly_back.entity.auth.User
 import io.swagger.v3.oas.annotations.media.Schema
+import org.joda.time.DateTime
 import java.io.Serializable
 import javax.validation.constraints.NotNull
 
@@ -33,5 +34,6 @@ data class CommentRequest(
 
 fun CommentRequest.toDtoWithoutUser() = CommentDto(
     text = this.text!!,
+    data = DateTime.now()
 //    articleId = this.articleId!!,
 )

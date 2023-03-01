@@ -22,7 +22,7 @@ open class Article(
     open var previewText: String,
 
     @Column(name = "date")
-    open var date: Timestamp,
+    open var date: Long,
 
     @Column(name = "file_pdf")
     @Deprecated("dont use this field")

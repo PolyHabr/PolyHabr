@@ -1,5 +1,6 @@
 package com.polyhabr.poly_back.service.impl
 
+import com.polyhabr.poly_back.controller.model.article.request.SortArticleRequest
 import com.polyhabr.poly_back.controller.utils.currentLogin
 import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.dto.ArticleUpdateDto
@@ -9,7 +10,6 @@ import com.polyhabr.poly_back.repository.auth.UsersRepository
 import com.polyhabr.poly_back.service.ArticleService
 import com.polyhabr.poly_back.service.FileService
 import org.joda.time.DateTime
-import org.joda.time.LocalTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -17,7 +17,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.support.TransactionTemplate
 import java.sql.Timestamp
-import java.time.LocalDate
+import kotlin.math.abs
 
 
 @Service
@@ -38,14 +38,27 @@ class ArticleServiceImpl(
     override fun getAll(
         offset: Int,
         size: Int,
+        sorting: SortArticleRequest?,
     ): Page<ArticleDto> {
-        val articles = articleRepository
-            .findAll(
-                PageRequest.of(
-                    offset,
-                    size,
-                )
+        val diff = sorting?.getMillis()
+        val pageRequest = PageRequest.of(offset, size)
+        val articles = if (diff == null) {
+            articleRepository.findArticlesOrderDate(pageRequest)
+        } else if (sorting.fieldView == true) {
+            articleRepository.findArticlesWithLimitTimelineOrderView(
+                pageRequest,
+                nowmillis = DateTime.now().millis,
+                diffmillis = diff
             )
+        } else if (sorting.fieldRating == true) {
+            articleRepository.findArticlesWithLimitTimelineOrderLike(
+                pageRequest,
+                nowmillis = DateTime.now().millis,
+                diffmillis = diff
+            )
+        } else {
+            articleRepository.findArticlesOrderDate(pageRequest)
+        }
         return articles.map {
             val listDisciplineToSave = mutableListOf<String>()
             val listTagToSave = mutableListOf<String>()
@@ -82,14 +95,29 @@ class ArticleServiceImpl(
         } ?: throw RuntimeException("SQL error")
     }
 
-    override fun searchByName(prefix: String?, offset: Int, size: Int): Page<ArticleDto> {
-        val articles = articleRepository
-            .findArticleByTitle(
-                PageRequest.of(
-                    offset,
-                    size,
-                ), prefix ?: ""
+    override fun searchByName(prefix: String?, offset: Int, size: Int, sorting: SortArticleRequest?): Page<ArticleDto> {
+        val searchText = prefix ?: ""
+        val diff = sorting?.getMillis()
+        val pageRequest = PageRequest.of(offset, size)
+        val articles = if (diff == null) {
+            articleRepository.searchByTitleArticlesOrderDate(pageable = pageRequest, titlesearch = searchText)
+        } else if (sorting.fieldView == true) {
+            articleRepository.searchByTitleArticlesWithLimitTimelineOrderView(
+                pageable = pageRequest,
+                nowmillis = DateTime.now().millis,
+                diffmillis = diff,
+                titlesearch = searchText
             )
+        } else if (sorting.fieldRating == true) {
+            articleRepository.searchByTitleArticlesWithLimitTimelineOrderLike(
+                pageable = pageRequest,
+                nowmillis = DateTime.now().millis,
+                diffmillis = diff,
+                titlesearch = searchText
+            )
+        } else {
+            articleRepository.searchByTitleArticlesOrderDate(pageable = pageRequest, titlesearch = searchText)
+        }
         return articles.map {
             val listDisciplineToSave = mutableListOf<String>()
             val listTagToSave = mutableListOf<String>()
@@ -276,7 +304,7 @@ class ArticleServiceImpl(
     ): ArticleDto =
         ArticleDto(
             id = this.id,
-            date = DateTime(this.date.time),
+            date = DateTime(this.date),
             filePdf = this.filePdf,
             likes = this.likes,
             previewText = this.previewText,
@@ -291,7 +319,7 @@ class ArticleServiceImpl(
         )
 
     private fun ArticleDto.toEntity() = Article(
-        date = Timestamp(this.date.millis),
+        date = this.date.millis,
         filePdf = this.filePdf!!,
         likes = this.likes,
         previewText = this.previewText,

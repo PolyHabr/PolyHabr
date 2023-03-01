@@ -52,11 +52,16 @@ class ArticleController(
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-        ): ResponseEntity<ArticleListResponse> {
+        @Schema(
+            example = "1",
+            description = "list of field sort"
+        ) @RequestParam("sorting") sorting: SortArticleRequest? = null
+    ): ResponseEntity<ArticleListResponse> {
         val rawResponse = articleService
             .getAll(
                 offset = offset,
                 size = size,
+                sorting
             )
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
@@ -106,9 +111,13 @@ class ArticleController(
         @Schema(example = "physics") @RequestParam("prefix") prefix: String?,
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+        @Schema(
+            example = "1",
+            description = "list of field sort"
+        ) @RequestParam("sorting") sorting: SortArticleRequest? = null
     ): ResponseEntity<ArticleListResponse> {
         val rawResponse = articleService
-            .searchByName(prefix?.lowercase(), offset, size)
+            .searchByName(prefix?.lowercase(), offset, size, sorting)
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
 

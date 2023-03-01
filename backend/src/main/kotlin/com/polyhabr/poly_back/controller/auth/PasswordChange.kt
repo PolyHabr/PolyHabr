@@ -22,7 +22,5 @@ data class PasswordChange(
     @field:NotNull
     @field:Size(min = 8, max = 35)
     @field:Pattern(regexp = "^[A-Za-z0-9]+\$")
-    @JsonProperty("new_password")
     val newPassword: String? = null
-
 ) : Serializable

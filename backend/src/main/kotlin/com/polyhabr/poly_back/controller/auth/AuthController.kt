@@ -149,7 +149,7 @@ class AuthController {
     @PostMapping("/forgotPassword")
     fun resetPassword(
         @RequestParam("email") email: String,
-    ): ResponseEntity<String> {
+    ): ResponseEntity<Unit> {
         usersService.sendResetPasswordEmail(email)
         return ResponseEntity.ok().build()
     }

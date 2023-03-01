@@ -36,5 +36,10 @@ data class UserUpdateRequest(
     @field:Size(min = 8, max = 35)
     @field:Pattern(regexp = "^[A-Za-z0-9]+\$")
     @JsonProperty("password")
-    var password: String? = null
+    var password: String? = null,
+
+    @field:Schema(example = "polyhabr123", pattern = "^[A-Za-z0-9]+\$")
+    @field:Size(min = 8, max = 35)
+    @field:Pattern(regexp = "^[A-Za-z0-9]+\$")
+    var newPassword: String? = null
 ) : Serializable
