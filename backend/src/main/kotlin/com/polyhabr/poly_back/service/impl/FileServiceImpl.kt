@@ -27,7 +27,7 @@ class FileServiceImpl(
         return userRepository.findByLogin(currentLogin())?.let { currentUser ->
             articleRepository.findByIdOrNull(articleId)?.let { currentArticle ->
                 dto.username = currentUser.login
-                val actualName = dto.name.takeIf { it != null && (it.isNotEmpty() || it.isNotBlank()) } ?: fileName
+                val actualName = fileName
                 val nameAndExtension: Pair<String, String> =
                     extractNameAndExtension(actualName ?: getRandomString(15))
                 val toCreate = File(
