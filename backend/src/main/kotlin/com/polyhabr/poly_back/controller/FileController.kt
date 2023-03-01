@@ -38,8 +38,6 @@ class FileController(
     )
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
-//        @Schema @RequestPart(name = "idArticle") @Positive articleId: Long,
-//        @Schema @RequestPart(name = "file") file: MultipartFile
         @ModelAttribute fileRequest: FileRequest
     ): ResponseEntity<*>? {
         val obj = ObjectMapper()
