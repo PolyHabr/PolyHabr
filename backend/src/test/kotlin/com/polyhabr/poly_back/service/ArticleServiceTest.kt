@@ -9,6 +9,7 @@ import com.polyhabr.poly_back.service.impl.ArticleServiceImpl
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -138,7 +139,6 @@ class ArticleServiceTest {
     private lateinit var articleService: ArticleServiceImpl
 
 
-    @BeforeEach
     fun setup() {
         val page = PageImpl(listOf(defaultArticle))
         given(usersRepository.findByLogin(null)).willReturn(defaultUser1)
@@ -242,6 +242,7 @@ class ArticleServiceTest {
     // write test for getAll method
     @Test
     fun `getAll should return all articles`() {
+        setup()
         val expectedDto = articles.map { it.toDto(listOf(), listOf()) }
         val result = articleService.getAll(1, 1, null).content
         assertEquals(expectedDto, result)
@@ -250,7 +251,8 @@ class ArticleServiceTest {
 
     // write test getById
     @Test
-    fun `getById should return article`() {
+    fun `getById should return article success`() {
+        setup()
         val expectedDto = defaultArticle.toDto(listOf(), listOf()).apply {
             viewCount = 1
         }
@@ -259,9 +261,17 @@ class ArticleServiceTest {
         verify(articleRepository).findById(1)
     }
 
+    @Test
+    fun `getById should return RuntimeException with message`() {
+        val e = assertThrows<RuntimeException> { articleService.getById(1) }
+        assertTrue(e.message.contentEquals("Article not found"));
+    }
+
+
     // write test searchByName
     @Test
     fun `searchByName should return articles`() {
+        setup()
         val expectedDto = articles.map { it.toDto(listOf(), listOf()) }
         val result = articleService.searchByName(eq(Mockito.anyString()), 1, 1, sorting = null).content
         assertEquals(expectedDto, result)
