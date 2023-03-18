@@ -1,5 +1,6 @@
 package com.polyhabr.poly_back.entity
 
+import com.polyhabr.poly_back.dto.ArticleToDisciplineTypeDto
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import javax.persistence.*
@@ -19,5 +20,10 @@ open class ArticleToDisciplineType(
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "discipline_type_id", nullable = false)
     open var disciplineType: DisciplineType? = null
-) : BaseEntity<Long>() {
-}
+) : BaseEntity<Long>()
+
+fun ArticleToDisciplineType.toDto() = ArticleToDisciplineTypeDto(
+    id = this.id,
+    articleId = this.article,
+    disciplineTypeId = this.disciplineType,
+)

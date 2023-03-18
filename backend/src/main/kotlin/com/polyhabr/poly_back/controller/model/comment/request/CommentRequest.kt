@@ -20,10 +20,6 @@ data class CommentRequest(
     @field:Schema(example = "article id")
     @field:NotNull
     var articleId: Long? = null,
-
-//    @field:Schema(example = "user id")
-//    @field:NotNull
-//    var userId: User? = null,
 ): Serializable
 
 //fun CommentRequest.toDto() = CommentDto(

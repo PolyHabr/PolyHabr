@@ -65,7 +65,7 @@ interface ArticleRepository : JpaRepository<Article, Long> {
     fun searchByTitleArticlesOrderDate(pageable: Pageable,  @Param("titlesearch") titlesearch: String): Page<Article>
 
     @Query("SELECT a FROM Article a where :nowmillis - a.date <= :diffmillis and LOWER(a.title) LIKE %:titlesearch% ORDER BY a.view DESC, a.date DESC")
-    fun searchByTitleArticlesWithLimitTimelineOrderView(
+        fun searchByTitleArticlesWithLimitTimelineOrderView(
         pageable: Pageable,
         @Param("nowmillis") nowmillis: Long,
         @Param("diffmillis") diffmillis: Long,

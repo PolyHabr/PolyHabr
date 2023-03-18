@@ -5,6 +5,7 @@ import com.polyhabr.poly_back.controller.model.comment.request.toDtoWithoutUser
 import com.polyhabr.poly_back.controller.utils.currentLogin
 import com.polyhabr.poly_back.dto.CommentDto
 import com.polyhabr.poly_back.entity.Comment
+import com.polyhabr.poly_back.entity.toDto
 import com.polyhabr.poly_back.repository.ArticleRepository
 import com.polyhabr.poly_back.repository.CommentRepository
 import com.polyhabr.poly_back.repository.auth.UsersRepository
@@ -119,16 +120,7 @@ class CommentServiceImpl(
         }
     }
 
-    private fun Comment.toDto(): CommentDto =
-        CommentDto(
-            id = this.id,
-            text = this.text,
-            articleId = this.articleId,
-            userId = this.userId,
-            data = DateTime(date)
-        )
-
-    private fun CommentDto.toEntity() = Comment(
+    fun CommentDto.toEntity() = Comment(
         text = this.text!!,
         articleId = this.articleId!!,
         userId = this.userId!!,
