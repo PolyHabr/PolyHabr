@@ -6,6 +6,7 @@ import java.io.Serializable
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
+import javax.validation.constraints.Positive
 import javax.validation.constraints.Size
 
 @Schema(
@@ -51,6 +52,9 @@ data class UserRequest(
     @field:Size(min = 2, max = 15)
     @field:Pattern(regexp = "^[A-Za-z]+\$")
     var surname: String? = null,
+
+    @Positive
+    var id: Long? = null,
 ) : Serializable
 
 fun UserRequest.toDto() = UserDto(
@@ -59,4 +63,5 @@ fun UserRequest.toDto() = UserDto(
     name = this.name!!,
     password = this.password!!,
     surname = this.surname!!,
+    id = this.id,
 )

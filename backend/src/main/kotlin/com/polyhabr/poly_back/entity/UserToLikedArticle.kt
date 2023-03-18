@@ -1,5 +1,7 @@
 package com.polyhabr.poly_back.entity
 
+import com.polyhabr.poly_back.controller.model.userToLikedArticle.request.UserToLikedArticleRequest
+import com.polyhabr.poly_back.dto.UserToLikedArticleDto
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import com.polyhabr.poly_back.entity.auth.User
@@ -20,6 +22,10 @@ open class UserToLikedArticle(
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
     open var user: User? = null
-) : BaseEntity<Long>() {
+) : BaseEntity<Long>()
 
-}
+fun UserToLikedArticle.toDto() = UserToLikedArticleDto(
+    id = this.id,
+    articleId = this.article,
+    userId = this.user,
+)

@@ -1,8 +1,10 @@
 package com.polyhabr.poly_back.entity
 
+import com.polyhabr.poly_back.dto.ArticleDto
 import com.polyhabr.poly_back.entity.auth.User
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import org.joda.time.DateTime
 import java.sql.Timestamp
 import java.time.LocalDate
 import javax.persistence.*
@@ -56,3 +58,25 @@ open class Article(
     @JoinColumn(name = "preview_src_id")
     open var preview_src_id: File? = null,
 ) : BaseEntity<Long>()
+
+fun Article.toDto(
+    disciplineList: List<String>,
+    tagList: List<String>,
+): ArticleDto =
+    ArticleDto(
+        id = this.id,
+        date = DateTime(this.date),
+        likes = this.likes,
+        previewText = this.previewText,
+        typeId = this.typeId,
+        userId = this.userId,
+        title = this.title,
+        listDisciplineName = disciplineList,
+        listTag = tagList,
+        text = this.text,
+        fileId = this.file_id?.id,
+        viewCount = this.view,
+        isSaveToFavourite = isFav,
+        pdfId = file_id?.id,
+        previewImgId = preview_src_id?.id
+    )
