@@ -14,6 +14,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.given
 import org.springframework.data.domain.PageImpl
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit4.SpringRunner
 
@@ -103,5 +104,45 @@ class ArticleTypeControllerTest {
         val actualResponse = articleTypeController.update(1L, articleTypeRequest)
 
         assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test search articles by name`() {
+        val articleType = defaultArticleType
+        val dtoArticleType = articleType.toDto()
+
+        val page = PageImpl(listOf(dtoArticleType))
+
+        given(articleTypeService.searchByName("article", 1, 1)).willReturn(page)
+
+        val expectedResponse = ResponseEntity(page.toListResponse(), HttpStatus.OK)
+        val actualResponse = articleTypeController.searchArticleTypesByName("article", 1, 1)
+
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test delete articleType`() {
+        val expected = true to "success"
+
+        given(articleTypeService.delete(1)).willReturn(expected)
+
+        val expectedResponse = ResponseEntity("success", HttpStatus.OK)
+
+        val actualResponse = articleTypeController.delete(1)
+
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test delete non-existing articleType`() {
+        val expected = false to "INTERNAL_SERVER_ERROR Internal Server Error"
+
+        given(articleTypeService.delete(1)).willReturn(expected)
+        val expectedResponse = ResponseEntity("INTERNAL_SERVER_ERROR Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
+
+        val actualResponse = articleTypeController.delete(1)
+        assertEquals(expectedResponse, actualResponse)
+
     }
 }

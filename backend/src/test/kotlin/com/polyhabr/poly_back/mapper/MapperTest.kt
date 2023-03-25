@@ -1,9 +1,6 @@
 package com.polyhabr.poly_back.mapper
 
-import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
-import com.polyhabr.poly_back.controller.model.article.request.ArticleUpdateRequest
-import com.polyhabr.poly_back.controller.model.article.request.toDto
-import com.polyhabr.poly_back.controller.model.article.request.toDtoWithoutType
+import com.polyhabr.poly_back.controller.model.article.request.*
 import com.polyhabr.poly_back.controller.model.articleType.request.ArticleTypeRequest
 import com.polyhabr.poly_back.controller.model.articleType.request.toDto
 import com.polyhabr.poly_back.controller.model.comment.request.CommentRequest
@@ -14,6 +11,11 @@ import com.polyhabr.poly_back.controller.model.user.request.UserRequest
 import com.polyhabr.poly_back.controller.model.user.request.toDto
 import com.polyhabr.poly_back.controller.model.userToLikedArticle.request.UserToLikedArticleRequest
 import com.polyhabr.poly_back.controller.model.userToLikedArticle.request.toDto
+import com.polyhabr.poly_back.controller.model.userToLikedArticle.response.UserToLikedArticleCreateResponse
+import com.polyhabr.poly_back.controller.model.userToLikedArticle.response.UserToLikedArticleListResponse
+import com.polyhabr.poly_back.controller.model.userToLikedArticle.response.UserToLikedArticleUpdateResponse
+import com.polyhabr.poly_back.controller.model.userToLikedArticle.response.toResponse
+import com.polyhabr.poly_back.controller.utils.FieldRequest
 import com.polyhabr.poly_back.dto.*
 import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.entity.auth.Role
@@ -163,6 +165,9 @@ class MapperTest {
         val actualDto = articleRequest.toDtoWithoutType().apply {
             date = datedd
         }
+
+        val someByteArray = ByteArray(2)
+        val actualDto2 = articleRequest.toDtoWithoutType(someByteArray,"psgk")
 
         assertEquals(expectedDto, actualDto)
     }
@@ -418,11 +423,23 @@ class MapperTest {
             userId = defaultUser1,
         )
 
+        val userToLikedArticleCreateResponse = UserToLikedArticleCreateResponse(
+            isSuccess = true,
+            id = 1L
+        )
+
         val expectedDto = UserToLikedArticleDto(
             articleId = userToLikedArticleRequest.articleId,
             userId = userToLikedArticleRequest.userId,
         )
 
+        val userToLikedArticleListResponse = UserToLikedArticleListResponse(listOf(expectedDto.toResponse()), 1)
+        val userToLikedArticleListResponse2 = listOf(expectedDto.toResponse())
+        val userToLikedArticleUpdateResponse = UserToLikedArticleUpdateResponse(true)
+
+        val fieldRequest = FieldRequest("nameField", true, "forDataRange")
+        val byteArray = ByteArray(5)
+        val fileCreatingDto = FileCreatingDto("username", "name", "originalName", "description", byteArray)
         val actualDto = userToLikedArticleRequest.toDto()
 
         assertEquals(expectedDto, actualDto)
@@ -450,6 +467,8 @@ class MapperTest {
         )
 
         val actualDto = articleUpdateRequest.toDto()
+
+        val actualDto2 = articleUpdateRequest.toDtoOnlyLike()
 
         assertEquals(expectedDto, actualDto)
     }

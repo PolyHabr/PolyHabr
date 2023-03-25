@@ -8,7 +8,6 @@ import com.polyhabr.poly_back.controller.model.tagType.response.toResponse
 import com.polyhabr.poly_back.entity.TagType
 import com.polyhabr.poly_back.entity.toDto
 import com.polyhabr.poly_back.service.TagTypeService
-import io.mockk.impl.annotations.MockK
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.extension.ExtendWith
@@ -18,6 +17,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.given
 import org.springframework.data.domain.PageImpl
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit4.SpringRunner
 
@@ -101,5 +101,47 @@ class TagTypeControllerTest {
         val actualResponse = tagTypeController.update(tagType.id!!, dtoTagTypeRequest)
 
         assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test search TagType by name`() {
+        val tagType = defaultTagType
+        val dtoTagType = tagType.toDto()
+        val listOf = listOf(dtoTagType)
+        val page = PageImpl(listOf)
+
+        given(tagTypeService.searchByName("tag", 1, 1)).willReturn(page)
+
+        val expectedResponse = ResponseEntity(page.toListResponse(), HttpStatus.OK)
+        val actualResponse = tagTypeController.searchTagTypesByName("tag", 1, 1)
+
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test delete tagType`() {
+        val tagType = defaultTagType
+        val dtoTagType = tagType.toDto()
+        val expected = true to "success"
+
+        given(tagTypeService.delete(1)).willReturn(expected)
+
+        val expectedResponse = ResponseEntity("success", HttpStatus.OK)
+
+        val actualResponse = tagTypeController.delete(1)
+
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test delete non-existing tagType`() {
+        val expected = false to "INTERNAL_SERVER_ERROR Internal Server Error"
+
+        given(tagTypeService.delete(1)).willReturn(expected)
+        val expectedResponse = ResponseEntity("INTERNAL_SERVER_ERROR Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
+
+        val actualResponse = tagTypeController.delete(1)
+        assertEquals(expectedResponse, actualResponse)
+
     }
 }

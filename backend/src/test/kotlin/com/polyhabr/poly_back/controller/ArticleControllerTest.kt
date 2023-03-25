@@ -3,28 +3,26 @@ package com.polyhabr.poly_back.controller
 import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
 import com.polyhabr.poly_back.controller.model.article.request.ArticleUpdateRequest
 import com.polyhabr.poly_back.controller.model.article.request.SortArticleRequest
-import com.polyhabr.poly_back.controller.model.article.response.ArticleCreateResponse
-import com.polyhabr.poly_back.controller.model.article.response.ArticleUpdateResponse
-import com.polyhabr.poly_back.controller.model.article.response.toListResponse
-import com.polyhabr.poly_back.controller.model.article.response.toResponse
+import com.polyhabr.poly_back.controller.model.article.response.*
 import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.service.ArticleService
 import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.given
+import org.mockito.kotlin.*
 import org.springframework.data.domain.PageImpl
-import org.junit.jupiter.api.Assertions.*
-import org.mockito.Mockito
-import org.mockito.kotlin.any
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit4.SpringRunner
+import javax.validation.ConstraintViolation
+import javax.validation.ConstraintViolationException
 
 @ExtendWith(MockitoExtension::class)
 @RunWith(SpringRunner::class)
@@ -102,6 +100,7 @@ class ArticleControllerTest {
                 tagType = defaultTagType
             ),
         )
+
     }
 
     @Mock
@@ -118,7 +117,13 @@ class ArticleControllerTest {
         val page = PageImpl(listOf(dtoArticle))
         val sort = SortArticleRequest()
 
-        given(articleService.getAll(1, 1,sort)).willReturn(page)
+        val article2 = defaultArticle
+        val dtoArticle2 = article.toDto(disciplineTypes, tagTypes)
+        val page2 = PageImpl(listOf(dtoArticle2))
+        val sort2 = SortArticleRequest()
+        val artUpdate = sort2?.getMillis() ?: Long.MAX_VALUE
+
+        given(articleService.getAll(1, 1, sort)).willReturn(page)
 
         val expectedResponse = ResponseEntity(page.toListResponse(), HttpStatus.OK)
         val actualResponse = articleController.getAll(1, 1, sort)
@@ -147,6 +152,7 @@ class ArticleControllerTest {
         val dtoArticle = article.toDto(disciplineTypes, tagTypes)
         val page = PageImpl(listOf(dtoArticle))
 
+        given(articleService.getById(1)).willReturn(dtoArticle)
         given(articleService.searchByName("title", 1, 1, null)).willReturn(page)
 
         val expectedResponse = ResponseEntity(page.toListResponse(), HttpStatus.OK)
@@ -172,7 +178,6 @@ class ArticleControllerTest {
             listTag = articleDto.listTag,
             articleType = articleDto.typeName,
         )
-
         given(articleService.create(any())).willReturn(expected)
 
         val expectedResponse = ResponseEntity(ArticleCreateResponse(true, 1L), HttpStatus.OK)
@@ -207,4 +212,109 @@ class ArticleControllerTest {
         assertEquals(expectedResponse, actualResponse)
     }
 
+    @Test
+    fun `test search articles by user`() {
+        val article = defaultArticle
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val page = PageImpl(listOf(dtoArticle))
+
+        given(articleService.getByUserId(1, 1, 1)).willReturn(page)
+
+        val expectedResponse = ResponseEntity(page.toListResponse(), HttpStatus.OK)
+        val actualResponse = article.userId?.id?.let { articleController.searchArticlesByUser(it, 1, 1) }
+
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test delete article`() {
+        val expected = true to "success"
+
+        given(articleService.delete(1)).willReturn(expected)
+
+        val expectedResponse = ResponseEntity("success", HttpStatus.OK)
+
+        val actualResponse = articleController.delete(1)
+
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test delete non-existing article`() {
+        val expected = false to "INTERNAL_SERVER_ERROR Internal Server Error"
+
+        given(articleService.delete(1)).willReturn(expected)
+        val expectedResponse =
+            ResponseEntity("INTERNAL_SERVER_ERROR Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
+
+        val actualResponse = articleController.delete(1)
+        assertEquals(expectedResponse, actualResponse)
+
+    }
+
+    @Test
+    fun `test add like to article`() {
+        doNothing().`when`(articleService).updateLikes(1, true)
+
+        val expectedResponse = ResponseEntity(null, HttpStatus.OK)
+        val actualResponse = articleController.addLike(1)
+
+        assertEquals(expectedResponse, actualResponse)
+
+    }
+
+    @Test
+    fun `test decrease like to article`() {
+        doNothing().`when`(articleService).updateLikes(1, false)
+
+        val expectedResponse = ResponseEntity(null, HttpStatus.OK)
+        val actualResponse = articleController.decreaseLike(1)
+
+        assertEquals(expectedResponse, actualResponse)
+
+    }
+
+    @Test
+    fun `test get favourite article`() {
+        val article = defaultArticle
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val page = PageImpl(listOf(dtoArticle))
+
+        given(articleService.getFavArticle(1, 1)).willReturn(page)
+
+        val expectedResponse = ResponseEntity(
+            ArticleListResponse(
+                listOf(dtoArticle.toResponse()), 1, 1
+            ), HttpStatus.OK
+        )
+        val actualResponse = articleController.getFavouriteArticle(1, 1)
+
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test add to favourite article`() {
+        doNothing().`when`(articleService).updateFavArticle(1, true)
+
+        val expectedResponse = ResponseEntity(null, HttpStatus.OK)
+
+        val actualResponse = articleController.addToFavouriteArticle(1)
+
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test remove to favourite article`() {
+        val article = defaultArticle
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val expected = true to "success"
+
+        doNothing().`when`(articleService).updateFavArticle(1, false)
+
+        val expectedResponse = ResponseEntity(null, HttpStatus.OK)
+
+        val actualResponse = articleController.removeFromFavouriteArticle(1)
+
+        assertEquals(expectedResponse, actualResponse)
+    }
 }

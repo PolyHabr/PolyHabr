@@ -19,6 +19,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.given
 import org.springframework.data.domain.PageImpl
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit4.SpringRunner
 
@@ -156,5 +157,59 @@ class CommentControllerTest {
         val actual = commentController.update(comment.id!!, updateCommentRequest)
 
         assertEquals(excepted, actual)
+    }
+
+    @Test
+    fun `test get comments by article id`() {
+
+        val comment = defaultComment
+        val commentDto = comment.toDto()
+        val page = PageImpl(listOf(commentDto))
+
+        given(commentService.getByArticleIdAll(1, 1, 1)).willReturn(page)
+
+        val excepted = ResponseEntity.ok(page.toListResponse())
+        val actual = commentController.getByArticleId(1,1,1)
+
+        assertEquals(excepted, actual)
+    }
+
+    @Test
+    fun `test search comments by name`() {
+
+        val comment = defaultComment
+        val commentDto = comment.toDto()
+        val page = PageImpl(listOf(commentDto))
+
+        given(commentService.searchByName("text", 1, 1)).willReturn(page)
+
+        val excepted = ResponseEntity.ok(page.toListResponse())
+        val actual = commentController.searchCommentsByName("text",1,1)
+
+        assertEquals(excepted, actual)
+    }
+
+    @Test
+    fun `test delete comments`() {
+        val expected = true to "success"
+
+        given(commentService.delete(1)).willReturn(expected)
+
+        val excepted = ResponseEntity.ok("success")
+        val actual = commentController.delete(1)
+
+        assertEquals(excepted, actual)
+    }
+
+    @Test
+    fun `test delete non-existing comments`() {
+        val expected = false to "INTERNAL_SERVER_ERROR Internal Server Error"
+
+        given(commentService.delete(1)).willReturn(expected)
+        val expectedResponse = ResponseEntity("INTERNAL_SERVER_ERROR Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
+
+        val actualResponse = commentController.delete(1)
+        assertEquals(expectedResponse, actualResponse)
+
     }
 }
