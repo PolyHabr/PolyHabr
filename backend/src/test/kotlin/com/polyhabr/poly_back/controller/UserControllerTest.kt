@@ -26,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.test.context.junit4.SpringRunner
+import javax.validation.ConstraintViolationException
 
 
 @ExtendWith(MockitoExtension::class)
@@ -164,6 +165,18 @@ class UserControllerTest {
         val actualResponse = userController.delete()
         assertEquals(expectedResponse, actualResponse)
 
+    }
+
+    @Test
+    fun `test handleConstraintViolationException`() {
+        val exString = "exString"
+        val ex = ConstraintViolationException(exString, null)
+
+        val actual = userController.handleConstraintViolationException(ex)!!
+        val expectedBody = "not valid due to validation error: " + ex.message
+
+        assertEquals(actual.statusCode, HttpStatus.BAD_REQUEST)
+        assertEquals(actual.body, expectedBody)
     }
 
 }

@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit4.SpringRunner
+import javax.validation.ConstraintViolationException
 
 @ExtendWith(MockitoExtension::class)
 @RunWith(SpringRunner::class)
@@ -211,5 +212,17 @@ class CommentControllerTest {
         val actualResponse = commentController.delete(1)
         assertEquals(expectedResponse, actualResponse)
 
+    }
+
+    @Test
+    fun `test handleConstraintViolationException`() {
+        val exString = "exString"
+        val ex = ConstraintViolationException(exString, null)
+
+        val actual = commentController.handleConstraintViolationException(ex)!!
+        val expectedBody = "not valid due to validation error: " + ex.message
+
+        assertEquals(actual.statusCode, HttpStatus.BAD_REQUEST)
+        assertEquals(actual.body, expectedBody)
     }
 }

@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.anyInt
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.*
@@ -285,30 +286,32 @@ class ArticleServiceTest {
         assertEquals(expectedDto, result)
     }
 
-//    @Test
-//    fun `create article`() {
-//        val article = defaultArticle
-//        val articleDto = article.toDto(disciplineTypes, tagTypes).apply {
-//            typeName = defaultArticleType.name.toString()
-//        }
-//        val result = transactionTemplate.execute{ articleService.create(articleDto)}
-//        assertEquals(null, result)
-//    }
+    @Test
+    fun `create article`() {
+        setup()
+        val article = defaultArticle
+        val articleDto = article.toDto(disciplineTypes, tagTypes).apply {
+            typeName = defaultArticleType.name.toString()
+        }
+        val result = transactionTemplate.execute { articleService.create(articleDto) }
 
-//    @Test
-//    fun `test update article`(){
-//
-//        val articleRequest = ArticleUpdateDto(
-//            filePdf = "newFile",
-//            likes = 0,
-//            previewText = "previewText",
-//            title = "12312312312312",
-//            text = "text",
-//            typeName = "typename"
-//        )
-//        val article = articleService.update(any(), articleRequest)
-//        assertEquals(defaultArticle, article)
-//    }
+        assertEquals(null, result)
+    }
+
+    @Test
+    fun `test update article`() {
+        val articleUpdate = ArticleUpdateDto(
+            previewText = "previewText",
+        )
+        setup()
+
+        `when`(articleRepository.save(defaultArticle)).thenReturn(defaultArticle)
+
+        val actual = articleService.update(1, articleUpdate)
+        val expected = true to "Ok"
+
+        assertEquals(actual, expected)
+    }
 
     @Test
     fun `test delete article`() {

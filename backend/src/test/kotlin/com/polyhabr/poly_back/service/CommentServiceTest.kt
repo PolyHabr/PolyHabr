@@ -149,18 +149,18 @@ class CommentServiceTest {
         Assertions.assertEquals(expectedComment, result)
     }
 
-//    @Test
-//    fun `get comment by article id all`() {
-//        val comment = defaultComment1
-//        val expectedComment = comment.toDto()
-//
-////        given(commentRepository.findAllByArticleId(any(),1).willReturn(true))
-//        `when`(commentRepository.findAllByArticleId(any(),1)).thenReturn(any())
-//
-//        val result = commentService.getByArticleIdAll(1, 1, 1L)
-//
-//        Assertions.assertEquals(expectedComment, result)
-//    }
+    @Test
+    fun `get comment by article id all`() {
+        val comment = listOf(defaultComment1, defaultComment2)
+        val expectedComment = comment.map { it.toDto() }
+        val page = PageImpl(comment)
+
+        given(commentRepository.findAllByArticleId(any(), Mockito.anyLong())).willReturn(page)
+
+        val result = commentService.getByArticleIdAll(1, 1, 1L).content
+
+        Assertions.assertEquals(expectedComment, result)
+    }
 
     @Test
     fun `search by name comment type`() {

@@ -44,6 +44,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.thymeleaf.spring5.SpringTemplateEngine
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletRequest.BASIC_AUTH
+import javax.validation.ConstraintViolationException
 
 @ExtendWith(MockitoExtension::class)
 @RunWith(SpringRunner::class)

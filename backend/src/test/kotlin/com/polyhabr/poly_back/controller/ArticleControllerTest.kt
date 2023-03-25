@@ -8,6 +8,7 @@ import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.service.ArticleService
+import kotlinx.coroutines.handleCoroutineException
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
@@ -282,11 +283,10 @@ class ArticleControllerTest {
 
         given(articleService.getFavArticle(1, 1)).willReturn(page)
 
-        val expectedResponse = ResponseEntity(
-            ArticleListResponse(
-                listOf(dtoArticle.toResponse()), 1, 1
-            ), HttpStatus.OK
+        val articleListResponse = ArticleListResponse(
+            listOf(dtoArticle.toResponse()), 1, 1
         )
+        val expectedResponse = ResponseEntity(articleListResponse, HttpStatus.OK)
         val actualResponse = articleController.getFavouriteArticle(1, 1)
 
         assertEquals(expectedResponse, actualResponse)
@@ -316,5 +316,17 @@ class ArticleControllerTest {
         val actualResponse = articleController.removeFromFavouriteArticle(1)
 
         assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test handleConstraintViolationException`() {
+        val exString = "exString"
+        val ex = ConstraintViolationException(exString, null)
+
+        val actual = articleController.handleConstraintViolationException(ex)!!
+        val expectedBody = "not valid due to validation error: " + ex.message
+        
+        assertEquals(actual.statusCode, HttpStatus.BAD_REQUEST)
+        assertEquals(actual.body, expectedBody)
     }
 }
