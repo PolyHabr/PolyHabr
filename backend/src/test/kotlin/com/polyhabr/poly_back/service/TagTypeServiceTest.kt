@@ -8,6 +8,7 @@ import com.polyhabr.poly_back.entity.auth.toDto
 import com.polyhabr.poly_back.entity.toDto
 import com.polyhabr.poly_back.repository.TagTypeRepository
 import com.polyhabr.poly_back.service.impl.TagTypeServiceImpl
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -155,5 +156,12 @@ class TagTypeServiceTest {
         val result = tagTypeService.update(1L, tagTypeRequest)
 
         assertNotNull(result)
+    }
+
+    @Test
+    fun `delete tagType`() {
+        val result = tagTypeService.delete(1L)
+
+        Assertions.assertNotNull(result)
     }
 }

@@ -159,4 +159,11 @@ class DisciplineTypeServiceTest {
 
         Assertions.assertNotNull(result)
     }
+
+    @Test
+    fun `delete disciplineType`() {
+        val result = disciplineTypeService.delete(1L)
+
+        Assertions.assertNotNull(result)
+    }
 }

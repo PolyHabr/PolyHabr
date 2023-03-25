@@ -151,4 +151,11 @@ class ArticleTypeServiceTest {
 
         Assertions.assertNotNull(result)
     }
+
+    @Test
+    fun `delete articleType`() {
+        val result = articleTypeService.delete(1L)
+
+        Assertions.assertNotNull(result)
+    }
 }

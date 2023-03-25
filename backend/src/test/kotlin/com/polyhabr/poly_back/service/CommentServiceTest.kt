@@ -14,8 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.given
 import org.springframework.data.domain.PageImpl
@@ -147,6 +149,19 @@ class CommentServiceTest {
         Assertions.assertEquals(expectedComment, result)
     }
 
+//    @Test
+//    fun `get comment by article id all`() {
+//        val comment = defaultComment1
+//        val expectedComment = comment.toDto()
+//
+////        given(commentRepository.findAllByArticleId(any(),1).willReturn(true))
+//        `when`(commentRepository.findAllByArticleId(any(),1)).thenReturn(any())
+//
+//        val result = commentService.getByArticleIdAll(1, 1, 1L)
+//
+//        Assertions.assertEquals(expectedComment, result)
+//    }
+
     @Test
     fun `search by name comment type`() {
         val comment = listOf(defaultComment1, defaultComment2)
@@ -176,7 +191,7 @@ class CommentServiceTest {
 //
 //        Assertions.assertNotNull(result)
 //    }
-//
+
 //    @Test
 //    fun `update comment`() {
 //        val comment = CommentServiceTest.defaultComment1
@@ -192,4 +207,11 @@ class CommentServiceTest {
 //
 //        Assertions.assertNotNull(result)
 //    }
+
+    @Test
+    fun `delete comment`() {
+        val result = commentService.delete(1L)
+
+        Assertions.assertNotNull(result)
+    }
 }
