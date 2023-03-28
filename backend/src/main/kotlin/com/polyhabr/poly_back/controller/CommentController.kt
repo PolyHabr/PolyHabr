@@ -75,7 +75,7 @@ class CommentController(
         ]
     )
     @GetMapping("/byArticleId")
-    fun getAll(
+    fun getByArticleId(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
         @Positive @RequestParam("articleId") id: Long

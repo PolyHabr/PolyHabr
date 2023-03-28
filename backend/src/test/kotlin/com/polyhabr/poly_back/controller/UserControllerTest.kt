@@ -1,13 +1,12 @@
 package com.polyhabr.poly_back.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.polyhabr.poly_back.controller.model.user.request.UserUpdateRequest
 import com.polyhabr.poly_back.controller.model.user.response.*
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.entity.auth.toDto
 import com.polyhabr.poly_back.entity.auth.toDtoWithoutPasswordAndEmail
-import com.polyhabr.poly_back.service.UserServiceTest
+import com.polyhabr.poly_back.repository.auth.UsersRepository
 import com.polyhabr.poly_back.service.UsersService
 import org.junit.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -19,10 +18,15 @@ import org.mockito.kotlin.given
 import org.junit.jupiter.api.Assertions.*
 import org.mockito.Mockito
 import org.mockito.kotlin.*
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.test.context.junit4.SpringRunner
+import javax.validation.ConstraintViolationException
 
 
 @ExtendWith(MockitoExtension::class)
@@ -47,6 +51,15 @@ class UserControllerTest {
 
     @Mock
     private lateinit var userService: UsersService
+
+    @Mock
+    private lateinit var usersRepository: UsersRepository
+
+    @Mock
+    private lateinit var userDetailsService: UserDetailsService
+
+    @Mock
+    private lateinit var userDetails: UserDetails
 
     @InjectMocks
     private lateinit var userController: UsersController
@@ -101,6 +114,7 @@ class UserControllerTest {
         val userDto = user.toDtoWithoutPasswordAndEmail()
         val page = PageImpl(listOf(userDto))
 
+        given(usersRepository.findUsersByName(any(), eq("admin"))).willReturn(Page.empty())
         given(userService.searchByName("dmitry", 1, 1)).willReturn(page)
 
         val expectedResponse = ResponseEntity(page.toListResponse(), HttpStatus.OK)
@@ -123,6 +137,46 @@ class UserControllerTest {
         val actualResponse = userController.update(userUpdateRequest)
 
         assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test delete user`() {
+        val user = defaultUser1
+        val userDto = user.toDtoWithoutPasswordAndEmail()
+        val expected = true to "success"
+
+        given(userService.delete()).willReturn(expected)
+
+        val expectedResponse = ResponseEntity("success", HttpStatus.OK)
+
+        val actualResponse = userController.delete()
+
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test delete non-existing user`() {
+        val expected = false to "INTERNAL_SERVER_ERROR Internal Server Error"
+
+        given(userService.delete()).willReturn(expected)
+        val expectedResponse =
+            ResponseEntity("INTERNAL_SERVER_ERROR Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
+
+        val actualResponse = userController.delete()
+        assertEquals(expectedResponse, actualResponse)
+
+    }
+
+    @Test
+    fun `test handleConstraintViolationException`() {
+        val exString = "exString"
+        val ex = ConstraintViolationException(exString, null)
+
+        val actual = userController.handleConstraintViolationException(ex)!!
+        val expectedBody = "not valid due to validation error: " + ex.message
+
+        assertEquals(actual.statusCode, HttpStatus.BAD_REQUEST)
+        assertEquals(actual.body, expectedBody)
     }
 
 }
