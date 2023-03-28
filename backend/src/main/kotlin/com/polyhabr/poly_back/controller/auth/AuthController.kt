@@ -34,26 +34,37 @@ import javax.validation.constraints.Size
 @RequestMapping("/api/auth")
 class AuthController {
 
-    @Autowired
-    lateinit var authenticationManager: AuthenticationManager
+    var authenticationManager: AuthenticationManager
 
-    @Autowired
-    lateinit var userRepository: UsersRepository
+    var userRepository: UsersRepository
 
-    @Autowired
-    lateinit var usersService: UsersService
+    var usersService: UsersService
 
-    @Autowired
-    lateinit var roleRepository: RoleRepository
+    var roleRepository: RoleRepository
 
-    @Autowired
-    lateinit var encoder: PasswordEncoder
+    var encoder: PasswordEncoder
 
-    @Autowired
-    lateinit var jwtProvider: JwtProvider
+    var jwtProvider: JwtProvider
 
-    @Autowired
-    lateinit var mailSender: JavaMailSender
+    var mailSender: JavaMailSender
+
+    constructor(
+        authenticationManager: AuthenticationManager,
+        userRepository: UsersRepository,
+        usersService: UsersService,
+        roleRepository: RoleRepository,
+        encoder: PasswordEncoder,
+        jwtProvider: JwtProvider,
+        mailSender: JavaMailSender
+    ) {
+        this.authenticationManager = authenticationManager
+        this.userRepository = userRepository
+        this.usersService = usersService
+        this.roleRepository = roleRepository
+        this.encoder = encoder
+        this.jwtProvider = jwtProvider
+        this.mailSender = mailSender
+    }
 
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {

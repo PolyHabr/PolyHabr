@@ -143,31 +143,6 @@ class ArticleController(
         return ResponseEntity.ok(rawResponse.toListResponse())
     }
 
-    /*    @Operation(summary = "Article create")
-        @ApiResponses(
-            value = [
-                ApiResponse(
-                    responseCode = "200", description = "ArticleCreateResponse", content = [
-                        Content(
-                            mediaType = "application/json",
-                            schema = Schema(implementation = ArticleCreateResponse::class)
-                        )
-                    ]
-                ),
-                ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
-            ]
-        )
-        @PostMapping(path = ["/create"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-        @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-        fun create(
-            @RequestPart(name = "model") @Valid articleRequest: ArticleRequest,
-            @RequestPart(name = "file") @Schema(description = "nullable, pfd byte") file: MultipartFile? = null
-        ): ResponseEntity<ArticleCreateResponse> {
-            val (success, id) = articleService.create(articleRequest.toDtoWithoutType(file?.bytes, file?.originalFilename))
-            val response = ArticleCreateResponse(id = id, isSuccess = success)
-            return ResponseEntity.ok(response)
-        }*/
-
     @Operation(summary = "Article create")
     @ApiResponses(
         value = [

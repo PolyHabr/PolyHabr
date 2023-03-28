@@ -16,8 +16,10 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.given
 import org.springframework.data.domain.PageImpl
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit4.SpringRunner
+import javax.validation.ConstraintViolationException
 
 @ExtendWith(MockitoExtension::class)
 @RunWith(SpringRunner::class)
@@ -127,5 +129,45 @@ class DisciplineTypeControllerTest {
         val actualResponse = disciplineTypeController.update(1L, disciplineTypeRequest)
 
         assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test get discipline types by id`() {
+        val disciplineType = defaultDisciplineType
+        val dtoDisciplineType = disciplineType.toDto()
+
+        given(disciplineTypeService.getById(1)).willReturn(dtoDisciplineType)
+
+        val expectedResponse = ResponseEntity.ok(DisciplineTypeResponse( dtoDisciplineType.name))
+        val actualResponse = disciplineTypeController.getById(1)
+
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test delete discipline types`() {
+        val disciplineType = defaultDisciplineType
+        val dtoDisciplineType = disciplineType.toDto()
+        val expected = true to "success"
+
+        given(disciplineTypeService.delete(1)).willReturn(expected)
+
+        val expectedResponse = ResponseEntity(null, HttpStatus.OK)
+
+        val actualResponse = disciplineTypeController.delete(1)
+
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test handleConstraintViolationException`() {
+        val exString = "exString"
+        val ex = ConstraintViolationException(exString, null)
+
+        val actual = disciplineTypeController.handleConstraintViolationException(ex)!!
+        val expectedBody = "not valid due to validation error: " + ex.message
+
+        assertEquals(actual.statusCode, HttpStatus.BAD_REQUEST)
+        assertEquals(actual.body, expectedBody)
     }
 }

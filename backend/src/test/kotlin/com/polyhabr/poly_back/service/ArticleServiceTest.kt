@@ -1,11 +1,16 @@
 package com.polyhabr.poly_back.service
 
+import com.polyhabr.poly_back.controller.ArticleControllerTest
+import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
+import com.polyhabr.poly_back.controller.model.article.request.ArticleUpdateRequest
+import com.polyhabr.poly_back.dto.ArticleUpdateDto
 import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.repository.*
 import com.polyhabr.poly_back.repository.auth.UsersRepository
 import com.polyhabr.poly_back.service.impl.ArticleServiceImpl
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.anyInt
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.*
@@ -21,6 +27,11 @@ import org.mockito.quality.Strictness
 import org.springframework.data.domain.PageImpl
 import org.springframework.transaction.support.TransactionTemplate
 import java.util.*
+import org.mockito.Mockito.`when`
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 
 
 @ExtendWith(MockitoExtension::class)
@@ -276,5 +287,87 @@ class ArticleServiceTest {
         val result = articleService.searchByName(eq(Mockito.anyString()), 1, 1, sorting = null).content
         assertEquals(expectedDto, result)
         verify(articleRepository).searchByTitleArticlesOrderDate(any(), Mockito.anyString())
+    }
+
+    @Test
+    fun `getByUserId should return articles`() {
+        setup()
+        val expectedDto = articles.map { it.toDto(listOf(), listOf()) }
+        val result = articleService.getByUserId(1, 1, 1).content
+        assertEquals(expectedDto, result)
+    }
+
+    @Test
+    fun `create article`() {
+        setup()
+        val article = defaultArticle
+        val articleDto = article.toDto(disciplineTypes, tagTypes).apply {
+            typeName = defaultArticleType.name.toString()
+        }
+        val result = transactionTemplate.execute { articleService.create(articleDto) }
+
+        assertEquals(null, result)
+    }
+
+    @Test
+    fun `test update article`() {
+        val articleUpdate = ArticleUpdateDto(
+            previewText = "previewText",
+        )
+        setup()
+
+        `when`(articleRepository.save(defaultArticle)).thenReturn(defaultArticle)
+
+        val actual = articleService.update(1, articleUpdate)
+        val expected = true to "Ok"
+
+        assertEquals(actual, expected)
+    }
+
+    @Test
+    fun `test delete article`() {
+        setup()
+        val expected = true to "Article deleted"
+        val result = articleService.delete(1)
+        assertEquals(expected, result)
+        verify(articleRepository).deleteById(1)
+    }
+
+    @Test
+    fun `test add likes article`() {
+        transactionTemplate.execute {
+//            given(articleService.updateLikes(1, true)).willReturn(null)
+            `when`(articleService.updateLikes(1, true)).thenReturn(null)
+            val expectedResponse = ResponseEntity(null, HttpStatus.OK)
+            val actualResponse = articleRepository.addLikeByArticleId(1)
+            assertEquals(expectedResponse, actualResponse)
+            verify(articleRepository).addLikeByArticleId(1)
+        }
+    }
+
+    @Test
+    fun `test decrease likes article`() {
+        transactionTemplate.execute {
+            val expected = true to "Article deleted"
+            val result = articleService.updateLikes(1, false)
+            assertEquals(expected, result)
+            verify(articleRepository).decreaseLikeByArticleId(1)
+
+        }
+    }
+
+    @Test
+    fun `test getFavArticle`() {
+        transactionTemplate.execute {
+
+            val article = defaultArticle
+            val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+
+            val expected = PageImpl(listOf(dtoArticle)) //true to "Article deleted"
+            val exp = expected.map { it }
+            val result = articleService.getFavArticle(1, 1)
+            assertEquals(exp, result)
+            verify(articleRepository).decreaseLikeByArticleId(1)
+        }
     }
 }
