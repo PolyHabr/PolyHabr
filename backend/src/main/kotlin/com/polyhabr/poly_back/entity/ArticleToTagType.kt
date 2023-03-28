@@ -1,5 +1,6 @@
 package com.polyhabr.poly_back.entity
 
+import com.polyhabr.poly_back.dto.ArticleToTagTypeDto
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import javax.persistence.*
@@ -19,6 +20,10 @@ open class ArticleToTagType(
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "tag_type_id", nullable = false)
     open var tagType: TagType? = null
-) : BaseEntity<Long>() {
+) : BaseEntity<Long>()
 
-}
+fun ArticleToTagType.toDto() = ArticleToTagTypeDto(
+    id = this.id,
+    articleId = this.article,
+    tagTypeId = this.tagType,
+)

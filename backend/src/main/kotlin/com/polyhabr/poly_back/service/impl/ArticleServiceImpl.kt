@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.support.TransactionTemplate
+import javax.transaction.Transactional
 
 
 @Service
@@ -29,7 +30,7 @@ class ArticleServiceImpl(
     private val articleToTagTypeRepository: ArticleToTagTypeRepository,
     private val articleToDisciplineTypeRepository: ArticleToDisciplineTypeRepository,
     private val fileService: FileService,
-    private val articleToFavRepository: ArticleToFavRepository
+    private val articleToFavRepository: ArticleToFavRepository,
 ) : ArticleService {
 
     @Autowired
@@ -91,24 +92,23 @@ class ArticleServiceImpl(
         }
     }
 
+    @Transactional
     override fun getById(id: Long): ArticleDto {
-        return transactionTemplate.execute {
-            articleRepository.findByIdOrNull(id)?.let { article ->
-                val listDisciplineToSave = mutableListOf<String>()
-                val listTagToSave = mutableListOf<String>()
-                articleToDisciplineTypeRepository.findByArticle(article).forEach { articleToDisciplineType ->
-                    listDisciplineToSave.add(articleToDisciplineType.disciplineType?.name!!)
-                }
-                articleToTagTypeRepository.findByArticle(article).forEach { articleToTagType ->
-                    listTagToSave.add(articleToTagType.tagType?.name!!)
-                }
-                articleRepository.save(article.apply { this.view++ })
-                return@execute article.toDto(
-                    disciplineList = listDisciplineToSave,
-                    tagList = listTagToSave
-                )
-            } ?: throw RuntimeException("Article not found")
-        } ?: throw RuntimeException("SQL error")
+        articleRepository.findByIdOrNull(id)?.let { article ->
+            val listDisciplineToSave = mutableListOf<String>()
+            val listTagToSave = mutableListOf<String>()
+            articleToDisciplineTypeRepository.findByArticle(article).forEach { articleToDisciplineType ->
+                listDisciplineToSave.add(articleToDisciplineType.disciplineType?.name!!)
+            }
+            articleToTagTypeRepository.findByArticle(article).forEach { articleToTagType ->
+                listTagToSave.add(articleToTagType.tagType?.name!!)
+            }
+            articleRepository.save(article.apply { this.view++ })
+            return article.toDto(
+                disciplineList = listDisciplineToSave,
+                tagList = listTagToSave
+            )
+        } ?: throw RuntimeException("Article not found")
     }
 
     override fun searchByName(
@@ -392,29 +392,7 @@ class ArticleServiceImpl(
         } ?: throw Exception("Internal error")
     }
 
-    private fun Article.toDto(
-        disciplineList: List<String>,
-        tagList: List<String>,
-    ): ArticleDto =
-        ArticleDto(
-            id = this.id,
-            date = DateTime(this.date),
-            likes = this.likes,
-            previewText = this.previewText,
-            typeId = this.typeId,
-            userId = this.userId,
-            title = this.title,
-            listDisciplineName = disciplineList,
-            listTag = tagList,
-            text = this.text,
-            fileId = this.file_id?.id,
-            viewCount = this.view,
-            isSaveToFavourite = isFav,
-            pdfId = file_id?.id,
-            previewImgId = preview_src_id?.id
-        )
-
-    private fun ArticleDto.toEntity() = Article(
+    fun ArticleDto.toEntity() = Article(
         date = this.date.millis,
         likes = this.likes,
         previewText = this.previewText,

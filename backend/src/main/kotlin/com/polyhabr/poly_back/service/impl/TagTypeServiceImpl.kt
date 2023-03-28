@@ -4,6 +4,7 @@ import com.polyhabr.poly_back.controller.model.tagType.request.TagTypeRequest
 import com.polyhabr.poly_back.controller.model.tagType.request.toDto
 import com.polyhabr.poly_back.dto.TagTypeDto
 import com.polyhabr.poly_back.entity.TagType
+import com.polyhabr.poly_back.entity.toDto
 import com.polyhabr.poly_back.repository.TagTypeRepository
 import com.polyhabr.poly_back.service.TagTypeService
 import org.springframework.data.domain.Page
@@ -72,13 +73,7 @@ class TagTypeServiceImpl(
         }
     }
 
-    private fun TagType.toDto(): TagTypeDto =
-        TagTypeDto(
-            id = this.id!!,
-            name = this.name!!,
-        )
-
-    private fun TagTypeDto.toEntity() = TagType(
+    fun TagTypeDto.toEntity() = TagType(
         name = this.name,
     )
 }

@@ -74,7 +74,7 @@ spring:
     host: smtp.mail.ru
     port: 587
     username: polyhabr@mail.ru
-    password: 13MrZBNdaf8MWHBs5Jkp
+    password: QJndD4b0SDAutKFTwzsg
     properties:
       mail:
         smtp:
