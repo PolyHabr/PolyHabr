@@ -291,6 +291,7 @@ class ArticleServiceTest {
 
     @Test
     fun `getByUserId should return articles`() {
+        setup()
         val expectedDto = articles.map { it.toDto(listOf(), listOf()) }
         val result = articleService.getByUserId(1, 1, 1).content
         assertEquals(expectedDto, result)
@@ -325,11 +326,11 @@ class ArticleServiceTest {
 
     @Test
     fun `test delete article`() {
+        setup()
         val expected = true to "Article deleted"
         val result = articleService.delete(1)
         assertEquals(expected, result)
         verify(articleRepository).deleteById(1)
-
     }
 
     @Test
