@@ -1,5 +1,6 @@
 package com.polyhabr.poly_back.entity
 
+import com.polyhabr.poly_back.dto.DisciplineTypeDto
 import javax.persistence.*
 import javax.validation.constraints.Size
 
@@ -14,3 +15,9 @@ open class DisciplineType() : BaseEntity<Long>() {
         this.name = name
     }
 }
+
+fun DisciplineType.toDto(): DisciplineTypeDto =
+    DisciplineTypeDto(
+        id = this.id!!,
+        name = this.name!!,
+    )

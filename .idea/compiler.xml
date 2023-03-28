@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="poly_back" target="17" />
+      <module name="poly_back" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

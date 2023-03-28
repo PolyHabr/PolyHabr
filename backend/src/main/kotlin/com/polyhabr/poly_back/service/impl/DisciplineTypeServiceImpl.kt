@@ -7,6 +7,7 @@ import com.polyhabr.poly_back.controller.utils.currentLogin
 import com.polyhabr.poly_back.dto.DisciplineTypeDto
 import com.polyhabr.poly_back.entity.DisciplineType
 import com.polyhabr.poly_back.entity.MyDiscipline
+import com.polyhabr.poly_back.entity.toDto
 import com.polyhabr.poly_back.repository.DisciplineTypeRepository
 import com.polyhabr.poly_back.repository.MyDisciplineRepository
 import com.polyhabr.poly_back.repository.auth.UsersRepository
@@ -119,13 +120,7 @@ class DisciplineTypeServiceImpl(
         return true
     }
 
-    private fun DisciplineType.toDto(): DisciplineTypeDto =
-        DisciplineTypeDto(
-            id = this.id!!,
-            name = this.name!!,
-        )
-
-    private fun DisciplineTypeDto.toEntity() = DisciplineType(
+    fun DisciplineTypeDto.toEntity() = DisciplineType(
         name = this.name,
     )
 }

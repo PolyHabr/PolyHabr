@@ -1,5 +1,6 @@
 package com.polyhabr.poly_back.entity
 
+import com.polyhabr.poly_back.dto.TagTypeDto
 import javax.persistence.*
 import javax.validation.constraints.Size
 
@@ -14,3 +15,9 @@ open class TagType() : BaseEntity<Long>() {
         this.name = name
     }
 }
+
+fun TagType.toDto(): TagTypeDto =
+    TagTypeDto(
+        id = this.id!!,
+        name = this.name!!,
+    )

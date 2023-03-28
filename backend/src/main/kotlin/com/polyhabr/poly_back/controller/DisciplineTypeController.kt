@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import java.security.Principal
 import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
@@ -78,7 +77,7 @@ class DisciplineTypeController(
     )
     @GetMapping("/my")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    fun geyMy(): ResponseEntity<DisciplineTypeSimpleListResponse> {
+    fun getMy(): ResponseEntity<DisciplineTypeSimpleListResponse> {
         val rawResponse = DisciplineTypeSimpleListResponse(
             disciplineTypeService.getMy().map { it.toResponse() }
         )
