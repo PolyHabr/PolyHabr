@@ -55,6 +55,13 @@ server:
 #  sql:
 #    init:
 #      platform: postgres
+#zonky:
+#  test:
+#    database:
+#      type: auto
+#      provider: default
+#      refresh: never
+#      replace: any
 assm:
   app:
     jwtSecret: jwtAssmSecretKey
@@ -105,6 +112,7 @@ spring:
     username: postgres
     password: "postgres"
     driverClassName: org.postgresql.Driver
+    platform: org.hibernate.dialect.PostgreSQLDialect
   sql:
     init:
       platform: postgres\
