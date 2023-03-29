@@ -1,28 +1,22 @@
-package com.polyhabr.poly_back.controller
+package com.polyhabr.poly_back.unit.controller
 
 import com.polyhabr.poly_back.controller.auth.AuthController
 import com.polyhabr.poly_back.controller.auth.LoginUser
 import com.polyhabr.poly_back.controller.auth.NewUser
 import com.polyhabr.poly_back.controller.auth.PasswordChange
-import com.polyhabr.poly_back.email.EmailService
 import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.entity.auth.toDtoWithoutPasswordAndEmail
 import com.polyhabr.poly_back.exception.UserAlreadyExistException
-import com.polyhabr.poly_back.jwt.JwtAuthTokenFilter
 import com.polyhabr.poly_back.jwt.JwtProvider
-import com.polyhabr.poly_back.repository.UserToLikedArticleRepository
 import com.polyhabr.poly_back.repository.auth.RoleRepository
 import com.polyhabr.poly_back.repository.auth.UsersRepository
-import com.polyhabr.poly_back.service.ArticleService
 import com.polyhabr.poly_back.service.UsersService
 import com.polyhabr.poly_back.utility.Utility
-import junit.framework.TestCase.assertEquals
-import org.junit.Test
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -31,23 +25,13 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.given
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.env.Environment
-import org.springframework.data.domain.PageImpl
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.test.context.junit4.SpringRunner
-import org.thymeleaf.spring5.SpringTemplateEngine
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletRequest.BASIC_AUTH
-import javax.validation.ConstraintViolationException
 
 @ExtendWith(MockitoExtension::class)
-@RunWith(SpringRunner::class)
 class AuthControllerTest {
     private companion object {
         val defaultRole = Role("ROLE_ADMIN")
@@ -166,7 +150,7 @@ class AuthControllerTest {
 
         val actualResponse = authController.registerUser(newUser).statusCode
 
-        assertEquals(expectedResponse, actualResponse)
+        Assertions.assertEquals(expectedResponse, actualResponse)
     }
 
     @Test
@@ -176,7 +160,7 @@ class AuthControllerTest {
         val expectedResponse = ResponseEntity(null, HttpStatus.OK)
         val actualResponse = authController.verifyUser("someCode")
 
-        assertEquals(expectedResponse, actualResponse)
+        Assertions.assertEquals(expectedResponse, actualResponse)
     }
 
     @Test
@@ -186,18 +170,15 @@ class AuthControllerTest {
         val expectedResponse = ResponseEntity(null, HttpStatus.OK)
         val actualResponse = authController.resetPassword("someMail@mail.com")
 
-        assertEquals(expectedResponse, actualResponse)
+        Assertions.assertEquals(expectedResponse, actualResponse)
     }
 
     @Test
     fun `test verify no change password`() {
-        val expected = true
-        given(usersService.changeUserPassword(any())).willReturn(expected)
-
         val expectedResponse = ResponseEntity(null, HttpStatus.BAD_REQUEST)
-        val actualResponse = authController.verifyChangePassword("adminnnn")
+        val actualResponse = authController.verifyChangePasswordWithToken("adminnnn")
 
-        assertEquals(expectedResponse, actualResponse)
+        Assertions.assertEquals(expectedResponse, actualResponse)
     }
 
     @Test
@@ -205,7 +186,31 @@ class AuthControllerTest {
         val expectedResponse = ResponseEntity(null, HttpStatus.OK)
         val actualResponse = authController.checkFreeLogin("someMail@mail.com")
 
-        assertEquals(expectedResponse, actualResponse)
+        Assertions.assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
+    fun `test savePassword success`() {
+        val passwordChange = PasswordChange("token", "newPassword")
+        given(usersService.changeUserPassword(any())).willReturn(true)
+
+        val expected = ResponseEntity(null, HttpStatus.OK)
+        val actual = authController.savePassword(passwordChange)
+
+        Assertions.assertEquals(expected, actual)
+
+    }
+
+    @Test
+    fun `test savePassword faild`() {
+        val passwordChange = PasswordChange("token", "newPassword")
+        given(usersService.changeUserPassword(any())).willReturn(false)
+
+        val expected = ResponseEntity(null, HttpStatus.BAD_REQUEST)
+        val actual = authController.savePassword(passwordChange)
+
+        Assertions.assertEquals(expected, actual)
+
     }
 
     @Test
@@ -213,7 +218,7 @@ class AuthControllerTest {
         val expectedResponse = ResponseEntity(null, HttpStatus.OK)
         val actualResponse = authController.checkFreeEmail("someMail@mail.com")
 
-        assertEquals(expectedResponse, actualResponse)
+        Assertions.assertEquals(expectedResponse, actualResponse)
     }
 
     @Test
@@ -226,7 +231,7 @@ class AuthControllerTest {
         val loginUser = LoginUser("admin", "admin")
         val actualResponse = authController.manualLogin(loginUser).username
 
-        assertEquals(expectedResponse, actualResponse)
+        Assertions.assertEquals(expectedResponse, actualResponse)
     }
 
     @Test
@@ -240,20 +245,16 @@ class AuthControllerTest {
         val loginUser2 = LoginUser()
         val actualResponse = authController.authenticateUser(loginUser).statusCode
 
-        assertEquals(expectedResponse, actualResponse)
+        Assertions.assertEquals(expectedResponse, actualResponse)
     }
 
 
     @Test
     fun `test verify change password`() {
-        val expected = false to "BAD_REQUEST Bad Request"
-        val passwordChange = PasswordChange("aaaaaa", "newpassword")
-        given(usersService.changeUserPassword(passwordChange)).willReturn(false)
-
         val expectedResponse = ResponseEntity(null, HttpStatus.BAD_REQUEST)
-        val actualResponse = authController.verifyChangePassword("aaaaaa")
+        val actualResponse = authController.verifyChangePasswordWithToken("aaaaaa")
 
-        assertEquals(expectedResponse, actualResponse)
+        Assertions.assertEquals(expectedResponse, actualResponse)
     }
 
     @Test
@@ -265,7 +266,7 @@ class AuthControllerTest {
     }
 
     @Test
-    fun `test utility`(){
+    fun `test utility`() {
         val utility = Utility
         val randomString = utility.getRandomString(10)
     }

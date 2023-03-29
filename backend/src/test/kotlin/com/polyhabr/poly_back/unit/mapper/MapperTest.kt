@@ -1,4 +1,4 @@
-package com.polyhabr.poly_back.mapper
+package com.polyhabr.poly_back.unit.mapper
 
 import com.polyhabr.poly_back.controller.model.article.request.*
 import com.polyhabr.poly_back.controller.model.articleType.request.ArticleTypeRequest
@@ -21,18 +21,13 @@ import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.entity.auth.toDto
-import com.polyhabr.poly_back.service.UserServiceTest
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.boot.test.context.SpringBootTest
-import io.mockk.every
 import org.junit.jupiter.api.Assertions.assertEquals
-import io.mockk.mockk
 import org.joda.time.DateTime
 
 @ExtendWith(MockitoExtension::class)
-@SpringBootTest
 class MapperTest {
     private companion object {
         const val TEST_ID = 1L
@@ -167,7 +162,7 @@ class MapperTest {
         }
 
         val someByteArray = ByteArray(2)
-        val actualDto2 = articleRequest.toDtoWithoutType(someByteArray,"psgk")
+        val actualDto2 = articleRequest.toDtoWithoutType(someByteArray, "psgk")
 
         assertEquals(expectedDto, actualDto)
     }

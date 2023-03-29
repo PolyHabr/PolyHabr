@@ -6,7 +6,6 @@ import com.polyhabr.poly_back.repository.auth.RoleRepository
 import com.polyhabr.poly_back.repository.auth.UsersRepository
 import com.polyhabr.poly_back.service.UsersService
 import net.bytebuddy.utility.RandomString
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.query.Param
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -180,7 +179,7 @@ class AuthController {
     }
 
     @GetMapping("/changePassword")
-    fun verifyChangePassword(@Param("token") token: String): ResponseEntity<String> {
+    fun verifyChangePasswordWithToken(@Param("token") token: String): ResponseEntity<String> {
         return if (usersService.validatePasswordResetToken(token)) {
             ResponseEntity.ok().build()
         } else {
@@ -219,7 +218,7 @@ class AuthController {
     }
 
     @PutMapping("/savePassword")
-    fun verifyChangePassword(@Valid @RequestBody passwordChange: PasswordChange): ResponseEntity<String> {
+    fun savePassword(@Valid @RequestBody passwordChange: PasswordChange): ResponseEntity<String> {
         return if (usersService.changeUserPassword(passwordChange)) {
             ResponseEntity.ok().build()
         } else {

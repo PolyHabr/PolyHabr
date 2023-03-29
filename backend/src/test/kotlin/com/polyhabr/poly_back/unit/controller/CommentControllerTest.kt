@@ -1,5 +1,6 @@
-package com.polyhabr.poly_back.controller
+package com.polyhabr.poly_back.unit.controller
 
+import com.polyhabr.poly_back.controller.CommentController
 import com.polyhabr.poly_back.controller.model.comment.request.CommentRequest
 import com.polyhabr.poly_back.controller.model.comment.response.CommentCreateResponse
 import com.polyhabr.poly_back.controller.model.comment.response.CommentUpdateResponse
@@ -8,12 +9,11 @@ import com.polyhabr.poly_back.controller.model.comment.response.toResponse
 import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
-import com.polyhabr.poly_back.service.ArticleServiceTest
+import com.polyhabr.poly_back.unit.service.ArticleServiceTest
 import com.polyhabr.poly_back.service.CommentService
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -21,11 +21,9 @@ import org.mockito.kotlin.given
 import org.springframework.data.domain.PageImpl
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.test.context.junit4.SpringRunner
 import javax.validation.ConstraintViolationException
 
 @ExtendWith(MockitoExtension::class)
-@RunWith(SpringRunner::class)
 class CommentControllerTest {
     @Mock
     private lateinit var commentService: CommentService

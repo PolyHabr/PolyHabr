@@ -1,14 +1,14 @@
-package com.polyhabr.poly_back.controller
+package com.polyhabr.poly_back.unit.controller
 
+import com.polyhabr.poly_back.controller.ArticleTypeController
 import com.polyhabr.poly_back.controller.model.articleType.request.ArticleTypeRequest
 import com.polyhabr.poly_back.controller.model.articleType.response.*
 import com.polyhabr.poly_back.entity.ArticleType
 import com.polyhabr.poly_back.entity.toDto
 import com.polyhabr.poly_back.service.ArticleTypeService
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -16,11 +16,9 @@ import org.mockito.kotlin.given
 import org.springframework.data.domain.PageImpl
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.test.context.junit4.SpringRunner
 import javax.validation.ConstraintViolationException
 
 @ExtendWith(MockitoExtension::class)
-@RunWith(SpringRunner::class)
 class ArticleTypeControllerTest {
     @Mock
     private lateinit var articleTypeService: ArticleTypeService
