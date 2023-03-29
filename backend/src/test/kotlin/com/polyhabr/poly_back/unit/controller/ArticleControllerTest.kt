@@ -1,5 +1,6 @@
-package com.polyhabr.poly_back.controller
+package com.polyhabr.poly_back.unit.controller
 
+import com.polyhabr.poly_back.controller.ArticleController
 import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
 import com.polyhabr.poly_back.controller.model.article.request.ArticleUpdateRequest
 import com.polyhabr.poly_back.controller.model.article.request.SortArticleRequest
@@ -8,25 +9,19 @@ import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.service.ArticleService
-import kotlinx.coroutines.handleCoroutineException
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.*
 import org.springframework.data.domain.PageImpl
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.test.context.junit4.SpringRunner
-import javax.validation.ConstraintViolation
 import javax.validation.ConstraintViolationException
 
 @ExtendWith(MockitoExtension::class)
-@RunWith(SpringRunner::class)
 class ArticleControllerTest {
     private companion object {
         val defaultRole = Role("ROLE_ADMIN")
@@ -153,7 +148,6 @@ class ArticleControllerTest {
         val dtoArticle = article.toDto(disciplineTypes, tagTypes)
         val page = PageImpl(listOf(dtoArticle))
 
-        given(articleService.getById(1)).willReturn(dtoArticle)
         given(articleService.searchByName("title", 1, 1, null)).willReturn(page)
 
         val expectedResponse = ResponseEntity(page.toListResponse(), HttpStatus.OK)

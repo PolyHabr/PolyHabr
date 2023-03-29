@@ -1,5 +1,6 @@
-package com.polyhabr.poly_back.controller
+package com.polyhabr.poly_back.unit.controller
 
+import com.polyhabr.poly_back.controller.UsersController
 import com.polyhabr.poly_back.controller.model.user.request.UserUpdateRequest
 import com.polyhabr.poly_back.controller.model.user.response.*
 import com.polyhabr.poly_back.entity.auth.Role
@@ -8,15 +9,12 @@ import com.polyhabr.poly_back.entity.auth.toDto
 import com.polyhabr.poly_back.entity.auth.toDtoWithoutPasswordAndEmail
 import com.polyhabr.poly_back.repository.auth.UsersRepository
 import com.polyhabr.poly_back.service.UsersService
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.given
-import org.junit.jupiter.api.Assertions.*
-import org.mockito.Mockito
 import org.mockito.kotlin.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -24,13 +22,10 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.test.context.junit4.SpringRunner
 import javax.validation.ConstraintViolationException
 
 
 @ExtendWith(MockitoExtension::class)
-@RunWith(SpringRunner::class)
 class UserControllerTest {
 
     private companion object {
@@ -114,7 +109,6 @@ class UserControllerTest {
         val userDto = user.toDtoWithoutPasswordAndEmail()
         val page = PageImpl(listOf(userDto))
 
-        given(usersRepository.findUsersByName(any(), eq("admin"))).willReturn(Page.empty())
         given(userService.searchByName("dmitry", 1, 1)).willReturn(page)
 
         val expectedResponse = ResponseEntity(page.toListResponse(), HttpStatus.OK)

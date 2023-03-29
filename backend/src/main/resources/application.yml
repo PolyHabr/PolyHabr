@@ -55,6 +55,13 @@ server:
 #  sql:
 #    init:
 #      platform: postgres
+#zonky:
+#  test:
+#    database:
+#      type: auto
+#      provider: default
+#      refresh: never
+#      replace: any
 assm:
   app:
     jwtSecret: jwtAssmSecretKey
@@ -105,6 +112,12 @@ spring:
     username: postgres
     password: "postgres"
     driverClassName: org.postgresql.Driver
+    platform: org.hibernate.dialect.PostgreSQLDialect
+    hikari:
+      max-lifetime: 1000
+      connection-timeout: 1000
+      validation-timeout: 1000
+      maximum-pool-size: 10
   sql:
     init:
       platform: postgres\

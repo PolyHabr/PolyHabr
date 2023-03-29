@@ -1,4 +1,4 @@
-package com.polyhabr.poly_back.service
+package com.polyhabr.poly_back.unit.service
 
 import com.polyhabr.poly_back.controller.model.disciplineType.request.DisciplineTypeRequest
 import com.polyhabr.poly_back.entity.DisciplineType
@@ -24,7 +24,6 @@ import org.springframework.data.domain.PageRequest
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
-
 class DisciplineTypeServiceTest {
     private companion object {
         val defaultRole = Role("ROLE_ADMIN")
@@ -147,7 +146,7 @@ class DisciplineTypeServiceTest {
 
     @Test
     fun `update discipline type`() {
-        val disciplineType = DisciplineTypeServiceTest.defaultDisciplineType1
+        val disciplineType = defaultDisciplineType1
         val disciplineTypeRequest = DisciplineTypeRequest(
             name = "disciplineType1",
         )

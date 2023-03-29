@@ -1,10 +1,9 @@
-package com.polyhabr.poly_back.service
+package com.polyhabr.poly_back.unit.service
 
 import com.polyhabr.poly_back.controller.model.tagType.request.TagTypeRequest
 import com.polyhabr.poly_back.entity.TagType
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
-import com.polyhabr.poly_back.entity.auth.toDto
 import com.polyhabr.poly_back.entity.toDto
 import com.polyhabr.poly_back.repository.TagTypeRepository
 import com.polyhabr.poly_back.service.impl.TagTypeServiceImpl
@@ -15,12 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.*
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.repository.findByIdOrNull
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)

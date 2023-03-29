@@ -1,4 +1,4 @@
-package com.polyhabr.poly_back.service
+package com.polyhabr.poly_back.unit.service
 
 import com.polyhabr.poly_back.controller.model.articleType.request.ArticleTypeRequest
 import com.polyhabr.poly_back.entity.ArticleType
@@ -22,7 +22,6 @@ import org.springframework.data.domain.PageRequest
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
-
 class ArticleTypeServiceTest {
     private companion object {
         val defaultRole = Role("ROLE_ADMIN")
@@ -139,7 +138,7 @@ class ArticleTypeServiceTest {
 
     @Test
     fun `update article type`() {
-        val articleType = ArticleTypeServiceTest.defaultArticleType1
+        val articleType = defaultArticleType1
         val articleTypeRequest = ArticleTypeRequest(
             name = "articleType1",
         )
