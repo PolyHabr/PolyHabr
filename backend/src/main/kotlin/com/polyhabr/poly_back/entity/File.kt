@@ -1,6 +1,7 @@
 package com.polyhabr.poly_back.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
@@ -11,6 +12,12 @@ import java.time.LocalDateTime;
 
 
 @Entity
+@JsonIgnoreProperties("hibernateLazyInitializer")
+
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
+
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "file")
 open class File(
