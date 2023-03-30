@@ -13,11 +13,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @JsonIgnoreProperties("hibernateLazyInitializer")
-
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-//@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
-
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "file")
 open class File(
@@ -49,6 +44,4 @@ open class File(
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
     @Column(name = "created_at")
     open var createdAt: LocalDateTime? = LocalDateTime.now()
-) {
-
-}
+)
