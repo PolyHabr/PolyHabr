@@ -6,6 +6,7 @@ import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.repository.*
 import com.polyhabr.poly_back.repository.auth.RoleRepository
 import com.polyhabr.poly_back.repository.auth.UsersRepository
+import com.polyhabr.poly_back.utility.Utility
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
@@ -46,6 +47,7 @@ class DataLoader : ApplicationRunner {
     @Autowired
     lateinit var articleToDisciplineTypeRepository: ArticleToDisciplineTypeRepository
 
+    private val sizeGenerateId = 5
     override fun run(args: ApplicationArguments) {
         setup()
     }
@@ -177,7 +179,9 @@ class DataLoader : ApplicationRunner {
 
         val article1 = articleRepository.save(
             Article(
-                title = "Необяснимо, но вполне логично! Что скрывает в себе квантовая механика?",
+                title = "Необяснимо, но вполне логично! Что скрывает в себе квантовая механика?" + Utility.getRandomString(
+                    sizeGenerateId
+                ),
                 previewText = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосв",
                 likes = 0,
                 typeId = articleType1,
@@ -191,7 +195,7 @@ class DataLoader : ApplicationRunner {
 
         val article2 = articleRepository.save(
             Article(
-                title = "Циклы в C++",
+                title = "Циклы в C++" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Иногда необходимо повторять одно и то же действие несколько раз подряд. Для этого используют циклы. В этом уроке мы научимся программировать циклы на C++, после чего посчитаем сумму всех чисел от 1 до 1000.",
                 likes = 0,
                 typeId = articleType2,
@@ -218,7 +222,7 @@ class DataLoader : ApplicationRunner {
 
         val article3 = articleRepository.save(
             Article(
-                title = "Циклы в C++",
+                title = "Циклы в C++" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Иногда необходимо повторять одно и то же действие несколько раз подряд. Для этого используют циклы. В этом уроке мы научимся программировать циклы на C++, после чего посчитаем сумму всех чисел от 1 до 1000.",
                 likes = 0,
                 typeId = articleType2,
@@ -256,7 +260,7 @@ class DataLoader : ApplicationRunner {
 
         val article4 = articleRepository.save(
             Article(
-                title = "Изучаем понятие «интеграл»",
+                title = "Изучаем понятие «интеграл»" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Интегрирование было известно еще в Древнем Египте. Конечно, не в современном виде, но все же. С тех пор математики написали очень много книг по этой теме. Особенно отличились Ньютон и Лейбниц, но суть вещей не изменилась.",
                 likes = 0,
                 typeId = articleType4,
@@ -275,7 +279,9 @@ class DataLoader : ApplicationRunner {
 
         val article5 = articleRepository.save(
             Article(
-                title = "Химия для смертных или Интересные опыты, которые можно повторить самому",
+                title = "Химия для смертных или Интересные опыты, которые можно повторить самому" + Utility.getRandomString(
+                    sizeGenerateId
+                ),
                 previewText = "Для большинства химия - скучная и сложная наука, но мы же знаем, что это не так )\n" +
                         "\n" +
                         "Лично я заинтересовался химией после посмотра фейерверка, и понеслась душа в рай, как говорится.",
@@ -311,7 +317,7 @@ class DataLoader : ApplicationRunner {
 
         val article6 = articleRepository.save(
             Article(
-                title = "решения дифференциальных уравнений",
+                title = "решения дифференциальных уравнений" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Задание\n" +
                         "\n" +
                         "Решить дифференциальное уравнение xy’=y.",
@@ -353,7 +359,7 @@ class DataLoader : ApplicationRunner {
 
         val article7 = articleRepository.save(
             Article(
-                title = "Три этапа философии Ницще",
+                title = "Три этапа философии Ницще" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Имя немецкого философа и мыслителя Фридриха Ницше – одно из наиболее узнаваемых в мире. Его учение пронизано нигилизмом и критическим отношением ко всему существующему на земле.",
                 likes = 0,
                 typeId = articleType6,
@@ -369,7 +375,7 @@ class DataLoader : ApplicationRunner {
 
         val article8 = articleRepository.save(
             Article(
-                title = "Сортировка пузырьком",
+                title = "Сортировка пузырьком" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Сортировка пузырьком - это метод сортировки массивов и списков путем последовательного сравнения и обмена соседних элементов, если предшествующий оказывается больше последующего.",
                 likes = 0,
                 typeId = articleType3,
@@ -399,7 +405,7 @@ class DataLoader : ApplicationRunner {
 
         val article9 = articleRepository.save(
             Article(
-                title = "Теория вероятностей. Базовые термины и понятия",
+                title = "Теория вероятностей. Базовые термины и понятия" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Под занавес продолжительных летних каникул пришло время потихоньку возвращаться к высшей математике и торжественно открыть пустой вёрдовский файл, чтобы приступить к созданию нового раздела – Теория вероятностей и математическая статистика.",
                 likes = 0,
                 typeId = articleType2,
@@ -425,7 +431,7 @@ class DataLoader : ApplicationRunner {
 
         val article10 = articleRepository.save(
             Article(
-                title = "Ковалентная связь и ее характеристики",
+                title = "Ковалентная связь и ее характеристики" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Химическая связь — взаимодействие атомов, осуществляемое путём обмена электронами или их перехода от одного атома к другому.",
                 likes = 0,
                 typeId = articleType1,
@@ -452,7 +458,9 @@ class DataLoader : ApplicationRunner {
         for (i in 0 until 40) {
             val article11 = articleRepository.save(
                 Article(
-                    title = "Необяснимо, но вполне логично! Что скрывает в себе квантовая механика?",
+                    title = "Необяснимо, но вполне логично! Что скрывает в себе квантовая механика? " + Utility.getRandomString(
+                        sizeGenerateId
+                    ),
                     previewText = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосв",
                     likes = 0,
                     typeId = articleType1,

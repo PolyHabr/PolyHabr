@@ -31,6 +31,7 @@ class TagTypeController(
     fun handleConstraintViolationException(e: ConstraintViolationException): ResponseEntity<String?>? {
         return ResponseEntity("not valid due to validation error: " + e.message, HttpStatus.BAD_REQUEST)
     }
+
     @Operation(summary = "Tag type list")
     @ApiResponses(
         value = [
@@ -49,7 +50,6 @@ class TagTypeController(
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-        
     ): ResponseEntity<TagTypeListResponse> {
         val rawResponse = tagTypeService
             .getAll(

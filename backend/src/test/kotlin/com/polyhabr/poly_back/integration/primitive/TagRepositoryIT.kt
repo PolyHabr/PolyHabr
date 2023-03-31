@@ -42,6 +42,9 @@ class TagRepositoryIT @Autowired constructor(
     fun test() {
         val tagType = tagTypeRepository.save(TagType(name = "test"))
         val tagType2 = tagTypeRepository.findById(tagType.id!!).get()
+
         assert(tagType2.name == tagType.name)
+
+        entityManager.clear()
     }
 }
