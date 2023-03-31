@@ -43,7 +43,7 @@ jobs:
           cache: maven
 
       - name: Run build
-        run: mvn -Dmaven.test.skip=true install --file backend/pom.xml
+        run: mvn install -DskipTests --file backend/pom.xml
 
       - name: Run Unit Test
         run: mvn surefire:test --file backend/pom.xml
