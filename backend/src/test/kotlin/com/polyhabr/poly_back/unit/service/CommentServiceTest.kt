@@ -146,6 +146,19 @@ class CommentServiceTest {
     }
 
     @Test
+    fun `get comment by id faild`() {
+        val comment = defaultComment1
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
+            commentService.getById(comment.id!!)
+        }
+
+        val expectedMessage = "Comment not found"
+        val actualMessage = exception.message!!
+
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
     fun `get comment by article id all`() {
         val comment = listOf(defaultComment1, defaultComment2)
         val expectedComment = comment.map { it.toDto() }
@@ -205,7 +218,7 @@ class CommentServiceTest {
 //    }
 
     @Test
-    fun `delete comment`() {
+    fun `delete comment false`() {
         val result = commentService.delete(1L)
 
         Assertions.assertNotNull(result)

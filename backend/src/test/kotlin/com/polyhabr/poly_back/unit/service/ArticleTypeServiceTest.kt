@@ -108,6 +108,20 @@ class ArticleTypeServiceTest {
     }
 
     @Test
+    fun `get article type by id faild`() {
+        val articleType = defaultArticleType1
+
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
+            articleTypeService.getById(articleType.id!!)
+        }
+
+        val expectedMessage = "Article type not found"
+        val actualMessage = exception.message!!
+
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
     fun `search by name article type`() {
         val articleTypes = listOf(defaultArticleType1, defaultArticleType2)
         val expectedArticles = articleTypes.map { it.toDto() }

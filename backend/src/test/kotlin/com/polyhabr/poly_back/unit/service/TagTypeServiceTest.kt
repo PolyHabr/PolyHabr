@@ -108,6 +108,20 @@ class TagTypeServiceTest {
         assertEquals(expectedTag, result)
     }
 
+    @Test
+    fun `get tag type by id faild`() {
+        val tagType = defaultTagType1
+
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
+            tagTypeService.getById(tagType.id!!)
+        }
+
+        val expectedMessage = "Tag type not found"
+        val actualMessage = exception.message!!
+
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
     // write test search by name tag type
     @Test
     fun `search by name tag type`() {
