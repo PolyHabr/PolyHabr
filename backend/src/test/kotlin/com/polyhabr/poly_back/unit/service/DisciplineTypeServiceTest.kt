@@ -116,6 +116,20 @@ class DisciplineTypeServiceTest {
     }
 
     @Test
+    fun `get discipline type by id faild`() {
+        val disciplineType = defaultDisciplineType1
+
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
+            disciplineTypeService.getById(disciplineType.id!!)
+        }
+
+        val expectedMessage = "Discipline type not found"
+        val actualMessage = exception.message!!
+
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
     fun `search by name discipline type`() {
         val disciplineTypes = listOf(defaultDisciplineType1, defaultDisciplineType2)
         val expectedDiscipline = disciplineTypes.map { it.toDto() }
