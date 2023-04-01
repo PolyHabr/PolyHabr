@@ -83,9 +83,10 @@ class ArticleController(
     ): ResponseEntity<ArticleResponse> {
         val response = articleService
             .getById(id)
-            .toResponse()
-        return response.let {
-            ResponseEntity.ok(response)
+        return if (response.first && response.second != null) {
+            ResponseEntity.ok(response.second?.toResponse())
+        } else {
+            ResponseEntity.badRequest().build()
         }
     }
 
@@ -161,10 +162,14 @@ class ArticleController(
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody articleRequest: ArticleRequest
-    ): ResponseEntity<ArticleCreateResponse> {
-        val (success, id) = articleService.create(articleRequest.toDtoWithoutType())
-        val response = ArticleCreateResponse(id = id, isSuccess = success)
-        return ResponseEntity.ok(response)
+    ): Any {
+        return try {
+            val (success, id) = articleService.create(articleRequest.toDtoWithoutType())
+            val response = ArticleCreateResponse(id = id, isSuccess = success)
+            ResponseEntity.ok(response)
+        } catch (e: Exception) {
+            ResponseEntity.badRequest().build()
+        }
     }
 
     @Operation(summary = "Update article by id")

@@ -133,7 +133,7 @@ class ArticleControllerTest {
         val article = defaultArticle
         val dtoArticle = article.toDto(disciplineTypes, tagTypes)
 
-        given(articleService.getById(1)).willReturn(dtoArticle)
+        given(articleService.getById(1)).willReturn(true to dtoArticle)
 
         val expectedResponse = ResponseEntity(dtoArticle.toResponse(), HttpStatus.OK)
         val actualResponse = articleController.getById(1)
