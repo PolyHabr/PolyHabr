@@ -136,7 +136,7 @@ class DisciplineTypeControllerTest {
 
         given(disciplineTypeService.getById(1)).willReturn(dtoDisciplineType)
 
-        val expectedResponse = ResponseEntity.ok(DisciplineTypeResponse( dtoDisciplineType.name))
+        val expectedResponse = ResponseEntity.ok(DisciplineTypeResponse(dtoDisciplineType.id, dtoDisciplineType.name))
         val actualResponse = disciplineTypeController.getById(1)
 
         assertEquals(expectedResponse, actualResponse)

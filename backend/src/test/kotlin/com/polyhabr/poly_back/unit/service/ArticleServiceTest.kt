@@ -257,7 +257,7 @@ class ArticleServiceTest {
     @Test
     fun `getById should return article success`() {
         setup()
-        val expectedDto = defaultArticle.toDto(listOf(), listOf()).apply {
+        val expectedDto = true to defaultArticle.toDto(listOf(), listOf()).apply {
             viewCount = 1
         }
         val result = articleService.getById(1)
@@ -266,9 +266,10 @@ class ArticleServiceTest {
     }
 
     @Test
-    fun `getById should return RuntimeException with message`() {
-        val e = assertThrows<RuntimeException> { articleService.getById(1) }
-        assertTrue(e.message.contentEquals("Article not found"));
+    fun `getById should return false with null`() {
+        val e = false to null
+        val a = articleService.getById(1)
+        assertEquals(e, a)
     }
 
 

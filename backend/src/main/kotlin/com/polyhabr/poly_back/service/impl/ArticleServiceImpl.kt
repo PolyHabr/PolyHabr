@@ -93,7 +93,7 @@ class ArticleServiceImpl(
     }
 
     @Transactional
-    override fun getById(id: Long): ArticleDto {
+    override fun getById(id: Long) =
         articleRepository.findByIdOrNull(id)?.let { article ->
             val listDisciplineToSave = mutableListOf<String>()
             val listTagToSave = mutableListOf<String>()
@@ -104,12 +104,12 @@ class ArticleServiceImpl(
                 listTagToSave.add(articleToTagType.tagType?.name!!)
             }
             articleRepository.save(article.apply { this.view++ })
-            return article.toDto(
+            val dto = article.toDto(
                 disciplineList = listDisciplineToSave,
                 tagList = listTagToSave
             )
-        } ?: throw RuntimeException("Article not found")
-    }
+            return@let true to dto
+        } ?: (false to null)
 
     override fun searchByName(
         prefix: String?,

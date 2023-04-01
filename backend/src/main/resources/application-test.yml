@@ -78,21 +78,20 @@ spring:
       max-file-size: 50MB
       max-request-size: 2MB
   mail:
-    host: smtp.mail.ru
-    port: 587
-    username: polyhabr@mail.ru
-    password: x8ThbP0mV5yjwrndCArh
+    host: localhost
+    port: 3025
+    username: duke
+    password: springboot
+    protocol: smtp
     properties:
       mail:
         smtp:
-          ssl: true
+          ssl: false
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
-          auth: true
           starttls:
-            enable: true
-    protocol: smtp
+            enable: false
   jpa:
     defer-datasource-initialization: true
     database: POSTGRESQL

@@ -122,7 +122,7 @@ class AuthController {
     }
 
     @PostMapping("/signup")
-    fun registerUser(@Valid @RequestBody newUser: NewUser): ResponseEntity<*> {
+    fun registerUser(@Valid @RequestBody newUser: NewUser): ResponseEntity<ResponseMessage> {
         userRepository.findByLogin(newUser.username!!)?.let {
             return ResponseEntity(
                 ResponseMessage("User already exists!"),

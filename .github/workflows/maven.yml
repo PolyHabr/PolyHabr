@@ -42,11 +42,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build with Maven
-        run: mvn -B package --file backend/pom.xml
+      - name: Run build
+        run: mvn install -DskipTests --file backend/pom.xml
 
       - name: Run Unit Test
-        run: mvn test --file backend/pom.xml
+        run: mvn surefire:test --file backend/pom.xml
 
       - name: Run Integration Test
         run: mvn failsafe:integration-test --file backend/pom.xml

@@ -138,7 +138,7 @@ class AuthControllerTest {
         val userDto = user.toDtoWithoutPasswordAndEmail()
 
         val newUser = NewUser(
-            "newUser", "firstName", "lastName", "dgrjryd@gmail.com", "somepassword", "ergjoerg"
+            "newUser", "firstName", "lastName", "dgrjryd@gmail.com", "somepassword"
         )
         val newUser2 = NewUser()
         `when`(passwordEncoder.encode("somepassword")).thenReturn("somepassword")

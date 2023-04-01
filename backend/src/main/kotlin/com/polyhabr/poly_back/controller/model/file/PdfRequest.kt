@@ -9,6 +9,6 @@ import java.io.Serializable
     description = "Data object for File Request",
 )
 data class PdfRequest(
-    val articleId: Long,
-    val file: MultipartFile
+    val articleId: Long?,
+    val file: MultipartFile?
 ) : Serializable

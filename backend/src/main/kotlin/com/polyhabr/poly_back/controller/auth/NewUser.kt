@@ -64,7 +64,6 @@ class NewUser : Serializable {
         lastName: String,
         email: String,
         password: String,
-        recaptchaToken: String
     ) {
         this.username = username
         this.firstName = firstName
