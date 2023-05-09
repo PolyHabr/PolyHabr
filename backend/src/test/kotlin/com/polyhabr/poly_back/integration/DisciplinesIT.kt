@@ -100,7 +100,7 @@ class DisciplinesIT @Autowired constructor(
     @Test
     fun `login under the admin and create discipline is success`() {
         val adminRole = dataLoader.createRoleAdmin()
-        val adminUser = dataLoader.createUserAdmin(adminRole)
+        dataLoader.createUserAdmin(adminRole)
 
         val token = loginAdminUser()
         Assertions.assertTrue(token.isNotEmpty())

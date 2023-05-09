@@ -6,15 +6,17 @@ import com.polyhabr.poly_back.entity.Article
 import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.utility.DateTimeUtils
 
-data class CommentResponse (
+data class CommentResponse(
+    val id: Long,
     val text: String,
     val articleId: Article,
     val userId: User,
     val data: String
 )
 
-fun CommentDto.toResponse(): CommentResponse{
+fun CommentDto.toResponse(): CommentResponse {
     return CommentResponse(
+        id = this.id!!,
         text = this.text!!,
         articleId = this.articleId!!,
         userId = this.userId!!,
