@@ -66,7 +66,7 @@ class DataLoader : ApplicationRunner {
 
         val user1 = userRepository.save(
             User(
-                login = "uservanya",
+                login = "uservanya123123",
                 password = encoder.encode("a12345678"),
                 name = "vanya",
                 surname = "ivanov",
@@ -78,7 +78,7 @@ class DataLoader : ApplicationRunner {
 
         val user2 = userRepository.save(
             User(
-                login = "usergrisha",
+                login = "usergrisha123123",
                 password = encoder.encode("a12345678"),
                 name = "grisha",
                 surname = "mescheryakov",
@@ -90,7 +90,7 @@ class DataLoader : ApplicationRunner {
 
         val user3 = userRepository.save(
             User(
-                login = "userdima",
+                login = "userdima1123123",
                 password = encoder.encode("a12345678"),
                 name = "dima",
                 surname = "shabinsky",
