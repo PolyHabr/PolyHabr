@@ -247,7 +247,7 @@ class ArticleServiceTest {
     @Test
     fun `getAll should return all articles`() {
         setup()
-        val expectedDto = articles.map { it.toDto(listOf(), listOf()) }
+        val expectedDto = articles.map { it.toDto(listOf(), listOf(), false) }
         val result = articleService.getAll(1, 1, null).content
         assertEquals(expectedDto, result)
         verify(articleRepository).findArticlesOrderDate(any())
@@ -257,7 +257,7 @@ class ArticleServiceTest {
     @Test
     fun `getById should return article success`() {
         setup()
-        val expectedDto = true to defaultArticle.toDto(listOf(), listOf()).apply {
+        val expectedDto = true to defaultArticle.toDto(listOf(), listOf(), false).apply {
             viewCount = 1
         }
         val result = articleService.getById(1)
@@ -277,7 +277,7 @@ class ArticleServiceTest {
     @Test
     fun `searchByName should return articles`() {
         setup()
-        val expectedDto = articles.map { it.toDto(listOf(), listOf()) }
+        val expectedDto = articles.map { it.toDto(listOf(), listOf(), false) }
         val result = articleService.searchByName(eq(Mockito.anyString()), 1, 1, sorting = null).content
         assertEquals(expectedDto, result)
         verify(articleRepository).searchByTitleArticlesOrderDate(any(), Mockito.anyString())
@@ -286,7 +286,7 @@ class ArticleServiceTest {
     @Test
     fun `getByUserId should return articles`() {
         setup()
-        val expectedDto = articles.map { it.toDto(listOf(), listOf()) }
+        val expectedDto = articles.map { it.toDto(listOf(), listOf(), false) }
         val result = articleService.getByUserId(1, 1, 1).content
         assertEquals(expectedDto, result)
     }
@@ -295,7 +295,7 @@ class ArticleServiceTest {
     fun `create article`() {
         setup()
         val article = defaultArticle
-        val articleDto = article.toDto(disciplineTypes, tagTypes).apply {
+        val articleDto = article.toDto(disciplineTypes, tagTypes, false).apply {
             typeName = defaultArticleType.name.toString()
         }
         val result = transactionTemplate.execute { articleService.create(articleDto) }
@@ -355,7 +355,7 @@ class ArticleServiceTest {
         transactionTemplate.execute {
 
             val article = defaultArticle
-            val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+            val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
 
             val expected = PageImpl(listOf(dtoArticle)) //true to "Article deleted"
             val exp = expected.map { it }

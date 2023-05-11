@@ -154,7 +154,8 @@ class MapperTest {
             text = articleRequest.text!!,
             isSaveToFavourite = false,
             pdfId = null,
-            previewImgId = null
+            previewImgId = null,
+            isLiked = false
         )
 
         val actualDto = articleRequest.toDtoWithoutType().apply {
@@ -199,12 +200,14 @@ class MapperTest {
             viewCount = articleEntity.view,
             isSaveToFavourite = articleEntity.isFav,
             pdfId = articleEntity.file_id?.id,
-            previewImgId = articleEntity.preview_src_id?.id
+            previewImgId = articleEntity.preview_src_id?.id,
+            isLiked = false
         )
 
         val actualDto = articleEntity.toDto(
             listOf(),
-            listOf()
+            listOf(),
+            false
         )
 
         assertEquals(expectedDto, actualDto)

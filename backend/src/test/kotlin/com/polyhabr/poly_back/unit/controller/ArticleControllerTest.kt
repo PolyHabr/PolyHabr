@@ -109,12 +109,12 @@ class ArticleControllerTest {
     @Test
     fun `test get all articles`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
         val page = PageImpl(listOf(dtoArticle))
         val sort = SortArticleRequest()
 
         val article2 = defaultArticle
-        val dtoArticle2 = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle2 = article.toDto(disciplineTypes, tagTypes, false)
         val page2 = PageImpl(listOf(dtoArticle2))
         val sort2 = SortArticleRequest()
         val artUpdate = sort2?.getMillis() ?: Long.MAX_VALUE
@@ -131,7 +131,7 @@ class ArticleControllerTest {
     @Test
     fun `test get article by id`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
 
         given(articleService.getById(1)).willReturn(true to dtoArticle)
 
@@ -145,7 +145,7 @@ class ArticleControllerTest {
     @Test
     fun `test search articles by title`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
         val page = PageImpl(listOf(dtoArticle))
 
         given(articleService.searchByName("title", 1, 1, null)).willReturn(page)
@@ -160,7 +160,7 @@ class ArticleControllerTest {
     @Test
     fun `test article create`() {
         val article = defaultArticle
-        val articleDto = article.toDto(disciplineTypes, tagTypes).apply {
+        val articleDto = article.toDto(disciplineTypes, tagTypes, false).apply {
             typeName = defaultArticleType.name.toString()
         }
         val expected = true to 1L
@@ -185,7 +185,7 @@ class ArticleControllerTest {
     @Test
     fun `test article update`() {
         val article = defaultArticle
-        val articleDto = article.toDto(disciplineTypes, tagTypes).apply {
+        val articleDto = article.toDto(disciplineTypes, tagTypes, false).apply {
             typeName = defaultArticleType.name.toString()
         }
         val expected = true to "success"
@@ -210,7 +210,7 @@ class ArticleControllerTest {
     @Test
     fun `test search articles by user`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
         val page = PageImpl(listOf(dtoArticle))
 
         given(articleService.getByUserId(1, 1, 1)).willReturn(page)
@@ -272,7 +272,7 @@ class ArticleControllerTest {
     @Test
     fun `test get favourite article`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
         val page = PageImpl(listOf(dtoArticle))
 
         given(articleService.getFavArticle(1, 1)).willReturn(page)
@@ -300,7 +300,7 @@ class ArticleControllerTest {
     @Test
     fun `test remove to favourite article`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
         val expected = true to "success"
 
         doNothing().`when`(articleService).updateFavArticle(1, false)

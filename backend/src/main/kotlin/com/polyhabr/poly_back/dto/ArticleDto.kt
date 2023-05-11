@@ -22,4 +22,5 @@ data class ArticleDto(
     val isSaveToFavourite: Boolean,
     val pdfId: String? = null,
     val previewImgId: String? = null,
+    val isLiked: Boolean
 )

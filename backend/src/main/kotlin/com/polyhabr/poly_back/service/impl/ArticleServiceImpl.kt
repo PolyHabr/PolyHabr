@@ -85,9 +85,13 @@ class ArticleServiceImpl(
             articleToTagTypeRepository.findByArticle(it).forEach { articleToTagType ->
                 listTagToSave.add(articleToTagType.tagType?.name!!)
             }
+            val isLiked = usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                return@let userToLikedArticleRepository.findArticleWithLike(it.id!!, currentUser.id) != null
+            } ?: false
             it.toDto(
                 disciplineList = listDisciplineToSave,
-                tagList = listTagToSave
+                tagList = listTagToSave,
+                isLiked = isLiked
             )
         }
     }
@@ -104,9 +108,13 @@ class ArticleServiceImpl(
                 listTagToSave.add(articleToTagType.tagType?.name!!)
             }
             articleRepository.save(article.apply { this.view++ })
+            val isLiked = usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                userToLikedArticleRepository.findArticleWithLike(article.id!!, currentUser.id) != null
+            } ?: false
             val dto = article.toDto(
                 disciplineList = listDisciplineToSave,
-                tagList = listTagToSave
+                tagList = listTagToSave,
+                isLiked
             )
             return@let true to dto
         } ?: (false to null)
@@ -168,9 +176,13 @@ class ArticleServiceImpl(
             articleToTagTypeRepository.findByArticle(it).forEach { articleToTagType ->
                 listTagToSave.add(articleToTagType.tagType?.name!!)
             }
+            val isLiked = usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                return@let userToLikedArticleRepository.findArticleWithLike(it.id!!, currentUser.id) != null
+            } ?: false
             it.toDto(
                 disciplineList = listDisciplineToSave,
-                tagList = listTagToSave
+                tagList = listTagToSave,
+                isLiked = isLiked
             )
         }
     }
@@ -193,9 +205,13 @@ class ArticleServiceImpl(
             articleToTagTypeRepository.findByArticle(it).forEach { articleToTagType ->
                 listTagToSave.add(articleToTagType.tagType?.name!!)
             }
+            val isLiked = usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                return@let userToLikedArticleRepository.findArticleWithLike(it.id!!, currentUser.id) != null
+            } ?: false
             it.toDto(
                 disciplineList = listDisciplineToSave,
-                tagList = listTagToSave
+                tagList = listTagToSave,
+                isLiked = isLiked
             )
         }
     }
@@ -344,9 +360,13 @@ class ArticleServiceImpl(
                     articleToTagTypeRepository.findByArticle(it.articleId!!).forEach { articleToTagType ->
                         listTagToSave.add(articleToTagType.tagType?.name!!)
                     }
+                    val isLiked = usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                        userToLikedArticleRepository.findArticleWithLike(it.id!!, currentUser.id) != null
+                    } ?: false
                     it?.articleId?.toDto(
                         disciplineList = listDisciplineToSave,
-                        tagList = listTagToSave
+                        tagList = listTagToSave,
+                        isLiked = isLiked
                     ) ?: throw Exception("Internal server error, fav article dont find")
                 }
             } ?: throw Exception("Internal server error, fav article dont find")

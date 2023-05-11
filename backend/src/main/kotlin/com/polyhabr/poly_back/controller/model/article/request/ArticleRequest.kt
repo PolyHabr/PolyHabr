@@ -63,7 +63,8 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
         text = this.text!!,
         isSaveToFavourite = false,
         pdfId = null,
-        previewImgId = null
+        previewImgId = null,
+        isLiked = false
     )
 }
 
@@ -85,6 +86,7 @@ fun ArticleRequest.toDtoWithoutType(data: ByteArray?, originName: String?): Arti
         text = this.text!!,
         isSaveToFavourite = false,
         pdfId = null,
-        previewImgId = null
+        previewImgId = null,
+        isLiked = false
     )
 }
