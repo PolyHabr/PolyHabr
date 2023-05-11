@@ -161,6 +161,46 @@ class AuthController {
         }
     }
 
+    @PostMapping("/signupmob")
+    fun registerUserMobile(@Valid @RequestBody newUser: NewUser): ResponseEntity<ResponseMessage> {
+        userRepository.findByLogin(newUser.username!!)?.let {
+            return ResponseEntity(
+                ResponseMessage("User already exists!"),
+                HttpStatus.BAD_REQUEST
+            )
+        } ?: run {
+            if (usernameExists(newUser.username!!)) {
+                return ResponseEntity(
+                    ResponseMessage("Username is already taken!"),
+                    HttpStatus.BAD_REQUEST
+                )
+            } else if (emailExists(newUser.email!!)) {
+                return ResponseEntity(
+                    ResponseMessage("Email is already in use!"),
+                    HttpStatus.BAD_REQUEST
+                )
+            }
+
+            // Creating user's account
+            val user = User(
+                login = newUser.username!!,
+                name = newUser.firstName!!,
+                surname = newUser.lastName!!,
+                email = newUser.email!!,
+                password = encoder.encode(newUser.password),
+                enabled = false,
+                verificationCode = getRandomStringFromNum(6)
+            )
+            user.roles = listOf(roleRepository.findByName("ROLE_USER"))
+
+            val savedUser = userRepository.save(user)
+
+            usersService.sendVerificationEmail(savedUser)
+
+            return ResponseEntity(ResponseMessage("User registered successfully!"), HttpStatus.OK)
+        }
+    }
+
     @GetMapping("/verify")
     fun verifyUser(@Param("code") code: String): ResponseEntity<String> {
         return if (usersService.verify(code)) {
@@ -232,5 +272,12 @@ class AuthController {
 
     private fun usernameExists(username: String): Boolean {
         return userRepository.findByLogin(username) != null
+    }
+
+    private fun getRandomStringFromNum(length: Int): String {
+        val allowedChars = ('0'..'9')
+        return (1..length)
+            .map { allowedChars.random() }
+            .joinToString("")
     }
 }

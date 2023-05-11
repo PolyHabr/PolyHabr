@@ -117,23 +117,35 @@ class UsersServiceImpl(
     }
 
     @Throws(MessagingException::class, UnsupportedEncodingException::class)
-    override fun sendVerificationEmail(user: User, siteURL: String) {
+    override fun sendVerificationEmail(user: User, siteURL: String, isMobile: Boolean) {
         val toAddress: String = user.email
         val fromAddress = "polyhabr@mail.ru"
         val senderName = "PolyHabr"
         val subject = "Please verify your registration"
-        var content = ("Дорогой [[name]],<br>"
-                + "Пожалуйста, нажмите на ссылку ниже, чтобы подтвердить свою регистрацию:<br>"
-                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                + "Спасибо Вам,<br>"
-                + "PolyHabr.")
+        var content = if (isMobile) {
+            ("Дорогой [[name]],<br>"
+                    + "Пожалуйста, введите код в приложении, чтобы подтвердить свою регистрацию:<br>"
+                    + "<h3>[[URL]]</h3>"
+                    + "Спасибо Вам,<br>"
+                    + "PolyHabr.")
+        } else {
+            ("Дорогой [[name]],<br>"
+                    + "Пожалуйста, нажмите на ссылку ниже, чтобы подтвердить свою регистрацию:<br>"
+                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                    + "Спасибо Вам,<br>"
+                    + "PolyHabr.")
+        }
         val message = mailSender.createMimeMessage()
         val helper = MimeMessageHelper(message)
         helper.setFrom(fromAddress, senderName)
         helper.setTo(toAddress)
         helper.setSubject(subject)
         content = content.replace("[[name]]", user.name)
-        val verifyURL = siteURL + "/api/auth/verify?code=" + user.verificationCode
+        val verifyURL = if (isMobile) {
+            user.verificationCode.toString()
+        } else {
+            siteURL + "/api/auth/verify?code=" + user.verificationCode
+        }
         content = content.replace("[[URL]]", verifyURL)
         helper.setText(content, true)
         mailSender.send(message)

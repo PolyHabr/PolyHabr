@@ -23,7 +23,7 @@ interface UsersService {
 
     fun delete(): Pair<Boolean, String>
 
-    fun sendVerificationEmail(user: User, siteURL: String = "http://localhost:4200")
+    fun sendVerificationEmail(user: User, siteURL: String = "http://localhost:4200", isMobile: Boolean = false)
 
     fun sendResetPasswordEmail(email: String, siteURL: String = "http://localhost:4200")
 
