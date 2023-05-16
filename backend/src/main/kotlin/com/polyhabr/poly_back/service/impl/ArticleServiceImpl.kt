@@ -216,6 +216,12 @@ class ArticleServiceImpl(
         }
     }
 
+    override fun getMy(offset: Int, size: Int): Page<ArticleDto> {
+        usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+            return getByUserId(currentUser.id!!, offset = offset, size = size)
+        } ?: throw RuntimeException("User not found")
+    }
+
     override fun create(articleDto: ArticleDto): Pair<Boolean, Long?> {
         usersRepository.findByLogin(currentLogin())?.let { currentUser ->
             return transactionTemplate.execute {

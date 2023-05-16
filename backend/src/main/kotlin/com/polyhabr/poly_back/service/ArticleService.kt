@@ -14,6 +14,9 @@ interface ArticleService {
 
     fun getByUserId(id: Long, offset: Int, size: Int): Page<ArticleDto>
 
+    fun getMy(offset: Int, size: Int): Page<ArticleDto>
+
+
     fun create(articleDto: ArticleDto): Pair<Boolean, Long?>
 
     fun update(id: Long, articleUpdateDto: ArticleUpdateDto): Pair<Boolean, String>

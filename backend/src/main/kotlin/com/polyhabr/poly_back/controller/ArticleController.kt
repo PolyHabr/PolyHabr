@@ -133,6 +133,30 @@ class ArticleController(
             ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
         ]
     )
+    @GetMapping("/my")
+    fun getMyArticles(
+        @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
+        @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+    ): ResponseEntity<ArticleListResponse> {
+        val rawResponse = articleService
+            .getMy(offset, size)
+        return ResponseEntity.ok(rawResponse.toListResponse())
+    }
+
+    @Operation(summary = "Search articles by tittle")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Article", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ArticleListResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
     @GetMapping("/byUser")
     fun searchArticlesByUser(
         @Positive @RequestParam("id") id: Long,
