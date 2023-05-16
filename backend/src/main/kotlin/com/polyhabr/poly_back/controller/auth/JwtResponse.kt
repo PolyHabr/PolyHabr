@@ -7,7 +7,8 @@ class JwtResponse(
     var username: String?,
     val authorities: Collection<GrantedAuthority>,
     val isFirst: Boolean,
-    val refreshToken: String?
+    val refreshToken: String?,
+    val idUser: Long
 ) {
     var type = "Bearer"
 }

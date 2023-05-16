@@ -89,7 +89,7 @@ class AuthController(
 
             val refreshToken = refreshTokenService.createRefreshToken(user.id!!)
 
-            val response = JwtResponse(jwt, user.login, authorities, isFirst, refreshToken?.token)
+            val response = JwtResponse(jwt, user.login, authorities, isFirst, refreshToken?.token, idUser = user.id!!)
             return ResponseEntity.ok(response)
         } ?: return ResponseEntity(
             ResponseMessage("User not found!"),
@@ -119,7 +119,7 @@ class AuthController(
 
             val refreshToken = refreshTokenService.createRefreshToken(user.id!!)
 
-            return JwtResponse(jwt, user.login, authorities, isFirst, refreshToken?.token)
+            return JwtResponse(jwt, user.login, authorities, isFirst, refreshToken?.token, idUser = user.id!!)
         } ?: throw Exception("User not found")
     }
 
