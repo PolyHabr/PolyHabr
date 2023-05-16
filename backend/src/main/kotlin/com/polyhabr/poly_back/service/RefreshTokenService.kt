@@ -14,7 +14,7 @@ class RefreshTokenService(
     private val usersRepository: UsersRepository,
     private val refreshTokenRepository: RefreshTokenRepository
 ) {
-    private val refreshTokenDurationMs: Long = 2600000L * 1000 // 30 дней
+    private val refreshTokenDurationMs: Long = 86400L * 1000
     fun findByToken(token: String?): Optional<RefreshToken> {
         return refreshTokenRepository.findByToken(token)
     }

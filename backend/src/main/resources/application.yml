@@ -65,7 +65,7 @@ server:
 assm:
   app:
     jwtSecret: jwtAssmSecretKey
-    jwtExpiration: 2600000
+    jwtExpiration: 86400
 
 logging:
   level:
