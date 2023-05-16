@@ -133,6 +133,7 @@ class ArticleController(
             ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
         ]
     )
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/my")
     fun getMyArticles(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
