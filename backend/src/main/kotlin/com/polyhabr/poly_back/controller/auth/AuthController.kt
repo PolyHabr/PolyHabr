@@ -197,7 +197,7 @@ class AuthController(
 
             val savedUser = userRepository.save(user)
 
-            usersService.sendVerificationEmail(savedUser)
+            usersService.sendVerificationEmail(user = savedUser, isMobile = true)
 
             return ResponseEntity(ResponseMessage("User registered successfully!"), HttpStatus.OK)
         }
