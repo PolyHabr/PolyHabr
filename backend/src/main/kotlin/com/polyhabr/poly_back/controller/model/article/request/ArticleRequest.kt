@@ -41,7 +41,6 @@ data class ArticleRequest(
 
     @field:Schema(example = "list tag, not null and not empty, max size 5")
     @field:NotNull
-    @field:NotEmpty
     val listTag: List<String>? = null,
 ) : Serializable
 
