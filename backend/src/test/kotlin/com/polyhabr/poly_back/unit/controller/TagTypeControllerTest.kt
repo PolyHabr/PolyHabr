@@ -78,7 +78,7 @@ class TagTypeControllerTest {
             name = tagType.name
         )
 
-        given(tagTypeService.create(dtoTagTypeRequest)).willReturn(tagType.id!!)
+        given(tagTypeService.create(dtoTagTypeRequest)).willReturn(tagType.toDto())
 
         val expectedResponse = ResponseEntity.ok(TagTypeCreateResponse(id = tagType.id!!, isSuccess = true))
         val actualResponse = tagTypeController.create(dtoTagTypeRequest)
