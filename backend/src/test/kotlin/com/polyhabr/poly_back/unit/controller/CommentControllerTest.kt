@@ -133,7 +133,7 @@ class CommentControllerTest {
             articleId = comment.articleId!!.id!!,
         )
 
-        given(commentService.create(commentRequest)).willReturn(comment.id)
+        given(commentService.create(commentRequest)).willReturn(comment.toDto())
 
         val excepted = ResponseEntity.ok(CommentCreateResponse(id = comment.id!!, isSuccess = true))
         val actual = commentController.create(commentRequest)
@@ -168,7 +168,7 @@ class CommentControllerTest {
         given(commentService.getByArticleIdAll(1, 1, 1)).willReturn(page)
 
         val excepted = ResponseEntity.ok(page.toListResponse())
-        val actual = commentController.getByArticleId(1,1,1)
+        val actual = commentController.getByArticleId(1, 1, 1)
 
         assertEquals(excepted, actual)
     }
@@ -183,7 +183,7 @@ class CommentControllerTest {
         given(commentService.searchByName("text", 1, 1)).willReturn(page)
 
         val excepted = ResponseEntity.ok(page.toListResponse())
-        val actual = commentController.searchCommentsByName("text",1,1)
+        val actual = commentController.searchCommentsByName("text", 1, 1)
 
         assertEquals(excepted, actual)
     }
@@ -205,7 +205,8 @@ class CommentControllerTest {
         val expected = false to "INTERNAL_SERVER_ERROR Internal Server Error"
 
         given(commentService.delete(1)).willReturn(expected)
-        val expectedResponse = ResponseEntity("INTERNAL_SERVER_ERROR Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
+        val expectedResponse =
+            ResponseEntity("INTERNAL_SERVER_ERROR Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
 
         val actualResponse = commentController.delete(1)
         assertEquals(expectedResponse, actualResponse)
