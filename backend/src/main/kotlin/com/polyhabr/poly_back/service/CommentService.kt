@@ -13,7 +13,7 @@ interface CommentService {
 
     fun searchByName(prefix: String?, offset: Int, size: Int): Page<CommentDto>
 
-    fun create(commentRequest: CommentRequest): Long?
+    fun create(commentRequest: CommentRequest): CommentDto
 
     fun update(id: Long, commentRequest: CommentRequest): Pair<Boolean, String>
 
