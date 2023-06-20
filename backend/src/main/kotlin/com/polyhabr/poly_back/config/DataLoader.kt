@@ -362,6 +362,24 @@ class DataLoader : ApplicationRunner {
         articleToTagTypeRepository.save(ArticleToTagType(article8, tags[2]))
         articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article8, disciplines[2]))
 
+        for (i in 0 until 40) {
+            val article11 = articleRepository.save(
+                Article(
+                    title = "Необяснимо, но вполне логично! Что скрывает в себе квантовая механика? " + Utility.getRandomString(
+                        sizeGenerateId
+                    ),
+                    previewText = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосв",
+                    likes = 0,
+                    typeId = articleTypes[0],
+                    userId = admin,
+                    date = DateTime.now().millis,
+                    text = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия"
+                )
+            )
+            articleToTagTypeRepository.save(ArticleToTagType(article11, tags[0]))
+            articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article11, disciplines[0]))
+        }
+
         val article9 = articleRepository.save(
             Article(
                 title = "Теория вероятностей. Базовые термины и понятия" + Utility.getRandomString(sizeGenerateId),
@@ -413,24 +431,6 @@ class DataLoader : ApplicationRunner {
         )
         articleToTagTypeRepository.save(ArticleToTagType(article10, tags[8]))
         articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article10, disciplines[5]))
-
-        for (i in 0 until 40) {
-            val article11 = articleRepository.save(
-                Article(
-                    title = "Необяснимо, но вполне логично! Что скрывает в себе квантовая механика? " + Utility.getRandomString(
-                        sizeGenerateId
-                    ),
-                    previewText = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосв",
-                    likes = 0,
-                    typeId = articleTypes[0],
-                    userId = admin,
-                    date = DateTime.now().millis,
-                    text = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия"
-                )
-            )
-            articleToTagTypeRepository.save(ArticleToTagType(article11, tags[0]))
-            articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article11, disciplines[0]))
-        }
     }
 
     fun createRoleAdmin() = roleRepository.save(Role("ROLE_ADMIN"))
