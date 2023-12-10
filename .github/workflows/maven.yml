@@ -48,5 +48,5 @@ jobs:
       - name: Run Unit Test
         run: mvn surefire:test --file backend/pom.xml
 
-      - name: Run Integration Test
-        run: mvn failsafe:integration-test -DskipITs --file backend/pom.xml
+#      - name: Run Integration Test
+#        run: mvn failsafe:integration-test -DskipITs --file backend/pom.xml
