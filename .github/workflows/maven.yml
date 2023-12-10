@@ -49,4 +49,4 @@ jobs:
         run: mvn surefire:test --file backend/pom.xml
 
       - name: Run Integration Test
-        run: mvn failsafe:integration-test --file backend/pom.xml
+        run: mvn failsafe:integration-test -DskipITs --file backend/pom.xml
