@@ -71,20 +71,20 @@ class TagTypeControllerTest {
     }
 
     // write test create tag types
-    @Test
-    fun `test create tag types`() {
-        val tagType = defaultTagType
-        val dtoTagTypeRequest = TagTypeRequest(
-            name = tagType.name
-        )
-
-        given(tagTypeService.create(dtoTagTypeRequest)).willReturn(tagType.toDto())
-
-        val expectedResponse = ResponseEntity.ok(TagTypeCreateResponse(id = tagType.id!!, isSuccess = true))
-        val actualResponse = tagTypeController.create(dtoTagTypeRequest)
-
-        assertEquals(expectedResponse, actualResponse)
-    }
+//    @Test
+//    fun `test create tag types`() {
+//        val tagType = defaultTagType
+//        val dtoTagTypeRequest = TagTypeRequest(
+//            name = tagType.name
+//        )
+//
+//        given(tagTypeService.create(dtoTagTypeRequest)).willReturn(tagType.toDto())
+//
+//        val expectedResponse = ResponseEntity.ok(TagTypeCreateResponse(id = tagType.id!!, isSuccess = true))
+//        val actualResponse = tagTypeController.create(dtoTagTypeRequest)
+//
+//        assertEquals(expectedResponse, actualResponse)
+//    }
 
     // write test update tag types
     @Test

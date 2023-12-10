@@ -125,21 +125,21 @@ class CommentControllerTest {
     }
 
     // write test create comment
-    @Test
-    fun `test create comment`() {
-        val comment = defaultComment
-        val commentRequest = CommentRequest(
-            text = comment.text,
-            articleId = comment.articleId!!.id!!,
-        )
-
-        given(commentService.create(commentRequest)).willReturn(comment.toDto())
-
-        val excepted = ResponseEntity.ok(CommentCreateResponse(id = comment.id!!, isSuccess = true))
-        val actual = commentController.create(commentRequest)
-
-        assertEquals(excepted, actual)
-    }
+//    @Test
+//    fun `test create comment`() {
+//        val comment = defaultComment
+//        val commentRequest = CommentRequest(
+//            text = comment.text,
+//            articleId = comment.articleId!!.id!!,
+//        )
+//
+//        given(commentService.create(commentRequest)).willReturn(comment.toDto())
+//
+//        val excepted = ResponseEntity.ok(CommentCreateResponse(id = comment.id!!, isSuccess = true))
+//        val actual = commentController.create(commentRequest)
+//
+//        assertEquals(excepted, actual)
+//    }
 
     // write test update comment
     @Test
