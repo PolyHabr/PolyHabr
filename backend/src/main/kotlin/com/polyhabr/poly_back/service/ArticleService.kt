@@ -8,11 +8,14 @@ import org.springframework.data.domain.Page
 interface ArticleService {
     fun getAll(offset: Int, size: Int, sorting: SortArticleRequest?): Page<ArticleDto>
 
-    fun getById(id: Long): ArticleDto
+    fun getById(id: Long): Pair<Boolean, ArticleDto?>
 
     fun searchByName(prefix: String?, offset: Int, size: Int, sorting: SortArticleRequest?): Page<ArticleDto>
 
     fun getByUserId(id: Long, offset: Int, size: Int): Page<ArticleDto>
+
+    fun getMy(offset: Int, size: Int): Page<ArticleDto>
+
 
     fun create(articleDto: ArticleDto): Pair<Boolean, Long?>
 

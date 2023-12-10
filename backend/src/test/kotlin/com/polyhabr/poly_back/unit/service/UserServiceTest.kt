@@ -1,4 +1,4 @@
-package com.polyhabr.poly_back.service
+package com.polyhabr.poly_back.unit.service
 
 import com.polyhabr.poly_back.controller.model.user.request.UserRequest
 import com.polyhabr.poly_back.controller.model.user.request.UserUpdateRequest
@@ -14,11 +14,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.kotlin.any
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.eq
+import org.mockito.kotlin.any
 import org.mockito.kotlin.given
-import org.mockito.kotlin.verify
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import java.util.*

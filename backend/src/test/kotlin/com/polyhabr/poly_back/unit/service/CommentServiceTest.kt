@@ -1,6 +1,5 @@
-package com.polyhabr.poly_back.service
+package com.polyhabr.poly_back.unit.service
 
-import com.polyhabr.poly_back.controller.model.comment.request.CommentRequest
 import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
@@ -14,10 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.given
 import org.springframework.data.domain.PageImpl
@@ -25,7 +22,6 @@ import org.springframework.data.domain.PageRequest
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
-
 class CommentServiceTest {
     private companion object {
         val defaultRole = Role("ROLE_ADMIN")
@@ -150,6 +146,19 @@ class CommentServiceTest {
     }
 
     @Test
+    fun `get comment by id faild`() {
+        val comment = defaultComment1
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
+            commentService.getById(comment.id!!)
+        }
+
+        val expectedMessage = "Comment not found"
+        val actualMessage = exception.message!!
+
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
     fun `get comment by article id all`() {
         val comment = listOf(defaultComment1, defaultComment2)
         val expectedComment = comment.map { it.toDto() }
@@ -209,7 +218,7 @@ class CommentServiceTest {
 //    }
 
     @Test
-    fun `delete comment`() {
+    fun `delete comment false`() {
         val result = commentService.delete(1L)
 
         Assertions.assertNotNull(result)

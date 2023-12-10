@@ -17,6 +17,7 @@ import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.Positive
 import javax.validation.constraints.PositiveOrZero
+import javax.xml.stream.events.Comment
 
 @CrossOrigin(origins = ["*"], maxAge = 14400)
 @RestController
@@ -149,7 +150,7 @@ class CommentController(
                 responseCode = "200", description = "CommentCreateResponse", content = [
                     Content(
                         mediaType = "application/json",
-                        schema = Schema(implementation = CommentCreateResponse::class)
+                        schema = Schema(implementation = CommentResponse::class)
                     )
                 ]
             ),
@@ -160,11 +161,9 @@ class CommentController(
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody commentRequest: CommentRequest
-    ): ResponseEntity<CommentCreateResponse> {
-        val id = commentService.create(commentRequest)
-        val success = id != null
-        val response = CommentCreateResponse(id = id, isSuccess = success)
-        return ResponseEntity.ok(response)
+    ): ResponseEntity<CommentResponse> {
+        val comment = commentService.create(commentRequest)
+        return ResponseEntity.ok(comment.toResponse())
     }
 
     @Operation(summary = "Update comment by id")

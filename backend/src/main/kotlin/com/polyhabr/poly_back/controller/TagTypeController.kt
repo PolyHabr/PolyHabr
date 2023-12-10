@@ -31,6 +31,7 @@ class TagTypeController(
     fun handleConstraintViolationException(e: ConstraintViolationException): ResponseEntity<String?>? {
         return ResponseEntity("not valid due to validation error: " + e.message, HttpStatus.BAD_REQUEST)
     }
+
     @Operation(summary = "Tag type list")
     @ApiResponses(
         value = [
@@ -49,7 +50,6 @@ class TagTypeController(
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-        
     ): ResponseEntity<TagTypeListResponse> {
         val rawResponse = tagTypeService
             .getAll(
@@ -117,7 +117,7 @@ class TagTypeController(
                 responseCode = "200", description = "TagTypeCreateResponse", content = [
                     Content(
                         mediaType = "application/json",
-                        schema = Schema(implementation = TagTypeCreateResponse::class)
+                        schema = Schema(implementation = TagTypeResponse::class)
                     )
                 ]
             ),
@@ -125,14 +125,12 @@ class TagTypeController(
         ]
     )
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody tagTypeRequest: TagTypeRequest
-    ): ResponseEntity<TagTypeCreateResponse> {
-        val id = tagTypeService.create(tagTypeRequest)
-        val success = id != null
-        val response = TagTypeCreateResponse(id = id, isSuccess = success)
-        return ResponseEntity.ok(response)
+    ): ResponseEntity<TagTypeResponse> {
+        val tag = tagTypeService.create(tagTypeRequest)
+        return ResponseEntity.ok(tag.toResponse())
     }
 
     @Operation(summary = "Update tag type by id")

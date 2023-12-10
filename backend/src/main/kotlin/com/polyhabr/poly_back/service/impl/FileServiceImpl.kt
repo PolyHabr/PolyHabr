@@ -7,6 +7,7 @@ import com.polyhabr.poly_back.repository.ArticleRepository
 import com.polyhabr.poly_back.repository.FileRepository
 import com.polyhabr.poly_back.repository.auth.UsersRepository
 import com.polyhabr.poly_back.service.FileService
+import org.joda.time.DateTime
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -34,7 +35,7 @@ class FileServiceImpl(
                 name = nameAndExtension.first,
                 type = nameAndExtension.second,
                 data = dto.data,
-                createdAt = LocalDateTime.now(),
+                createdAt = DateTime.now().millis,
             )
             val savedFile = fileRepository.save(toCreate)
             return savedFile

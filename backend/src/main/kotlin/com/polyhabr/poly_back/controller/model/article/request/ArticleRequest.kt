@@ -41,7 +41,6 @@ data class ArticleRequest(
 
     @field:Schema(example = "list tag, not null and not empty, max size 5")
     @field:NotNull
-    @field:NotEmpty
     val listTag: List<String>? = null,
 ) : Serializable
 
@@ -63,7 +62,8 @@ fun ArticleRequest.toDtoWithoutType(): ArticleDto {
         text = this.text!!,
         isSaveToFavourite = false,
         pdfId = null,
-        previewImgId = null
+        previewImgId = null,
+        isLiked = false
     )
 }
 
@@ -85,6 +85,7 @@ fun ArticleRequest.toDtoWithoutType(data: ByteArray?, originName: String?): Arti
         text = this.text!!,
         isSaveToFavourite = false,
         pdfId = null,
-        previewImgId = null
+        previewImgId = null,
+        isLiked = false
     )
 }

@@ -1,5 +1,6 @@
-package com.polyhabr.poly_back.controller
+package com.polyhabr.poly_back.unit.controller
 
+import com.polyhabr.poly_back.controller.CommentController
 import com.polyhabr.poly_back.controller.model.comment.request.CommentRequest
 import com.polyhabr.poly_back.controller.model.comment.response.CommentCreateResponse
 import com.polyhabr.poly_back.controller.model.comment.response.CommentUpdateResponse
@@ -8,12 +9,11 @@ import com.polyhabr.poly_back.controller.model.comment.response.toResponse
 import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
-import com.polyhabr.poly_back.service.ArticleServiceTest
+import com.polyhabr.poly_back.unit.service.ArticleServiceTest
 import com.polyhabr.poly_back.service.CommentService
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -21,11 +21,9 @@ import org.mockito.kotlin.given
 import org.springframework.data.domain.PageImpl
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.test.context.junit4.SpringRunner
 import javax.validation.ConstraintViolationException
 
 @ExtendWith(MockitoExtension::class)
-@RunWith(SpringRunner::class)
 class CommentControllerTest {
     @Mock
     private lateinit var commentService: CommentService
@@ -135,7 +133,7 @@ class CommentControllerTest {
             articleId = comment.articleId!!.id!!,
         )
 
-        given(commentService.create(commentRequest)).willReturn(comment.id)
+        given(commentService.create(commentRequest)).willReturn(comment.toDto())
 
         val excepted = ResponseEntity.ok(CommentCreateResponse(id = comment.id!!, isSuccess = true))
         val actual = commentController.create(commentRequest)
@@ -170,7 +168,7 @@ class CommentControllerTest {
         given(commentService.getByArticleIdAll(1, 1, 1)).willReturn(page)
 
         val excepted = ResponseEntity.ok(page.toListResponse())
-        val actual = commentController.getByArticleId(1,1,1)
+        val actual = commentController.getByArticleId(1, 1, 1)
 
         assertEquals(excepted, actual)
     }
@@ -185,7 +183,7 @@ class CommentControllerTest {
         given(commentService.searchByName("text", 1, 1)).willReturn(page)
 
         val excepted = ResponseEntity.ok(page.toListResponse())
-        val actual = commentController.searchCommentsByName("text",1,1)
+        val actual = commentController.searchCommentsByName("text", 1, 1)
 
         assertEquals(excepted, actual)
     }
@@ -207,7 +205,8 @@ class CommentControllerTest {
         val expected = false to "INTERNAL_SERVER_ERROR Internal Server Error"
 
         given(commentService.delete(1)).willReturn(expected)
-        val expectedResponse = ResponseEntity("INTERNAL_SERVER_ERROR Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
+        val expectedResponse =
+            ResponseEntity("INTERNAL_SERVER_ERROR Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
 
         val actualResponse = commentController.delete(1)
         assertEquals(expectedResponse, actualResponse)

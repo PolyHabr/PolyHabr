@@ -1,4 +1,4 @@
-package com.polyhabr.poly_back.service
+package com.polyhabr.poly_back.unit.service
 
 import com.polyhabr.poly_back.dto.FileCreatingDto
 import com.polyhabr.poly_back.entity.*
@@ -20,7 +20,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.given
 import org.mockito.quality.Strictness
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.repository.findByIdOrNull
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)

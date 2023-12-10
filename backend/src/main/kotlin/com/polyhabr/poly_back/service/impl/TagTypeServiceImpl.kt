@@ -43,12 +43,12 @@ class TagTypeServiceImpl(
             )
             .map { it.toDto() }
 
-    override fun create(tagTypeRequest: TagTypeRequest): Long? {
+    override fun create(tagTypeRequest: TagTypeRequest): TagTypeDto {
         return tagTypeRepository.save(
             tagTypeRequest
                 .toDto()
                 .toEntity()
-        ).id
+        ).toDto()
     }
 
     override fun update(id: Long, tagTypeRequest: TagTypeRequest): Pair<Boolean, String> {

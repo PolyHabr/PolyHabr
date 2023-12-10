@@ -62,6 +62,7 @@ open class Article(
 fun Article.toDto(
     disciplineList: List<String>,
     tagList: List<String>,
+    isLiked: Boolean
 ): ArticleDto =
     ArticleDto(
         id = this.id,
@@ -78,5 +79,6 @@ fun Article.toDto(
         viewCount = this.view,
         isSaveToFavourite = isFav,
         pdfId = file_id?.id,
-        previewImgId = preview_src_id?.id
+        previewImgId = preview_src_id?.id,
+        isLiked = isLiked
     )

@@ -11,7 +11,7 @@ interface TagTypeService {
 
     fun searchByName(prefix: String?, offset: Int, size: Int): Page<TagTypeDto>
 
-    fun create(tagTypeRequest: TagTypeRequest): Long?
+    fun create(tagTypeRequest: TagTypeRequest): TagTypeDto
 
     fun update(id: Long, tagTypeRequest: TagTypeRequest): Pair<Boolean, String>
 

@@ -27,6 +27,7 @@ data class ArticleResponse(
     val isSaveToFavourite: Boolean,
     val pdfId: String?,
     val previewImgId: String?,
+    val isLiked: Boolean
 )
 
 fun ArticleDto.toResponse(): ArticleResponse {
@@ -45,6 +46,7 @@ fun ArticleDto.toResponse(): ArticleResponse {
         viewCount = this.viewCount,
         isSaveToFavourite = isSaveToFavourite,
         pdfId = pdfId,
-        previewImgId = previewImgId
+        previewImgId = previewImgId,
+        isLiked = isLiked
     )
 }

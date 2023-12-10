@@ -36,6 +36,9 @@ class FileController(
     fun create(
         @ModelAttribute pdfRequest: PdfRequest
     ): ResponseEntity<*>? {
+        if (pdfRequest.file == null || pdfRequest.articleId == null) {
+            return ResponseEntity.badRequest().build<Any>()
+        }
         val model = FileOnlyRequest(
             name = Utility.getRandomString(30)
         )
@@ -62,6 +65,9 @@ class FileController(
     fun createPreviewPng(
         @ModelAttribute pdfRequest: PdfRequest
     ): ResponseEntity<*>? {
+        if (pdfRequest.file == null || pdfRequest.articleId == null) {
+            return ResponseEntity.badRequest().build<Any>()
+        }
         val model = FileOnlyRequest(
             name = Utility.getRandomString(30)
         )

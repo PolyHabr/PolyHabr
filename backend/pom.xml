@@ -24,6 +24,9 @@
         <java.version>11</java.version>
         <kotlin.version>1.6.21</kotlin.version>
         <testcontainers.version>1.17.4</testcontainers.version>
+        <skipTests>false</skipTests>
+        <skipUnitTests>${skipTests}</skipUnitTests>
+        <skipIntegrationTests>${skipTests}</skipIntegrationTests>
     </properties>
 
     <dependencies>
@@ -74,6 +77,45 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.14</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.cronn</groupId>
+            <artifactId>test-utils</artifactId>
+            <version>0.6.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.kirviq</groupId>
+            <artifactId>dumbster</artifactId>
+            <version>1.7.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail-junit5</artifactId>
+            <version>2.1.0-alpha-1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.sun.mail</groupId>-->
+        <!--            <artifactId>javax.mail</artifactId>-->
+        <!--            <version>1.5.0</version>-->
+        <!--        </dependency>-->
+
+        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
         </dependency>
@@ -113,6 +155,13 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>io.zonky.test</groupId>-->
+        <!--            <artifactId>embedded-database-spring-test</artifactId>-->
+        <!--            <version>2.2.0</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.mockito.kotlin/mockito-kotlin -->
         <dependency>
@@ -232,6 +281,32 @@
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>${skipUnitTests}</skipTests>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                    </includes>
+                    <skipTests>${skipIntegrationTests}</skipTests>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
@@ -273,5 +348,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

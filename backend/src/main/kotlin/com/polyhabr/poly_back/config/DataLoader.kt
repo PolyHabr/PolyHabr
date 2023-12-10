@@ -6,14 +6,13 @@ import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.repository.*
 import com.polyhabr.poly_back.repository.auth.RoleRepository
 import com.polyhabr.poly_back.repository.auth.UsersRepository
+import com.polyhabr.poly_back.utility.Utility
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
-import java.sql.Timestamp
-import java.time.LocalDate
 
 
 @Component
@@ -46,40 +45,28 @@ class DataLoader : ApplicationRunner {
     @Autowired
     lateinit var articleToDisciplineTypeRepository: ArticleToDisciplineTypeRepository
 
+    @Autowired
+    lateinit var passwordTokenRepository: PasswordTokenRepository
+
+    @Autowired
+    lateinit var fileRepository: FileRepository
+
+    private val sizeGenerateId = 5
     override fun run(args: ApplicationArguments) {
         setup()
     }
 
     private fun setup() {
-        val defaultRole = roleRepository.save(Role("ROLE_USER"))
-        val adminRole = roleRepository.save(Role("ROLE_ADMIN"))
+        val defaultRole = createDefaultRole()
+        val adminRole = createRoleAdmin()
 
-        val admin = userRepository.save(
-            User(
-                login = "admin",
-                password = encoder.encode("admincool"),
-                name = "dmitry",
-                surname = "shabinsky",
-                email = "admin@notfake.com",
-                enabled = true,
-                roles = listOf(adminRole)
-            )
-        )
-        val user = userRepository.save(
-            User(
-                login = "uservasya",
-                password = encoder.encode("userbroke"),
-                name = "vasya",
-                surname = "pupkin",
-                email = "userbroke@notfake.com",
-                enabled = true,
-                roles = listOf(defaultRole)
-            )
-        )
+        val admin = createUserAdmin(adminRole)
+
+        val user = createUserDefault(defaultRole)
 
         val user1 = userRepository.save(
             User(
-                login = "uservanya",
+                login = "uservanya123123",
                 password = encoder.encode("a12345678"),
                 name = "vanya",
                 surname = "ivanov",
@@ -91,7 +78,7 @@ class DataLoader : ApplicationRunner {
 
         val user2 = userRepository.save(
             User(
-                login = "usergrisha",
+                login = "usergrisha123123",
                 password = encoder.encode("a12345678"),
                 name = "grisha",
                 surname = "mescheryakov",
@@ -103,7 +90,7 @@ class DataLoader : ApplicationRunner {
 
         val user3 = userRepository.save(
             User(
-                login = "userdima",
+                login = "userdima1123123",
                 password = encoder.encode("a12345678"),
                 name = "dima",
                 surname = "shabinsky",
@@ -149,52 +136,28 @@ class DataLoader : ApplicationRunner {
             )
         )
 
-        val tag1 = tagTypeRepository.save(TagType("Квантовая запутанность"))
-        val tag2 = tagTypeRepository.save(TagType("C++"))
-        val tag3 = tagTypeRepository.save(TagType("Python"))
-        val tag4 = tagTypeRepository.save(TagType("Интегралы"))
-        val tag5 = tagTypeRepository.save(TagType("Дифференциал"))
-        val tag6 = tagTypeRepository.save(TagType("Химические опыты"))
-        val tag7 = tagTypeRepository.save(TagType("Ницше"))
-        val tag8 = tagTypeRepository.save(TagType("Теория вероятностей"))
-        val tag9 = tagTypeRepository.save(TagType("Ковалентная связь"))
+        val tags = createList9Tags()
+        val disciplines = createList6Disciplines()
+        val articleTypes = createList6ArticleType()
 
-
-        val discipline1 = disciplineTypeRepository.save(DisciplineType("Физика"))
-        val discipline2 = disciplineTypeRepository.save(DisciplineType("Математика"))
-        val discipline3 = disciplineTypeRepository.save(DisciplineType("Программирование"))
-        val discipline4 = disciplineTypeRepository.save(DisciplineType("Высшая математика"))
-        val discipline5 = disciplineTypeRepository.save(DisciplineType("Философия"))
-        val discipline6 = disciplineTypeRepository.save(DisciplineType("Химия"))
-
-        val articleType1 = articleTypeRepository.save(ArticleType("Курсовая работа"))
-        val articleType2 = articleTypeRepository.save(ArticleType("Доклад"))
-        val articleType3 = articleTypeRepository.save(ArticleType("Лабораторная работа"))
-        val articleType4 = articleTypeRepository.save(ArticleType("Отчёт"))
-        val articleType5 = articleTypeRepository.save(ArticleType("Самостоятельная работа"))
-        val articleType6 = articleTypeRepository.save(ArticleType("Исследовательская работа"))
-
-
-        val article1 = articleRepository.save(
-            Article(
-                title = "Необяснимо, но вполне логично! Что скрывает в себе квантовая механика?",
-                previewText = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосв",
-                likes = 0,
-                typeId = articleType1,
-                userId = admin,
-                date = DateTime.now().millis,
-                text = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия"
-            )
+        val article1 = createArticle(
+            title = "Необяснимо, но вполне логично! Что скрывает в себе квантовая механика?" + Utility.getRandomString(
+                sizeGenerateId
+            ),
+            previewText = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосв",
+            text = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия",
+            articleType = articleTypes[0],
+            user = admin,
+            tag = tags[0],
+            discipline = disciplines[0],
         )
-        articleToTagTypeRepository.save(ArticleToTagType(article1, tag1))
-        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article1, discipline1))
 
         val article2 = articleRepository.save(
             Article(
-                title = "Циклы в C++",
+                title = "Циклы в C++" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Иногда необходимо повторять одно и то же действие несколько раз подряд. Для этого используют циклы. В этом уроке мы научимся программировать циклы на C++, после чего посчитаем сумму всех чисел от 1 до 1000.",
                 likes = 0,
-                typeId = articleType2,
+                typeId = articleTypes[1],
                 userId = user,
                 date = DateTime.now().millis,
                 text = "Иногда необходимо повторять одно и то же действие несколько раз подряд. Для этого используют циклы. В этом уроке мы научимся программировать циклы на C++, после чего посчитаем сумму всех чисел от 1 до 1000. Если мы знаем точное количество действий (итераций) цикла, то можем использовать цикл for. Синтаксис его выглядит примерно так: for (действие до начала цикла;\n" +
@@ -213,15 +176,15 @@ class DataLoader : ApplicationRunner {
                         "Счетчик цикла — это переменная, в которой хранится количество проходов данного цикла."
             )
         )
-        articleToTagTypeRepository.save(ArticleToTagType(article2, tag2))
-        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article2, discipline3))
+        articleToTagTypeRepository.save(ArticleToTagType(article2, tags[1]))
+        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article2, disciplines[2]))
 
         val article3 = articleRepository.save(
             Article(
-                title = "Циклы в C++",
+                title = "Циклы в C++" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Иногда необходимо повторять одно и то же действие несколько раз подряд. Для этого используют циклы. В этом уроке мы научимся программировать циклы на C++, после чего посчитаем сумму всех чисел от 1 до 1000.",
                 likes = 0,
-                typeId = articleType2,
+                typeId = articleTypes[1],
                 userId = user1,
                 date = DateTime.now().millis,
                 text = "Иногда необходимо повторять одно и то же действие несколько раз подряд. Для этого используют циклы. В этом уроке мы научимся программировать циклы на C++, после чего посчитаем сумму всех чисел от 1 до 1000. Цикл while. Когда мы не знаем, сколько итераций должен произвести цикл, нам понадобится цикл while или do...while. Синтаксис цикла while в C++ выглядит следующим образом.\n" +
@@ -251,15 +214,15 @@ class DataLoader : ApplicationRunner {
                         "} "
             )
         )
-        articleToTagTypeRepository.save(ArticleToTagType(article3, tag2))
-        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article3, discipline3))
+        articleToTagTypeRepository.save(ArticleToTagType(article3, tags[1]))
+        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article3, disciplines[2]))
 
         val article4 = articleRepository.save(
             Article(
-                title = "Изучаем понятие «интеграл»",
+                title = "Изучаем понятие «интеграл»" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Интегрирование было известно еще в Древнем Египте. Конечно, не в современном виде, но все же. С тех пор математики написали очень много книг по этой теме. Особенно отличились Ньютон и Лейбниц, но суть вещей не изменилась.",
                 likes = 0,
-                typeId = articleType4,
+                typeId = articleTypes[3],
                 userId = user2,
                 date = DateTime.now().millis,
                 text = "Интегрирование было известно еще в Древнем Египте. Конечно, не в современном виде, но все же. С тех пор математики написали очень много книг по этой теме. Особенно отличились Ньютон и Лейбниц, но суть вещей не изменилась. Неопределенный интеграл\n" +
@@ -270,17 +233,19 @@ class DataLoader : ApplicationRunner {
                         "Первообразная существует для всех непрерывных функций. Также к первообразной часто прибавляют знак константы, так как производные функций, различающихся на константу, совпадают. Процесс нахождения интеграла называется интегрированием."
             )
         )
-        articleToTagTypeRepository.save(ArticleToTagType(article3, tag4))
-        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article4, discipline4))
+        articleToTagTypeRepository.save(ArticleToTagType(article3, tags[3]))
+        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article4, disciplines[3]))
 
         val article5 = articleRepository.save(
             Article(
-                title = "Химия для смертных или Интересные опыты, которые можно повторить самому",
+                title = "Химия для смертных или Интересные опыты, которые можно повторить самому" + Utility.getRandomString(
+                    sizeGenerateId
+                ),
                 previewText = "Для большинства химия - скучная и сложная наука, но мы же знаем, что это не так )\n" +
                         "\n" +
                         "Лично я заинтересовался химией после посмотра фейерверка, и понеслась душа в рай, как говорится.",
                 likes = 0,
-                typeId = articleType3,
+                typeId = articleTypes[2],
                 userId = user3,
                 date = DateTime.now().millis,
                 text = "Для большинства химия - скучная и сложная наука, но мы же знаем, что это не так )\n" +
@@ -306,17 +271,17 @@ class DataLoader : ApplicationRunner {
                         "Над вулканчиком не дышим, если не хотим получить дозу дихромата в лёгкие."
             )
         )
-        articleToTagTypeRepository.save(ArticleToTagType(article5, tag6))
-        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article5, discipline6))
+        articleToTagTypeRepository.save(ArticleToTagType(article5, tags[5]))
+        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article5, disciplines[5]))
 
         val article6 = articleRepository.save(
             Article(
-                title = "решения дифференциальных уравнений",
+                title = "решения дифференциальных уравнений" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Задание\n" +
                         "\n" +
                         "Решить дифференциальное уравнение xy’=y.",
                 likes = 0,
-                typeId = articleType5,
+                typeId = articleTypes[4],
                 userId = user3,
                 date = DateTime.now().millis,
                 text = "Задание\n" +
@@ -348,15 +313,15 @@ class DataLoader : ApplicationRunner {
                         "y=Cx, где С=Const."
             )
         )
-        articleToTagTypeRepository.save(ArticleToTagType(article6, tag5))
-        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article6, discipline2))
+        articleToTagTypeRepository.save(ArticleToTagType(article6, tags[4]))
+        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article6, disciplines[1]))
 
         val article7 = articleRepository.save(
             Article(
-                title = "Три этапа философии Ницще",
+                title = "Три этапа философии Ницще" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Имя немецкого философа и мыслителя Фридриха Ницше – одно из наиболее узнаваемых в мире. Его учение пронизано нигилизмом и критическим отношением ко всему существующему на земле.",
                 likes = 0,
-                typeId = articleType6,
+                typeId = articleTypes[5],
                 userId = user2,
                 date = DateTime.now().millis,
                 text = "Имя немецкого философа и мыслителя Фридриха Ницше – одно из наиболее узнаваемых в мире. Его учение пронизано нигилизмом и критическим отношением ко всему существующему на земле. Труды мыслителя являются очень сложными для понимания и принятия. Его убеждения могут встретить и резко отрицательную реакцию, и недоумение, и положительное принятие. Но только не равнодушие. Биография и жизненный путь Фридриха наполнены событиями.\n" +
@@ -364,15 +329,15 @@ class DataLoader : ApplicationRunner {
                         "Философские взгляды Ницше очень долго воспринимались как идеи фашизма и нацизма. И до сих пор, его труды могут быть восприняты как основа фашистского мировоззрения. Ницше обвиняют в том, что его философия нигилизма и Сверхчеловека являются основополагающими для действий Гитлера."
             )
         )
-        articleToTagTypeRepository.save(ArticleToTagType(article7, tag7))
-        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article7, discipline5))
+        articleToTagTypeRepository.save(ArticleToTagType(article7, tags[6]))
+        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article7, disciplines[4]))
 
         val article8 = articleRepository.save(
             Article(
-                title = "Сортировка пузырьком",
+                title = "Сортировка пузырьком" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Сортировка пузырьком - это метод сортировки массивов и списков путем последовательного сравнения и обмена соседних элементов, если предшествующий оказывается больше последующего.",
                 likes = 0,
-                typeId = articleType3,
+                typeId = articleTypes[2],
                 userId = user4,
                 date = DateTime.now().millis,
                 text = "Сортировка пузырьком - это метод сортировки массивов и списков путем последовательного сравнения и обмена соседних элементов, если предшествующий оказывается больше последующего.\n" +
@@ -394,15 +359,33 @@ class DataLoader : ApplicationRunner {
                         "Результат: [6, 4, 3, 8, 12]"
             )
         )
-        articleToTagTypeRepository.save(ArticleToTagType(article8, tag3))
-        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article8, discipline3))
+        articleToTagTypeRepository.save(ArticleToTagType(article8, tags[2]))
+        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article8, disciplines[2]))
+
+        for (i in 0 until 40) {
+            val article11 = articleRepository.save(
+                Article(
+                    title = "Необяснимо, но вполне логично! Что скрывает в себе квантовая механика? " + Utility.getRandomString(
+                        sizeGenerateId
+                    ),
+                    previewText = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосв",
+                    likes = 0,
+                    typeId = articleTypes[0],
+                    userId = admin,
+                    date = DateTime.now().millis,
+                    text = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия"
+                )
+            )
+            articleToTagTypeRepository.save(ArticleToTagType(article11, tags[0]))
+            articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article11, disciplines[0]))
+        }
 
         val article9 = articleRepository.save(
             Article(
-                title = "Теория вероятностей. Базовые термины и понятия",
+                title = "Теория вероятностей. Базовые термины и понятия" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Под занавес продолжительных летних каникул пришло время потихоньку возвращаться к высшей математике и торжественно открыть пустой вёрдовский файл, чтобы приступить к созданию нового раздела – Теория вероятностей и математическая статистика.",
                 likes = 0,
-                typeId = articleType2,
+                typeId = articleTypes[1],
                 userId = user3,
                 date = DateTime.now().millis,
                 text = "Под занавес продолжительных летних каникул пришло время потихоньку возвращаться к высшей математике и торжественно открыть пустой вёрдовский файл, чтобы приступить к созданию нового раздела – Теория вероятностей и математическая статистика. Признаюсь, нелегко даются первые строчки, но первый шаг – это пол пути, поэтому я предлагаю всем внимательно проштудировать вводную статью, после чего осваивать тему будет в 2 раза проще! Ничуть не преувеличиваю. …Накануне очередного 1 сентября вспоминается первый класс и букварь…. Буквы складываются в слоги, слоги в слова, слова в короткие предложения – Мама мыла раму. Совладать с тервером и математической статистикой так же просто, как научиться читать! Однако для этого необходимо знать ключевые термины, понятия и обозначения, а также некоторые специфические правила, которым и посвящён данный урок.\n" +
@@ -420,15 +403,15 @@ class DataLoader : ApplicationRunner {
                         "ОБЯЗАТЕЛЬНО закачайте обе книги из Интернета или раздобудьте их бумажные оригиналы! Подойдёт и версия 60-70-х годов, что даже лучше для чайников. Хотя фраза «теория вероятностей для чайников» звучит довольно нелепо, поскольку почти всё ограничивается элементарными арифметическими действиями. Проскакивают, правда, местами производные и интегралы, но это только местами."
             )
         )
-        articleToTagTypeRepository.save(ArticleToTagType(article9, tag8))
-        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article9, discipline4))
+        articleToTagTypeRepository.save(ArticleToTagType(article9, tags[7]))
+        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article9, disciplines[3]))
 
         val article10 = articleRepository.save(
             Article(
-                title = "Ковалентная связь и ее характеристики",
+                title = "Ковалентная связь и ее характеристики" + Utility.getRandomString(sizeGenerateId),
                 previewText = "Химическая связь — взаимодействие атомов, осуществляемое путём обмена электронами или их перехода от одного атома к другому.",
                 likes = 0,
-                typeId = articleType1,
+                typeId = articleTypes[0],
                 userId = user2,
                 date = DateTime.now().millis,
                 text = "Химическая связь — взаимодействие атомов, осуществляемое путём обмена электронами или их перехода от одного атома к другому.\n" +
@@ -446,23 +429,130 @@ class DataLoader : ApplicationRunner {
                         "Важнейшей характеристикой атома при образовании химической связи является его электроотрицательность (ЭО) — способность притягивать электроны."
             )
         )
-        articleToTagTypeRepository.save(ArticleToTagType(article10, tag9))
-        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article10, discipline6))
+        articleToTagTypeRepository.save(ArticleToTagType(article10, tags[8]))
+        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article10, disciplines[5]))
+    }
 
-        for (i in 0 until 40) {
-            val article11 = articleRepository.save(
-                Article(
-                    title = "Необяснимо, но вполне логично! Что скрывает в себе квантовая механика?",
-                    previewText = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосв",
-                    likes = 0,
-                    typeId = articleType1,
-                    userId = admin,
-                    date = DateTime.now().millis,
-                    text = "Квантовая мехависимым. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия взаимосвязаны. В этом мирем и взаимозависимым. В этом мия"
-                )
+    fun createRoleAdmin() = roleRepository.save(Role("ROLE_ADMIN"))
+    fun createDefaultRole() = roleRepository.save(Role("ROLE_USER"))
+
+    fun createUserAdmin(adminRole: Role) = userRepository.save(
+        User(
+            login = "admin",
+            password = encoder.encode("admincool"),
+            name = "dmitry",
+            surname = "shabinsky",
+            email = "admin@notfake.com",
+            enabled = true,
+            roles = listOf(adminRole)
+        )
+    )
+
+    fun createUserDefault(defaultRole: Role) = userRepository.save(
+        User(
+            login = "uservanya",
+            password = encoder.encode("a12345678"),
+            name = "vanya",
+            surname = "ivanov",
+            email = "uservanya@notfake.com",
+            enabled = true,
+            roles = listOf(defaultRole)
+        )
+    )
+
+    fun createList9Tags(): List<TagType> {
+        val tag1 = tagTypeRepository.save(TagType("Квантовая запутанность"))
+        val tag2 = tagTypeRepository.save(TagType("C++"))
+        val tag3 = tagTypeRepository.save(TagType("Python"))
+        val tag4 = tagTypeRepository.save(TagType("Интегралы"))
+        val tag5 = tagTypeRepository.save(TagType("Дифференциал"))
+        val tag6 = tagTypeRepository.save(TagType("Химические опыты"))
+        val tag7 = tagTypeRepository.save(TagType("Ницше"))
+        val tag8 = tagTypeRepository.save(TagType("Теория вероятностей"))
+        val tag9 = tagTypeRepository.save(TagType("Ковалентная связь"))
+        return listOf(
+            tag1,
+            tag2,
+            tag3,
+            tag4,
+            tag5,
+            tag6,
+            tag7,
+            tag8,
+            tag9
+        )
+    }
+
+    fun createList6Disciplines(): List<DisciplineType> {
+        val discipline1 = disciplineTypeRepository.save(DisciplineType("Физика"))
+        val discipline2 = disciplineTypeRepository.save(DisciplineType("Математика"))
+        val discipline3 = disciplineTypeRepository.save(DisciplineType("Программирование"))
+        val discipline4 = disciplineTypeRepository.save(DisciplineType("Высшая математика"))
+        val discipline5 = disciplineTypeRepository.save(DisciplineType("Философия"))
+        val discipline6 = disciplineTypeRepository.save(DisciplineType("Химия"))
+        return listOf(
+            discipline1,
+            discipline2,
+            discipline3,
+            discipline4,
+            discipline5,
+            discipline6
+        )
+    }
+
+    fun createList6ArticleType(): List<ArticleType> {
+        val articleType1 = articleTypeRepository.save(ArticleType("Курсовая работа"))
+        val articleType2 = articleTypeRepository.save(ArticleType("Доклад"))
+        val articleType3 = articleTypeRepository.save(ArticleType("Лабораторная работа"))
+        val articleType4 = articleTypeRepository.save(ArticleType("Отчёт"))
+        val articleType5 = articleTypeRepository.save(ArticleType("Самостоятельная работа"))
+        val articleType6 = articleTypeRepository.save(ArticleType("Исследовательская работа"))
+
+        return listOf(
+            articleType1,
+            articleType2,
+            articleType3,
+            articleType4,
+            articleType5,
+            articleType6
+        )
+    }
+
+    fun createArticle(
+        title: String,
+        previewText: String,
+        text: String,
+        articleType: ArticleType,
+        user: User,
+        discipline: DisciplineType,
+        tag: TagType
+    ): Article {
+        val article1 = articleRepository.save(
+            Article(
+                title = title,
+                previewText = previewText,
+                likes = 0,
+                typeId = articleType,
+                userId = user,
+                date = DateTime.now().millis,
+                text = text
             )
-            articleToTagTypeRepository.save(ArticleToTagType(article11, tag1))
-            articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article11, discipline1))
-        }
+        )
+        articleToTagTypeRepository.save(ArticleToTagType(article1, tag))
+        articleToDisciplineTypeRepository.save(ArticleToDisciplineType(article1, discipline))
+        return article1
+    }
+
+    fun clean() {
+        articleToTagTypeRepository.deleteAll()
+        articleToDisciplineTypeRepository.deleteAll()
+        articleRepository.deleteAll()
+        tagTypeRepository.deleteAll()
+        disciplineTypeRepository.deleteAll()
+        articleTypeRepository.deleteAll()
+        passwordTokenRepository.deleteAll()
+        fileRepository.deleteAll()
+        userRepository.deleteAll()
+        roleRepository.deleteAll()
     }
 }

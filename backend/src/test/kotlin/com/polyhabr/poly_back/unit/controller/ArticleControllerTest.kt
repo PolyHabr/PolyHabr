@@ -1,5 +1,6 @@
-package com.polyhabr.poly_back.controller
+package com.polyhabr.poly_back.unit.controller
 
+import com.polyhabr.poly_back.controller.ArticleController
 import com.polyhabr.poly_back.controller.model.article.request.ArticleRequest
 import com.polyhabr.poly_back.controller.model.article.request.ArticleUpdateRequest
 import com.polyhabr.poly_back.controller.model.article.request.SortArticleRequest
@@ -8,25 +9,19 @@ import com.polyhabr.poly_back.entity.*
 import com.polyhabr.poly_back.entity.auth.Role
 import com.polyhabr.poly_back.entity.auth.User
 import com.polyhabr.poly_back.service.ArticleService
-import kotlinx.coroutines.handleCoroutineException
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.*
 import org.springframework.data.domain.PageImpl
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.test.context.junit4.SpringRunner
-import javax.validation.ConstraintViolation
 import javax.validation.ConstraintViolationException
 
 @ExtendWith(MockitoExtension::class)
-@RunWith(SpringRunner::class)
 class ArticleControllerTest {
     private companion object {
         val defaultRole = Role("ROLE_ADMIN")
@@ -114,12 +109,12 @@ class ArticleControllerTest {
     @Test
     fun `test get all articles`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
         val page = PageImpl(listOf(dtoArticle))
         val sort = SortArticleRequest()
 
         val article2 = defaultArticle
-        val dtoArticle2 = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle2 = article.toDto(disciplineTypes, tagTypes, false)
         val page2 = PageImpl(listOf(dtoArticle2))
         val sort2 = SortArticleRequest()
         val artUpdate = sort2?.getMillis() ?: Long.MAX_VALUE
@@ -136,9 +131,9 @@ class ArticleControllerTest {
     @Test
     fun `test get article by id`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
 
-        given(articleService.getById(1)).willReturn(dtoArticle)
+        given(articleService.getById(1)).willReturn(true to dtoArticle)
 
         val expectedResponse = ResponseEntity(dtoArticle.toResponse(), HttpStatus.OK)
         val actualResponse = articleController.getById(1)
@@ -150,10 +145,9 @@ class ArticleControllerTest {
     @Test
     fun `test search articles by title`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
         val page = PageImpl(listOf(dtoArticle))
 
-        given(articleService.getById(1)).willReturn(dtoArticle)
         given(articleService.searchByName("title", 1, 1, null)).willReturn(page)
 
         val expectedResponse = ResponseEntity(page.toListResponse(), HttpStatus.OK)
@@ -166,7 +160,7 @@ class ArticleControllerTest {
     @Test
     fun `test article create`() {
         val article = defaultArticle
-        val articleDto = article.toDto(disciplineTypes, tagTypes).apply {
+        val articleDto = article.toDto(disciplineTypes, tagTypes, false).apply {
             typeName = defaultArticleType.name.toString()
         }
         val expected = true to 1L
@@ -191,7 +185,7 @@ class ArticleControllerTest {
     @Test
     fun `test article update`() {
         val article = defaultArticle
-        val articleDto = article.toDto(disciplineTypes, tagTypes).apply {
+        val articleDto = article.toDto(disciplineTypes, tagTypes, false).apply {
             typeName = defaultArticleType.name.toString()
         }
         val expected = true to "success"
@@ -216,7 +210,7 @@ class ArticleControllerTest {
     @Test
     fun `test search articles by user`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
         val page = PageImpl(listOf(dtoArticle))
 
         given(articleService.getByUserId(1, 1, 1)).willReturn(page)
@@ -278,7 +272,7 @@ class ArticleControllerTest {
     @Test
     fun `test get favourite article`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
         val page = PageImpl(listOf(dtoArticle))
 
         given(articleService.getFavArticle(1, 1)).willReturn(page)
@@ -306,7 +300,7 @@ class ArticleControllerTest {
     @Test
     fun `test remove to favourite article`() {
         val article = defaultArticle
-        val dtoArticle = article.toDto(disciplineTypes, tagTypes)
+        val dtoArticle = article.toDto(disciplineTypes, tagTypes, false)
         val expected = true to "success"
 
         doNothing().`when`(articleService).updateFavArticle(1, false)

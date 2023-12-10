@@ -1,4 +1,4 @@
-package com.polyhabr.poly_back.service
+package com.polyhabr.poly_back.unit.service
 
 import com.polyhabr.poly_back.controller.model.articleType.request.ArticleTypeRequest
 import com.polyhabr.poly_back.entity.ArticleType
@@ -22,7 +22,6 @@ import org.springframework.data.domain.PageRequest
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
-
 class ArticleTypeServiceTest {
     private companion object {
         val defaultRole = Role("ROLE_ADMIN")
@@ -109,6 +108,20 @@ class ArticleTypeServiceTest {
     }
 
     @Test
+    fun `get article type by id faild`() {
+        val articleType = defaultArticleType1
+
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
+            articleTypeService.getById(articleType.id!!)
+        }
+
+        val expectedMessage = "Article type not found"
+        val actualMessage = exception.message!!
+
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
     fun `search by name article type`() {
         val articleTypes = listOf(defaultArticleType1, defaultArticleType2)
         val expectedArticles = articleTypes.map { it.toDto() }
@@ -139,7 +152,7 @@ class ArticleTypeServiceTest {
 
     @Test
     fun `update article type`() {
-        val articleType = ArticleTypeServiceTest.defaultArticleType1
+        val articleType = defaultArticleType1
         val articleTypeRequest = ArticleTypeRequest(
             name = "articleType1",
         )

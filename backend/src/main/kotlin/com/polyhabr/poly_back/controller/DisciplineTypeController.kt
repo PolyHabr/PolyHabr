@@ -51,8 +51,7 @@ class DisciplineTypeController(
     fun getAll(
         @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
         @Schema(example = "1") @Positive @RequestParam("size") size: Int,
-
-        ): ResponseEntity<DisciplineTypeListResponse> {
+    ): ResponseEntity<DisciplineTypeListResponse> {
         val rawResponse = disciplineTypeService
             .getAll(
                 offset = offset,

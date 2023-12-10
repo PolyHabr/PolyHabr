@@ -85,15 +85,19 @@ class ArticleServiceImpl(
             articleToTagTypeRepository.findByArticle(it).forEach { articleToTagType ->
                 listTagToSave.add(articleToTagType.tagType?.name!!)
             }
+            val isLiked = usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                return@let userToLikedArticleRepository.findArticleWithLike(it.id!!, currentUser.id) != null
+            } ?: false
             it.toDto(
                 disciplineList = listDisciplineToSave,
-                tagList = listTagToSave
+                tagList = listTagToSave,
+                isLiked = isLiked
             )
         }
     }
 
     @Transactional
-    override fun getById(id: Long): ArticleDto {
+    override fun getById(id: Long) =
         articleRepository.findByIdOrNull(id)?.let { article ->
             val listDisciplineToSave = mutableListOf<String>()
             val listTagToSave = mutableListOf<String>()
@@ -104,12 +108,16 @@ class ArticleServiceImpl(
                 listTagToSave.add(articleToTagType.tagType?.name!!)
             }
             articleRepository.save(article.apply { this.view++ })
-            return article.toDto(
+            val isLiked = usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                userToLikedArticleRepository.findArticleWithLike(article.id!!, currentUser.id) != null
+            } ?: false
+            val dto = article.toDto(
                 disciplineList = listDisciplineToSave,
-                tagList = listTagToSave
+                tagList = listTagToSave,
+                isLiked
             )
-        } ?: throw RuntimeException("Article not found")
-    }
+            return@let true to dto
+        } ?: (false to null)
 
     override fun searchByName(
         prefix: String?,
@@ -168,9 +176,13 @@ class ArticleServiceImpl(
             articleToTagTypeRepository.findByArticle(it).forEach { articleToTagType ->
                 listTagToSave.add(articleToTagType.tagType?.name!!)
             }
+            val isLiked = usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                return@let userToLikedArticleRepository.findArticleWithLike(it.id!!, currentUser.id) != null
+            } ?: false
             it.toDto(
                 disciplineList = listDisciplineToSave,
-                tagList = listTagToSave
+                tagList = listTagToSave,
+                isLiked = isLiked
             )
         }
     }
@@ -193,11 +205,21 @@ class ArticleServiceImpl(
             articleToTagTypeRepository.findByArticle(it).forEach { articleToTagType ->
                 listTagToSave.add(articleToTagType.tagType?.name!!)
             }
+            val isLiked = usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                return@let userToLikedArticleRepository.findArticleWithLike(it.id!!, currentUser.id) != null
+            } ?: false
             it.toDto(
                 disciplineList = listDisciplineToSave,
-                tagList = listTagToSave
+                tagList = listTagToSave,
+                isLiked = isLiked
             )
         }
+    }
+
+    override fun getMy(offset: Int, size: Int): Page<ArticleDto> {
+        usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+            return getByUserId(currentUser.id!!, offset = offset, size = size)
+        } ?: throw RuntimeException("User not found")
     }
 
     override fun create(articleDto: ArticleDto): Pair<Boolean, Long?> {
@@ -344,9 +366,13 @@ class ArticleServiceImpl(
                     articleToTagTypeRepository.findByArticle(it.articleId!!).forEach { articleToTagType ->
                         listTagToSave.add(articleToTagType.tagType?.name!!)
                     }
+                    val isLiked = usersRepository.findByLogin(currentLogin())?.let { currentUser ->
+                        userToLikedArticleRepository.findArticleWithLike(it.id!!, currentUser.id) != null
+                    } ?: false
                     it?.articleId?.toDto(
                         disciplineList = listDisciplineToSave,
-                        tagList = listTagToSave
+                        tagList = listTagToSave,
+                        isLiked = isLiked
                     ) ?: throw Exception("Internal server error, fav article dont find")
                 }
             } ?: throw Exception("Internal server error, fav article dont find")

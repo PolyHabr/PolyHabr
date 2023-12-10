@@ -66,7 +66,7 @@ class CommentServiceImpl(
             .map { it.toDto() }
 
 
-    override fun create(commentRequest: CommentRequest): Long? {
+    override fun create(commentRequest: CommentRequest): CommentDto {
         usersRepository.findByLogin(currentLogin())?.let { currentUser ->
             commentRequest.articleId?.let {
                 articleRepository.findByIdOrNull(it)?.let { currentArticle ->
@@ -78,7 +78,7 @@ class CommentServiceImpl(
                                 userId = currentUser
                             }
                             .toEntity()
-                    ).id
+                    ).toDto()
                 } ?: throw RuntimeException("Article type not found")
             } ?: run {
                 return commentRepository.save(
@@ -88,7 +88,7 @@ class CommentServiceImpl(
                             userId = currentUser
                         }
                         .toEntity()
-                ).id
+                ).toDto()
             }
         } ?: throw RuntimeException("User not found")
     }

@@ -83,9 +83,10 @@ class ArticleController(
     ): ResponseEntity<ArticleResponse> {
         val response = articleService
             .getById(id)
-            .toResponse()
-        return response.let {
-            ResponseEntity.ok(response)
+        return if (response.first && response.second != null) {
+            ResponseEntity.ok(response.second?.toResponse())
+        } else {
+            ResponseEntity.badRequest().build()
         }
     }
 
@@ -132,6 +133,31 @@ class ArticleController(
             ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
         ]
     )
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @GetMapping("/my")
+    fun getMyArticles(
+        @Schema(example = "0") @PositiveOrZero @RequestParam("offset") offset: Int,
+        @Schema(example = "1") @Positive @RequestParam("size") size: Int,
+    ): ResponseEntity<ArticleListResponse> {
+        val rawResponse = articleService
+            .getMy(offset, size)
+        return ResponseEntity.ok(rawResponse.toListResponse())
+    }
+
+    @Operation(summary = "Search articles by tittle")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Article", content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ArticleListResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ]
+    )
     @GetMapping("/byUser")
     fun searchArticlesByUser(
         @Positive @RequestParam("id") id: Long,
@@ -161,10 +187,14 @@ class ArticleController(
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun create(
         @Valid @RequestBody articleRequest: ArticleRequest
-    ): ResponseEntity<ArticleCreateResponse> {
-        val (success, id) = articleService.create(articleRequest.toDtoWithoutType())
-        val response = ArticleCreateResponse(id = id, isSuccess = success)
-        return ResponseEntity.ok(response)
+    ): Any {
+        return try {
+            val (success, id) = articleService.create(articleRequest.toDtoWithoutType())
+            val response = ArticleCreateResponse(id = id, isSuccess = success)
+            ResponseEntity.ok(response)
+        } catch (e: Exception) {
+            ResponseEntity.badRequest().build()
+        }
     }
 
     @Operation(summary = "Update article by id")
