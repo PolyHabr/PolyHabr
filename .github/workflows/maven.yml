@@ -23,6 +23,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [20.7.0]
+
     steps:
       - name: Setup DB
         uses: harmon758/postgresql-action@v1
@@ -35,6 +39,32 @@ jobs:
       - name: Pull repository
         uses: actions/checkout@v3
 
+      - name: Check frontend
+        run: cd frontend
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+      - name: Cypress run
+        uses: cypress-io/github-action@v5.6.1 # use the explicit version number
+        with:
+          build: npm run build
+          start: npm start
+      - name: Check backend
+        run: cd ..
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
