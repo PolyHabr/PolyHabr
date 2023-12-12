@@ -1,0 +1,143 @@
+@use "src/base";
+
+article {
+  $card-padding: 20px;
+
+  background-color: base.$col-white;
+  margin-top: 12px;
+  padding-top: 16px;
+
+  .head {
+    @extend %head;
+  }
+
+  .title {
+    margin: 8px $card-padding 4px;
+  }
+
+  .tags {
+    margin-left: $card-padding;
+    margin-right: $card-padding;
+    font-size: 12px;
+
+    *:not(:last-child):after {
+      content: ", ";
+    }
+  }
+
+  img {
+    width: 50%;
+    height: 300px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: cover;
+  }
+
+  .type {
+    margin-left: $card-padding;
+    margin-right: $card-padding;
+    margin-top: 8px;
+  }
+
+  iframe {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+
+  .body {
+    margin-left: $card-padding;
+    margin-right: $card-padding;
+    padding-top: 16px;
+    font-size: 16px;
+
+    img {
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      width: 75%;
+    }
+  }
+
+  &.full {
+    .info {
+      border-top: 1px solid base.$col-gray-darker;
+    }
+  }
+
+  &.short {
+    margin-top: 0;
+
+    .title {
+      font-size: 14px;
+    }
+
+    .footer {
+      .info {
+        margin-top: 0;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: $card-padding;
+        margin-right: $card-padding;
+        border-bottom: 1px solid base.$col-gray-darker;
+      }
+    }
+  }
+
+  &.last {
+    .footer {
+      .info {
+        border-bottom: none !important;
+      }
+    }
+  }
+
+  .footer {
+
+    .more {
+      margin-left: $card-padding;
+      margin-right: $card-padding;
+      margin-top: 18px;
+      color: base.$col-green-light;
+      height: 36px;
+      padding: 0 13px;
+      display: flex;
+      align-items: center;
+    }
+
+    .info {
+      padding-left: $card-padding;
+      padding-right: $card-padding;
+      display: flex;
+      height: 47px;
+      margin-top: 24px;
+
+      div {
+        cursor: pointer;
+      }
+
+      & > * {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+
+        &:not(:first-child) {
+          margin-left: 32px;
+        }
+
+        span {
+          color: base.$col-green-light;
+        }
+
+        svg {
+          fill: base.$col-green-light-smooth;
+
+          &.selected {
+            fill: base.$col-green;
+          }
+        }
+      }
+    }
+  }
+}

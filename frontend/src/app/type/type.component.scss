@@ -1,0 +1,150 @@
+@use "src/base";
+
+
+.top {
+  height: 68px;
+  border-bottom: 1px solid base.$col-green-pale;
+  background: base.$col-white;
+
+  .container {
+    height: 100%;
+    background: base.$col-white;
+
+    .logo {
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+}
+
+.background {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: base.$col-gray-pale;
+  height: 100vh;
+
+  .layout {
+    background: base.$col-white;
+    margin-top: 80px;
+    width: 460px;
+    max-width: 460px;
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 10%);
+    border-radius: 4px;
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+
+      .error-text {
+        display: flex;
+        color: red;
+        margin-top: 10px;
+      }
+
+      .title {
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .form {
+        .title {
+          font-size: 14px;
+          margin-bottom: 12px;
+          font-weight: 700;
+        }
+
+        input {
+          width: calc(100% - 15px * 2);
+          border: 1px solid base.$col-gray-second;
+          outline: none;
+          padding: 0 14px;
+          height: 40px;
+        }
+        &.error {
+          input {
+            border: 1px solid base.$col-red;
+          }
+        }
+      }
+
+      .email {
+        margin-top: 57px;
+      }
+
+      .password {
+        margin-top: 31px;
+
+        .error-text {
+          display: none;
+
+          &.active {
+            display: flex;
+            color: red;
+            margin-top: 10px;
+          }
+        }
+      }
+
+      .enter {
+        margin-top: 28px;
+        height: 48px;
+        font-size: 15px;
+        width: 100%;
+      }
+
+      .forgot_password {
+        margin-top: 15px;
+        color: base.$col-green-light;
+      }
+    }
+  }
+
+  button {
+    margin-top: 16px;
+  }
+
+  .select {
+    width: auto;
+    display: flex;
+    margin-top: 16px;
+    flex-direction: column;
+    border: 2px solid base.$col-gray-second;
+
+    .block {
+      height: 40px;
+
+      padding: 0 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      position: relative;
+      font-size: 12px;
+
+      &:after {
+        content: '';
+        position: absolute;
+        left: -2px;
+        top: -2px;
+        width: 100%;
+        height: calc(100% - 1px);
+        border: 2px solid transparent;
+        transition: all .3s;
+      }
+
+      &:last-child:after {
+        top: -1px;
+      }
+
+      &.selected:after {
+        border: 2px solid base.$col-green-light;
+        transition: all .3s;
+      }
+    }
+  }
+}

@@ -1,0 +1,126 @@
+@use "src/base";
+
+$padding-horizontal: 16px;
+$padding-vertical: 15px;
+
+.author {
+  background: base.$col-white;
+  padding: $padding-vertical $padding-horizontal;
+  margin-top: 12px;
+
+  .head {
+    .karma {
+      width: fit-content;
+
+      *:first-child {
+        text-align: center;
+        font-size: 16px;
+        color: base.$col-green-light;
+        font-weight: 600;
+      }
+
+      *:last-child {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .body {
+    display: flex;
+    margin-top: 8px;
+
+    div {
+      font-weight: 600;
+    }
+
+    a {
+      margin-left: 4px;
+      color: base.$col-green-light;
+    }
+  }
+
+  .footer {
+    margin-top: 8px;
+    font-size: 14px;
+    color: base.$col-gray-dark-second;
+  }
+}
+
+.comments {
+  margin-top: 12px;
+  background-color: base.$col-white;
+
+  .head {
+    display: flex;
+    align-items: center;
+    padding-top: $padding-vertical;
+    padding-left: $padding-horizontal;
+    padding-right: $padding-horizontal;
+
+    h2 {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    span {
+      font-weight: 600;
+      color: base.$col-green;
+      margin-left: 6px;
+    }
+  }
+
+  .list {
+    padding: $padding-vertical $padding-horizontal;
+    border-bottom: 1px solid base.$col-gray-darker;
+  }
+
+  .no-list {
+    padding: $padding-vertical $padding-horizontal;
+    text-align: center;
+  }
+
+  .comment-input {
+    background: base.$col-gray-pale-second;
+    padding-bottom: $padding-vertical;
+
+    .head {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    textarea {
+      margin-left: $padding-horizontal;
+      margin-right: $padding-horizontal;
+      padding: $padding-vertical $padding-horizontal;
+      border: 1px solid base.$col-gray-darker;
+      background: base.$col-white;
+      outline: none;
+      width: -webkit-fill-available;
+      height: 78px;
+      resize: none;
+      font-family: "Montserrat", sans-serif;
+    }
+
+    button {
+      margin-left: $padding-horizontal;
+      margin-top: $padding-vertical;
+    }
+  }
+}
+
+.others {
+  margin-top: 12px;
+  background: base.$col-white;
+  margin-bottom: 32px;
+
+  .head {
+    padding-top: $padding-vertical;
+    padding-bottom: $padding-vertical;
+    margin-left: $padding-horizontal;
+    margin-right: $padding-horizontal;
+    border-bottom: 1px solid base.$col-gray-darker;
+    font-weight: 600;
+    color: base.$col-green-dark;
+  }
+}

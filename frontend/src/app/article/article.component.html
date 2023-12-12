@@ -1,0 +1,40 @@
+<poly-header></poly-header>
+<div class="container" *ngIf="article">
+  <poly-card [article]="article" [type]="CardType.FULL" [isEditable]="isArticleEditable"></poly-card>
+  <div class="author">
+    <div class="head">
+      <div class="karma" *ngIf="false">
+        <div>40</div>
+        <div>Карма</div>
+      </div>
+      <div class="body">
+        <div>{{article.user.name}} {{article.user.surname}}</div>
+        <a href="#">@{{article.user.login}}</a>
+      </div>
+    </div>
+    <div class="footer">Автор работы</div>
+  </div>
+  <div class="comments">
+    <div class="head">
+      <h2>Комментарии</h2>
+      <span>{{comments.length > 0 ? comments.length : ""}}</span>
+    </div>
+    <div class="list" *ngIf="comments.length > 0">
+      <poly-comment *ngFor="let comment of comments;let last = last" [comment]="comment"
+                    [isLast]="last"></poly-comment>
+    </div>
+    <div class="no-list" *ngIf="comments.length == 0">
+      Здесь пока нет ни одного комментария, вы можете стать первым!
+    </div>
+    <div class="comment-input" *ngIf="DataHelper.user">
+      <div class="head">Ваш комментарий</div>
+      <textarea #commentInput></textarea>
+      <button (click)="sendComment(commentInput)">Отправить</button>
+    </div>
+  </div>
+  <div class="others">
+    <div class="head">ПОХОЖИЕ ПУБЛИКАЦИИ</div>
+    <poly-card *ngFor="let other of others; let last = last" [article]="other"
+               [isLast]="last" [type]="CardType.SHORT"></poly-card>
+  </div>
+</div>

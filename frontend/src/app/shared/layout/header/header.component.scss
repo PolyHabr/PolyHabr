@@ -1,0 +1,89 @@
+@use "src/base";
+
+.top {
+  height: 48px;
+  background-color: base.$col-green;
+
+  .container {
+    height: 100%;
+
+    .logo {
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      font-size: 24px;
+      color: base.$col-white !important;
+      font-weight: 500;
+    }
+  }
+}
+
+.bottom {
+  height: 57px;
+  background: base.$col-white;
+  border-bottom: 1px solid base.$col-gray-second;
+
+  .container {
+    height: 100%;
+
+    display: flex;
+
+    .menu {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      font-size: 14px;
+
+      * {
+        height: 100%;
+        padding-right: 10px;
+        padding-left: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:first-child {
+          padding-left: 0;
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      height: 100%;
+      align-items: center;
+
+      .button-icon {
+        margin-left: 16px;
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        svg {
+          color: base.$col-gray-dark;
+          fill: base.$col-gray-dark;
+          cursor: pointer;
+
+          &:hover {
+            fill: base.$col-green-light;
+          }
+        }
+
+        poly-menu {
+          position: absolute;
+          right: 0;
+          top: 35px;
+          z-index: 1;
+        }
+      }
+
+      .profile {
+        width: 32px;
+        height: 32px;
+        margin-left: 16px;
+      }
+    }
+  }
+}

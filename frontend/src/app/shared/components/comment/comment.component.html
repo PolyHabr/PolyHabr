@@ -1,0 +1,7 @@
+<div class="comment" [ngClass]="{last: isLast}">
+  <div class="head">
+    <a href="#" class="name">{{comment.userId.login}}</a>
+    <div class="date">{{comment.date}}</div>
+  </div>
+  <div class="text" [innerHtml]="comment.text"></div>
+</div>

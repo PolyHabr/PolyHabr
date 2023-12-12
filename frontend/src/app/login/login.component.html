@@ -1,0 +1,36 @@
+<header class="top">
+  <div class="container">
+    <a href="/" class="logo"
+       (click)="toFeed($event)">
+      ПолиХабр
+    </a>
+  </div>
+</header>
+<div class="background">
+  <div class="layout">
+    <div class="content">
+      <h1 class="title">Вход</h1>
+      <div class="form nickname"
+           [ngClass]="{'error': registerErrorConfig.nicknameError}">
+        <div class="title">Никнейм</div>
+        <input type="text"
+               [(ngModel)]="nicknameInputValue"
+               name="login"
+               (ngModelChange)="checkFieldValidation(RegexType.LOGIN, $event, InputFieldsType.NICKNAME)"
+               #nicknameInputElement>
+        <div class="error-text" [ngClass]="{'active': registerErrorConfig.nicknameError}">{{registerErrorConfig.nicknameError}}</div>
+      </div>
+      <div class="form password" [ngClass]="{'error': registerErrorConfig.passwordError}">
+        <div class="title">Пароль</div>
+        <input type="password" #passwordInputElement>
+        <div class="error-text" [ngClass]="{'active': registerErrorConfig.passwordError}">{{registerErrorConfig.passwordError}}</div>
+      </div>
+      <button class="enter" (click)="onEnterButtonClicked($event)">Войти</button>
+      <a class="forgot_password" (click)="toForgotPassword($event)">Забыли пароль?</a>
+    </div>
+  </div>
+  <div class="layout no_account">
+    <div>Еще нет аккаунта?</div>
+    <a href="/registration" (click)="toRegistration($event)">Зарегистрируйтесь</a>
+  </div>
+</div>

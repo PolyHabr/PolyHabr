@@ -1,0 +1,22 @@
+<poly-header></poly-header>
+<div class="container" #container>
+  <div class="title" *ngIf="user">
+    <div class="headline">
+      <div class="surname">{{user.name}} {{user.surname}}</div>
+      <a class="nickname" href="">@{{user.login}}</a>
+    </div>
+    <div class="tabs">
+      <div class="tab" (click)="onTabClick(ProfileSortState.PUBLISHED)"
+           [ngClass]="{'active': isTabActive(ProfileSortState.PUBLISHED)}">Публикации
+      </div>
+      <div class="tab" (click)="onTabClick(ProfileSortState.FAVOURITES)"
+           [ngClass]="{'active': isTabActive(ProfileSortState.FAVOURITES)}">Закладки
+      </div>
+    </div>
+  </div>
+  <poly-card *ngFor="let article of articles" [article]="article" #cardComponent></poly-card>
+  <div class="no-cards" *ngIf="articles.length == 0">
+    <div class="text">К сожалению, здесь пока нет ни
+      одной {{activeTab == ProfileSortState.PUBLISHED ? "публикации" : "закладки"}}</div>
+  </div>
+</div>

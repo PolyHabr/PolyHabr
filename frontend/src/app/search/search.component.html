@@ -1,0 +1,5 @@
+<poly-header></poly-header>
+<div class="container" #container>
+  <poly-sort-bar [state]="SortBarState.SEARCH" (onSearch)="onSearch($event)" #sortBar></poly-sort-bar>
+  <poly-card *ngFor="let article of articles" [article]="article" #cardComponent></poly-card>
+</div>

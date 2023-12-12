@@ -1,0 +1,74 @@
+@use "src/base";
+
+.menu {
+  min-width: 300px;
+  box-shadow: 0 0 12px rgb(0 0 0 / 16%);
+  background: base.$col-white;
+  border-radius: 4px;
+  padding-bottom: 12px;
+
+  .header {
+    border-bottom: 1px solid rgb(234, 234, 234);
+    padding: 20px;
+
+    .name {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .nickname {
+      color: base.$col-green-light;
+
+      &:hover {
+        color: base.$col-green !important;
+      }
+    }
+  }
+
+  .email {
+    color: base.$col-green-light;
+  }
+
+  .body {
+    border-bottom: 1px solid rgb(234, 234, 234);
+    padding-bottom: 12px;
+  }
+
+  .body, .footer {
+    margin-top: 12px;
+
+    .item {
+      width: calc(100% - 40px);
+      height: 48px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+
+      &:hover {
+        background: base.$col-green-light-smooth;
+        color: base.$col-green !important;
+      }
+    }
+  }
+
+  .footer {
+    .item {
+      color: base.$col-gray-dark;
+
+      svg {
+        color: base.$col-gray-dark;
+        fill: base.$col-gray-dark;
+        margin-right: 8px;
+      }
+
+      &:hover {
+        color: base.$col-green !important;
+
+        svg {
+          fill: base.$col-green;
+        }
+      }
+    }
+  }
+}

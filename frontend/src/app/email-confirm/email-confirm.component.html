@@ -1,0 +1,18 @@
+<header class="top">
+  <div class="container">
+    <a href="/" class="logo"
+       (click)="toFeed($event)">
+      ПолиХабр
+    </a>
+  </div>
+</header>
+<div class="background">
+  <div class="container">
+    <div class="content">
+      <div class="title">Подтвердите почту</div>
+      <div class="text">На почту {{emailString}} отправлено письмо с ссылкой для подтверждения регистрации. Если вы не можете найти письмо, проверьте, пожалуйста, папку спам.</div>
+      <div class="sub-title">E-mail</div>
+      <div class="email">{{emailString}}</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<poly-header></poly-header>
+<div class="container">
+  <div class="sub-header">Настройки</div>
+  <div class="content">
+    <div class="form name"
+         [ngClass]="{'error': profileSettingsErrorConfig.nameError}">
+      <div class="title">Имя</div>
+      <input type="text"
+             [(ngModel)]="nameInputValue"
+             [value]="DataHelper.user?.name ? DataHelper.user?.name : ''"
+             name="name"
+             (ngModelChange)="checkFieldValidation(RegexType.NAME, $event, InputFieldsType.NAME)"
+             #nameInputElement>
+      <div class="error-text"
+           [ngClass]="{'active': profileSettingsErrorConfig.nameError}">{{profileSettingsErrorConfig.nameError}}</div>
+    </div>
+    <div class="form surname"
+         [ngClass]="{'error': profileSettingsErrorConfig.surnameError}">
+      <div class="title">Фамилия</div>
+      <input type="text"
+             [(ngModel)]="surnameInputValue"
+             [value]="DataHelper.user?.surname ? DataHelper.user?.surname : ''"
+             name="name"
+             (ngModelChange)="checkFieldValidation(RegexType.SURNAME, $event, InputFieldsType.SURNAME)"
+             #surnameInputElement>
+      <div class="error-text"
+           [ngClass]="{'active': profileSettingsErrorConfig.surnameError}">{{profileSettingsErrorConfig.surnameError}}</div>
+    </div>
+    <div class="form email" [ngClass]="{'error': profileSettingsErrorConfig.emailError}">
+      <div class="title">E-mail</div>
+      <input type="email"
+             [(ngModel)]="emailInputValue"
+             [value]="DataHelper.user?.email ? DataHelper.user?.email : ''"
+             name="email"
+             (change)="checkFieldValidation(RegexType.EMAIL, emailInputElement, InputFieldsType.EMAIL)"
+             #emailInputElement>
+      <div class="error-text"
+           [ngClass]="{'active': profileSettingsErrorConfig.emailError}">{{profileSettingsErrorConfig.emailError}}</div>
+    </div>
+    <div class="form old-password" [ngClass]="{'error': profileSettingsErrorConfig.passwordOldError}">
+      <div class="title">Старый пароль</div>
+      <input type="password"
+             [(ngModel)]="oldPasswordInputValue" #passwordOldInputElement>
+      <div class="error-text"
+           [ngClass]="{'active': profileSettingsErrorConfig.passwordOldError}">{{profileSettingsErrorConfig.passwordOldError}}</div>
+    </div>
+    <div class="form new-password" [ngClass]="{'error': profileSettingsErrorConfig.passwordError}">
+      <div class="title">Новый пароль</div>
+      <input type="password"
+             [(ngModel)]="passwordInputValue" #passwordInputElement>
+      <div class="error-text"
+           [ngClass]="{'active': profileSettingsErrorConfig.passwordError}">{{profileSettingsErrorConfig.passwordError}}</div>
+    </div>
+    <div class="form confirm-password" [ngClass]="{'error': profileSettingsErrorConfig.passwordAgainError}">
+      <div class="title">Подвтерждение пароля</div>
+      <input type="password"
+             [(ngModel)]="submitPasswordInputValue" #passwordAgainInputElement>
+      <div class="error-text"
+           [ngClass]="{'active': profileSettingsErrorConfig.passwordAgainError}">{{profileSettingsErrorConfig.passwordAgainError}}</div>
+    </div>
+    <div class="form confirm-password" [ngClass]="{'error': profileSettingsErrorConfig.passwordAgainError}">
+      <div class="title">Изменить предпочитаемые дисциплины</div>
+      <button (click)="toTypes($event)">Изменить</button>
+    </div>
+
+    <button (click)="onClickConfirmChanges($event)">Сохранить изменения</button>
+  </div>
+</div>

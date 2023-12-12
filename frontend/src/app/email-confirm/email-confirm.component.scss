@@ -1,0 +1,62 @@
+@use "src/base";
+
+
+.top {
+  height: 68px;
+  border-bottom: 1px solid base.$col-green-pale;
+  background: base.$col-white;
+
+  .container {
+    height: 100%;
+    background: base.$col-white;
+
+    .logo {
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+}
+
+.background {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: base.$col-gray-pale;
+  height: 100vh;
+
+  .container {
+    width: 490px;
+    background: base.$col-white;
+    margin-top: 80px;
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 10%);
+    border-radius: 4px;
+
+    .content {
+      padding: 40px;
+
+      .title {
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .text {
+        margin-top: 12px;
+      }
+
+      .sub-title {
+        font-size: 14px;
+        font-weight: 700;
+        margin-top: 12px;
+      }
+
+      .email {
+        font-weight: 500;
+        margin-top: 6px;
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+<poly-header></poly-header>
+<div class="container">
+  <div class="content">
+    <h1 class="headline">Новая публикация</h1>
+    <div class="form">
+      <div class="row">
+        <div>
+          <div class="input-title required">Тип публикации</div>
+          <div class="select">
+            <div class="block" *ngFor="let type of types" [ngClass]="{selected:selectedType == type}"
+                 (click)="selectedType = type">
+              {{type.name}}
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="input-title required">Дисциплина работы</div>
+          <div class="select">
+            <div class="block" *ngFor="let discipline of disciplines"
+                 [ngClass]="{selected:selectedDiscipline == discipline}"
+                 (click)="selectedDiscipline = discipline">
+              {{discipline.name}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="input-title required">Наименование работы</div>
+      <input type="text" class="name-input" placeholder="Введите название" #titleInputComponent>
+      <div class="title">Отоборажение в ленте</div>
+      <div class="file">
+        <div class="preview">
+          <svg *ngIf="!preview" width="21" height="20" viewBox="0 0 21 20" fill="none"
+               xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 0H9.5V9H0.5V11H9.5V20H11.5V11H20.5V9H11.5V0Z"
+                  fill="#929CA5"></path>
+          </svg>
+          <b *ngIf="!preview">Прикрепите файл</b>
+          <b *ngIf="preview">Файл {{preview.name}} прикреплен</b>
+          <p *ngIf="hasPreviewError" class="error">Размер изображения слишком большой.</p>
+          <p *ngIf="!preview">Прикрепите сюда файл (.png, .jpg, .jpeg)</p>
+          <button *ngIf="!preview" (click)="previewInput.click()">Загрузить файл</button>
+          <button *ngIf="preview" (click)="previewInput.value = ''; preview = null;">Открепить файл</button>
+        </div>
+        <input style="display: none" accept=".png, .jpg, .jpeg" type="file"
+               (change)="onPreviewSelected($any($event.target).files)"
+               #previewInput>
+      </div>
+      <textarea placeholder="Введите текст" class="preview-input" #previewTextInputComponent></textarea>
+      <div class="title">Файл и описание работы</div>
+      <div class="file">
+        <div class="preview">
+          <svg *ngIf="!file" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 0H9.5V9H0.5V11H9.5V20H11.5V11H20.5V9H11.5V0Z"
+                  fill="#929CA5"></path>
+          </svg>
+          <b *ngIf="!file">Прикрепите файл</b>
+          <b *ngIf="file">Файл {{file.name}} прикреплен</b>
+          <p *ngIf="hasError" class="error">Размер изображения слишком большой. Максимальный размер изображения не
+            должен превышать 20 Мб</p>
+          <p *ngIf="!file">Прикрепите сюда файл (.docx, .doc, .pdf) размером до 20 мб</p>
+          <button *ngIf="!file" (click)="fileInput.click()">Загрузить файл</button>
+          <button *ngIf="file" (click)="fileInput.value = ''; file = null;">Открепить файл</button>
+        </div>
+        <input style="display: none" accept=".docx, .doc, .pdf" type="file"
+               (change)="onFileSelected($any($event.target).files)"
+               #fileInput>
+      </div>
+      <textarea placeholder="Введите текст" class="text-input" #textInputComponent></textarea>
+      <div class="input-title required">Теги работы (через запятую)</div>
+      <input type="text" class="tags-input" #tagInputComponent>
+    </div>
+    <button (click)="add($event)">Отправить</button>
+  </div>
+</div>

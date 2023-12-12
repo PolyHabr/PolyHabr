@@ -1,0 +1,45 @@
+<header>
+  <div class="top">
+    <div class="container">
+      <a href="/" class="logo"
+         (click)="toFeed($event)">
+        ПолиХабр
+      </a>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="container">
+      <div class="menu">
+        <a href="/profile" (click)="toProfile($event)">
+          Мои публикации
+        </a>
+        <a href="/" (click)="toFeed($event)">
+          Все публикации
+        </a>
+      </div>
+      <div class="actions">
+        <a href="/search" class="button-icon"
+           (click)="toSearch($event)">
+          <svg height="24" width="24">
+            <title>Поиск</title>
+            <use xlink:href="assets/images/icons/icon-set.svg#search"></use>
+          </svg>
+        </a>
+        <a href="/upload" class="button-icon" *ngIf="DataHelper.user"
+           (click)="toUpload($event)">
+          <svg height="24" width="24">
+            <title>Новая публикация</title>
+            <use xlink:href="assets/images/icons/icon-set.svg#write"></use>
+          </svg>
+        </a>
+        <div class="button-icon">
+          <svg height="24" width="24" (click)="menu.showMenu()">
+            <title>Профиль</title>
+            <use xlink:href="assets/images/icons/icon-set.svg#header-user"></use>
+          </svg>
+          <poly-menu #menu></poly-menu>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,25 @@
+@use "src/base";
+
+.comment {
+  $card-padding: 20px;
+
+  background-color: base.$col-white;
+  margin-top: 12px;
+
+  .head {
+    @extend %head;
+  }
+
+  .text {
+    margin-top: 8px;
+    margin-left: $card-padding;
+    margin-right: $card-padding;
+    padding-bottom: $card-padding;
+  }
+
+  &:not(.last) {
+    .text {
+      border-bottom: 1px solid base.$col-gray-darker;
+    }
+  }
+}

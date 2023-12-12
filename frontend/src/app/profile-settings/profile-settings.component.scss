@@ -1,0 +1,46 @@
+@use "src/base";
+
+.container {
+  display: flex;
+  flex-direction: column;
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 14px 20px;
+    background: base.$col-white;
+    box-sizing: border-box;
+    margin-top: 12px;
+  }
+
+  .sub-header {
+    font-weight: 700;
+    font-size: 22px;
+    color: base.$col-black;
+  }
+
+  .content {
+    margin-bottom: 60px;
+
+    .form {
+      @extend %form;
+
+      width: 524px;
+
+      &:first-child {
+        margin-top: 24px;
+      }
+
+      button {
+        margin-top: 0;
+        width: 300px;
+      }
+    }
+
+    button {
+      margin-top: 32px;
+      width: 200px;
+    }
+  }
+}

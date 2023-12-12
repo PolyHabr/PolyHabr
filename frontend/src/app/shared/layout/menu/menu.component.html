@@ -1,0 +1,36 @@
+<div class="menu" *ngIf="isShown()" (clickOutside)="hideMenu()">
+  <div class="unauthorized" *ngIf="!DataHelper.user">
+    <div class="header">
+      <a href="/login" class="email chip selectable" (click)="toLogin($event)">Войти</a>
+      <a href="/registration" (click)="toRegistration($event)">
+        <button>Регистрация</button>
+      </a>
+    </div>
+  </div>
+  <div class="authorized" *ngIf="DataHelper.user">
+    <div class="header">
+      <div class="name">{{DataHelper.user.name}}</div>
+      <a href="/profile" class="nickname">@{{DataHelper.user.login}}</a>
+    </div>
+    <div class="body">
+      <a href="/profile#published" class="item">Профиль</a>
+      <a href="/profile#favourites" class="item">Избранное</a>
+    </div>
+    <div class="footer">
+      <a href="/profile-settings" class="item">
+        <svg height="24" width="24">
+          <title>Настройки</title>
+          <use xlink:href="assets/images/icons/icon-set.svg#settings"></use>
+        </svg>
+        <span>Настройки профиля</span>
+      </a>
+      <a class="item" (click)="logout($event)">
+        <svg height="24" width="24">
+          <title>Выйти</title>
+          <use xlink:href="assets/images/icons/icon-set.svg#logout"></use>
+        </svg>
+        <span>Выход</span>
+      </a>
+    </div>
+  </div>
+</div>

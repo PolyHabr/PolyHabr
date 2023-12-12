@@ -1,0 +1,63 @@
+@use "src/base";
+
+.container {
+  margin-top: 12px;
+  box-sizing: border-box;
+
+  .title {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+    background-color: base.$col-white;
+    .headline {
+      margin-left: 20px;
+      margin-right: 20px;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 18px;
+
+      .nickname {
+        margin-left: 6px;
+        transition: color 0.2s;
+        color: base.$col-green-light;
+      }
+    }
+
+    .tabs {
+      display: flex;
+      margin-top: 16px;
+      padding-left: 20px;
+      padding-right: 20px;
+      border-bottom: 1px solid base.$col-gray-second;
+
+      .tab {
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        margin-right: 24px;
+        text-transform: uppercase;
+        height: 44px;
+        padding-bottom: 2px;
+        padding-top: 2px;
+        font-weight: 600;
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        &.active {
+          padding-bottom: 0;
+          border-bottom: 2px solid base.$col-green-light;
+        }
+      }
+    }
+  }
+
+  .no-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+  }
+}
